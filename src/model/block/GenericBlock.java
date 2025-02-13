@@ -1,5 +1,6 @@
 package model.block;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import model.entity.Entity;
@@ -14,9 +15,10 @@ public abstract class GenericBlock {
     public GenericBlock(String name, String desc) {
 		this.name = name;
 		this.desc = desc;
+		this.piecesOnBlock = new ArrayList<Entity>();
 	}
     
-    abstract void onLand();
+    abstract void onLand(Entity piece);
 
 	public List<Entity> getPiecesOnBlock() {
 		return piecesOnBlock;

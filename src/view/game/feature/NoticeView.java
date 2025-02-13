@@ -25,26 +25,18 @@ public class NoticeView extends BaseView {
 	public void show() {
 		TextUtil.clearScreen();
 		TextUtil.printHeader("NOTICE", width, height);
-		showNoticeDesc();
+		noticeViewController.showNoticeDesc();
 		System.out.println();
 		TextUtil.pressEnter();
 		
 		if(previousView != null) {
+			GameManager.getInstance().unPausePlayerMovementThread();
 			GameManager.getInstance().setCurrentView(previousView);
             previousView.show();
 		}
 	}
 	
-	private void showNoticeDesc() {
-		String noticeFolderPath = String.format("%s/notice%d.txt", DataConfig.FOLDER_NOTICES, 
-				noticeViewController.getCurrentNoticeIndex());
-		
-		List<String> notice = FileUtil.readFile(noticeFolderPath);
-		printNotice(wrappedLines(notice));
-		noticeViewController.increaseNoticeIndex();
-	}
-	
-	private void printNotice(List<String> notice) {
+	public void printNotice(List<String> notice) {
 		int linesPerPage = height;
 		int totalLines = notice.size();
 		int currentLine = 0;
@@ -58,7 +50,7 @@ public class NoticeView extends BaseView {
 		}
 	}
 	
-	private List<String> wrappedLines(List<String> notice) {
+	public List<String> wrappedLines(List<String> notice) {
 		List<String> wrappedLines = new ArrayList<String>();
 		
 		for(String line : notice) {

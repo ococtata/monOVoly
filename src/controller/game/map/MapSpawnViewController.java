@@ -3,6 +3,7 @@ package controller.game.map;
 import config.MapConfig;
 import manager.GameManager;
 import manager.MapManager;
+import manager.thread.PlayerMovementManager;
 import model.Position;
 import utility.Scanner;
 import view.game.feature.NoticeView;
@@ -10,6 +11,7 @@ import view.game.map.MapBarracksView;
 import view.game.map.MapGachaView;
 import view.game.map.MapShopView;
 import view.game.map.MapSpawnView;
+import view.game.monovoly.MonovolyMap;
 
 public class MapSpawnViewController extends BaseMapViewController {
 	private MapSpawnView mapSpawnView;
@@ -31,7 +33,11 @@ public class MapSpawnViewController extends BaseMapViewController {
 			return false;
 		}
 		else if(map[newY][newX] == MapConfig.GATE) {
-			//ga
+			MonovolyMap monovolyMap = new MonovolyMap();
+			monovolyMap.setPreviousView(mapSpawnView);
+			GameManager.getInstance().setCurrentView(monovolyMap);
+			
+			monovolyMap.show();
 			return false;
 		}
 		else if(newX == 0 && map[newY][newX] == ' ') {

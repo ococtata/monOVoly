@@ -1,6 +1,7 @@
 package view;
 
 import config.GeneralConfig;
+import utility.ExitUtil;
 import utility.TextUtil;
 import view.credentials.LoginView;
 import view.credentials.RegisterView;
@@ -40,8 +41,8 @@ public class TitleScreenView extends BaseView{
 		            new RegisterView();
 		            break;
 		        case 3:
-		            System.out.println(" Exit");
-		            deactivateView();
+		        	deactivateView();
+		            ExitUtil.exitGame();
 		            break;
 		        default:
 		            System.out.println(" Input must be 1-3!");

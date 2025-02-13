@@ -8,6 +8,7 @@ public abstract class Entity {
 	private int totalAssest;
 	private int rank;
 	private Position position;
+	private String piece;
 	
 	public Entity(String name, int money, Position position) {
 		super();
@@ -51,5 +52,13 @@ public abstract class Entity {
 
 	public void setRank(int rank) {
 		this.rank = rank;
+	}
+
+	public String getPiece() {
+		return piece;
+	}
+
+	public void setPiece(String piece) {
+		this.piece = piece;
 	}
 }

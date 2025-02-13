@@ -19,9 +19,8 @@ public class PropertyBlock extends GenericBlock{
 	}
 
 	@Override
-	void onLand() {
+	void onLand(Entity piece) {
 		// TODO Auto-generated method stub
-		System.out.println("TEts");
 	}
 	
 	public void buy(Entity piece) {
@@ -41,9 +40,9 @@ public class PropertyBlock extends GenericBlock{
 	
 	public void construct(Entity piece) {
 		if(piece.getMoney() >= constructPrice) {
-			deductMoney(piece, baseUpgradeCost);
-			buildingLevel = buildingLevel + 1;
-			constructPrice = constructPrice + (buildingLevel * baseUpgradeCost);
+			deductMoney(piece, constructPrice);
+			buildingLevel++;
+			constructPrice += (buildingLevel * baseUpgradeCost);
 		}
 	}
 

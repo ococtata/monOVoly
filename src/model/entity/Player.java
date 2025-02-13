@@ -28,6 +28,8 @@ public class Player extends Entity {
 		
 		this.mapPosition = new Position(0, 0);
 		this.maxEnergy = calculateMaxEnergy();
+		
+		setPiece("P");
 	}
 	
 	private int calculateMaxEnergy() {

@@ -84,4 +84,11 @@ public class GameManager {
 		return energyManagerThread;
 	}
 	
+	public void pausePlayerMovementThread() {
+		PlayerMovementManager.getInstance(player).pause();
+	}	
+	
+	public void unPausePlayerMovementThread() {
+		PlayerMovementManager.getInstance(player).unpause();
+	}
 }

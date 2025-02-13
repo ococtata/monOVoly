@@ -1,5 +1,6 @@
 package controller.game.monovoly;
 
+import manager.GameManager;
 import view.game.monovoly.MonovolyMap;
 
 public class MonovolyMapController {
@@ -7,5 +8,6 @@ public class MonovolyMapController {
 	
 	public MonovolyMapController(MonovolyMap monovolyMap) {
 		this.monovolyMap = monovolyMap;
+		GameManager.getInstance().pausePlayerMovementThread();
 	}
 }

@@ -1,5 +1,6 @@
 package model.block;
 
+import config.BoardConfig;
 import model.entity.Entity;
 
 public class StartBlock extends GenericBlock{
@@ -7,14 +8,13 @@ public class StartBlock extends GenericBlock{
 
 	public StartBlock(String name, String desc) {
 		super(name, desc);
+		this.income = BoardConfig.BLOCK_START_BASE_INCOME;
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	void onLand() {
-		for(Entity piece : getPiecesOnBlock()){
-			increaseMoney(piece, income);
-		}
+	void onLand(Entity piece) {
+		increaseMoney(piece, income);
 	}
 
 }

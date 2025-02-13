@@ -11,6 +11,7 @@ import model.Position;
 import model.entity.Player;
 import utility.Scanner;
 import view.BaseView;
+import view.TitleScreenView;
 import view.game.feature.NoticeView;
 import view.game.map.MapBarracksView;
 import view.game.map.MapGachaView;
@@ -18,10 +19,19 @@ import view.game.map.MapShopView;
 import view.game.map.MapSpawnView;
 
 public class PlayerMovementLogic implements Runnable, Scanner {
-	private volatile boolean active = true;
+	private boolean active = true;
     private Player player;
+    private boolean paused = false;
 
-    public PlayerMovementLogic(Player player) {
+    public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+
+	public PlayerMovementLogic(Player player) {
         this.player = player;
     }
 
@@ -33,6 +43,9 @@ public class PlayerMovementLogic implements Runnable, Scanner {
     public void run() {
     	try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             while (active) {
+            	if(paused) {
+            		continue;
+            	}
                 if (System.in.available() > 0) {
                     char input = (char) System.in.read();
                     handleInput(input);

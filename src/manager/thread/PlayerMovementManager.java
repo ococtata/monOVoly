@@ -25,13 +25,16 @@ public class PlayerMovementManager {
             playerMovementThread.start();
         }
     }
-
-    public void stop() {
-    	playerMovementLogic.deactivate();	
-    	playerMovementThread.interrupt();
-    }
     
     public Thread getPlayerMovementThread() {
     	return playerMovementThread;
+    }
+    
+    public void pause() {
+    	playerMovementLogic.setPaused(true);
+    }
+    
+    public void unpause() {
+    	playerMovementLogic.setPaused(false);
     }
 }

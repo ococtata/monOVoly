@@ -1,18 +1,22 @@
 package controller.game.feature;
 
 import java.io.File;
+import java.util.List;
 
 import config.DataConfig;
+import manager.GameManager;
+import utility.FileUtil;
+import utility.Random;
 import view.game.feature.NoticeView;
 
-public class NoticeViewController {
+public class NoticeViewController implements Random{
 	private NoticeView noticeView;
-	private static int currentNoticeIndex = 1;
 	private static int maxNoticeIndex;
 	
 	public NoticeViewController(NoticeView noticeView) {
 		this.noticeView = noticeView;
 		maxNoticeIndex = getNoticeFileCount();
+		GameManager.getInstance().pausePlayerMovementThread();
 	}
 	
 	public int getNoticeFileCount() {
@@ -21,20 +25,20 @@ public class NoticeViewController {
         
         return files.length;
 	}
-
-	public int getCurrentNoticeIndex() {
-		return currentNoticeIndex;
-	}
-
 	public static int getMaxNoticeIndex() {
 		return maxNoticeIndex;
 	}
 	
-	public int increaseNoticeIndex() {
-		int newIndex = currentNoticeIndex + 1;
-		if(newIndex > maxNoticeIndex) {
-			return 1;
-		}
+	public int randomIndex() {
+		int newIndex = rand.nextInt(maxNoticeIndex) + 1;
 		return newIndex;
+	}
+	
+	public void showNoticeDesc() {
+		String noticeFolderPath = String.format("%s/notice%d.txt", DataConfig.FOLDER_NOTICES, 
+				randomIndex());
+		
+		List<String> notice = FileUtil.readFile(noticeFolderPath);
+		noticeView.printNotice(noticeView.wrappedLines(notice));
 	}
 }

@@ -1,6 +1,8 @@
 package view.game.monovoly;
 
 import controller.game.monovoly.MonovolyMapController;
+import model.GameBoard;
+import utility.TextUtil;
 import view.BaseView;
 
 public class MonovolyMap extends BaseView{
@@ -12,8 +14,9 @@ public class MonovolyMap extends BaseView{
 	
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-		
+		TextUtil.clearScreen();
+		GameBoard gameBoard = new GameBoard();
+		gameBoard.printBoard();
 	}
 
 }

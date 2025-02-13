@@ -3,9 +3,11 @@ package utility;
 import config.GeneralConfig;
 
 public class TextUtil implements Scanner{
-	public static void pressEnter() {
+	public synchronized static void pressEnter() {
 		System.out.print(" Press ENTER to continue...");
-		scan.nextLine();
+		if (scan.hasNextLine()) {
+            scan.nextLine();
+        }
 	}
 	
 	public static void printHorizontalBorder(int len) {
