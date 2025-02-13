@@ -1,0 +1,63 @@
+package controller.game.map;
+
+import config.MapConfig;
+import manager.GameManager;
+import manager.MapManager;
+import model.Position;
+import utility.Scanner;
+import view.game.feature.NoticeView;
+import view.game.map.MapBarracksView;
+import view.game.map.MapGachaView;
+import view.game.map.MapShopView;
+import view.game.map.MapSpawnView;
+
+public class MapSpawnViewController extends BaseMapViewController {
+	private MapSpawnView mapSpawnView;
+	
+	public MapSpawnViewController(MapSpawnView mapSpawnView) {
+		this.mapSpawnView = mapSpawnView;
+		GameManager.getInstance().startThreads();
+	}
+
+	public boolean checkCollision(int newX, int newY) {
+        char[][] map = MapManager.getInstance().getCurrentMap();
+		
+		if(map[newY][newX] == MapConfig.NOTICE) {
+			NoticeView noticeView = new NoticeView();
+            noticeView.setPreviousView(mapSpawnView);
+            GameManager.getInstance().setCurrentView(noticeView);
+            
+            noticeView.show();
+			return false;
+		}
+		else if(map[newY][newX] == MapConfig.GATE) {
+			//ga
+			return false;
+		}
+		else if(newX == 0 && map[newY][newX] == ' ') {
+			MapGachaView mapGachaView = new MapGachaView();
+			mapGachaView.setPreviousView(mapSpawnView);
+			GameManager.getInstance().setCurrentView(mapGachaView);
+            
+			mapGachaView.show();
+			return false;
+		}
+		else if(newX == map[0].length - 1 && map[newY][newX] == ' ') {
+			MapBarracksView mapBarracksView = new MapBarracksView();
+			mapBarracksView.setPreviousView(mapSpawnView);
+			GameManager.getInstance().setCurrentView(mapBarracksView);
+            
+			mapBarracksView.show();
+			return false;
+		}
+		else if(newY == map.length - 1 && map[newY][newX] == ' ') {
+			MapShopView mapShopView = new MapShopView();
+			mapShopView.setPreviousView(mapSpawnView);
+			GameManager.getInstance().setCurrentView(mapShopView);
+			
+			mapShopView.show();
+			return false;
+		}
+		return true;
+	}
+}

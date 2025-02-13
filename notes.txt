@@ -1,0 +1,24 @@
+Format:
+- user data format: id#username#email#password#gems#money
+- player stat format: id#level#coins#gems#barracksupgrade#currentEnergy
+
+Formula
+- maxEnergy = base * (level * 0.1)
+
+================================================================
+LOGIN REGIST
+
+Security:
+- hash password: reverse -> swap adjacent char -> shift right by 8
+
+Validation:
+- username: unique, len >= 4
+- pass : len >= 8
+- email: unique, must have @ and .com
+
+================================================================
+MAIN MENU
+
+
+================================================================
+GAME

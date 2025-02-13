@@ -1,0 +1,43 @@
+package view;
+
+import config.GeneralConfig;
+import manager.GameManager;
+import utility.Scanner;
+
+public abstract class BaseView implements Scanner {
+	protected int HEIGHT = GeneralConfig.HEIGHT;
+	protected int WIDTH = GeneralConfig.WIDTH;
+	
+	protected char[][] map;
+	
+	protected BaseView previousView;
+
+	public BaseView() {
+		GameManager.getInstance().setCurrentView(this);
+		activateView();
+	}
+	
+	protected boolean active = false;
+	
+	public abstract void show();
+	
+	public void deactivateView() {
+		this.active = false;
+	}
+	
+	protected void activateView() {
+		this.active = true;
+	}
+	
+	public BaseView getPreviousView() {
+		return previousView;
+	}
+
+	public void setPreviousView(BaseView previousView) {
+		this.previousView = previousView;
+	}
+	
+	public char[][] getMap() {
+		return map;
+	}
+}
