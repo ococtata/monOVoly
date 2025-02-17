@@ -1,12 +1,14 @@
 package model.entity;
 
+import config.BoardConfig;
+import config.ColorConfig;
 import model.Position;
 
 public class Enemy extends Entity {
 
 	public Enemy(String name, int money, Position position) {
 		super(name, money, position);
-		// TODO Auto-generated constructor stub
+		setPiece(ColorConfig.LIGHT_RED + BoardConfig.ENEMY_PIECE + ColorConfig.RESET);
 	}
 
 	@Override

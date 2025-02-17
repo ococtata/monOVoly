@@ -9,6 +9,7 @@ public abstract class Entity {
 	private int rank;
 	private Position position;
 	private String piece;
+	private String color;
 	
 	public Entity(String name, int money, Position position) {
 		super();
@@ -17,6 +18,14 @@ public abstract class Entity {
 		this.position = position;
 	}
 	
+	protected String getColor() {
+		return color;
+	}
+
+	protected void setColor(String color) {
+		this.color = color;
+	}
+
 	public String getName() {
 		return name;
 	}

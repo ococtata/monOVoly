@@ -29,7 +29,6 @@ public class MapSpawnViewController extends BaseMapViewController {
             noticeView.setPreviousView(mapSpawnView);
             GameManager.getInstance().setCurrentView(noticeView);
             
-            noticeView.show();
 			return false;
 		}
 		else if(map[newY][newX] == MapConfig.GATE) {
@@ -37,7 +36,6 @@ public class MapSpawnViewController extends BaseMapViewController {
 			monovolyMap.setPreviousView(mapSpawnView);
 			GameManager.getInstance().setCurrentView(monovolyMap);
 			
-			monovolyMap.show();
 			return false;
 		}
 		else if(newX == 0 && map[newY][newX] == ' ') {
@@ -45,7 +43,6 @@ public class MapSpawnViewController extends BaseMapViewController {
 			mapGachaView.setPreviousView(mapSpawnView);
 			GameManager.getInstance().setCurrentView(mapGachaView);
             
-			mapGachaView.show();
 			return false;
 		}
 		else if(newX == map[0].length - 1 && map[newY][newX] == ' ') {
@@ -53,7 +50,6 @@ public class MapSpawnViewController extends BaseMapViewController {
 			mapBarracksView.setPreviousView(mapSpawnView);
 			GameManager.getInstance().setCurrentView(mapBarracksView);
             
-			mapBarracksView.show();
 			return false;
 		}
 		else if(newY == map.length - 1 && map[newY][newX] == ' ') {
@@ -61,7 +57,6 @@ public class MapSpawnViewController extends BaseMapViewController {
 			mapShopView.setPreviousView(mapSpawnView);
 			GameManager.getInstance().setCurrentView(mapShopView);
 			
-			mapShopView.show();
 			return false;
 		}
 		return true;

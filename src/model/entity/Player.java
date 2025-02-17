@@ -1,5 +1,7 @@
 package model.entity;
 
+import config.BoardConfig;
+import config.ColorConfig;
 import config.PlayerStatConfig;
 import model.Position;
 
@@ -29,7 +31,7 @@ public class Player extends Entity {
 		this.mapPosition = new Position(0, 0);
 		this.maxEnergy = calculateMaxEnergy();
 		
-		setPiece("P");
+		setPiece(ColorConfig.LIGHT_GREEN + BoardConfig.PLAYER_PIECE + ColorConfig.RESET);
 	}
 	
 	private int calculateMaxEnergy() {

@@ -44,6 +44,10 @@ public abstract class GenericBlock {
 		return blockColor;
 	}
 
+	public void setBlockColor(String blockColor) {
+		this.blockColor = blockColor;
+	}
+
 	public int getNumber() {
 		return number;
 	}
@@ -61,5 +65,8 @@ public abstract class GenericBlock {
 		int money = piece.getMoney() + amount;
 		piece.setMoney(money);
 	}
-	
+
+	protected void setPiecesOnBlock(List<Entity> piecesOnBlock) {
+		this.piecesOnBlock = piecesOnBlock;
+	}
 }

@@ -1,6 +1,7 @@
 package model.block;
 
 import config.BoardConfig;
+import config.ColorConfig;
 import model.entity.Entity;
 
 public class PropertyBlock extends GenericBlock{
@@ -15,7 +16,6 @@ public class PropertyBlock extends GenericBlock{
 
 	public PropertyBlock(String name, String desc) {
 		super(name, desc);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
