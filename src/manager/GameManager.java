@@ -2,6 +2,8 @@ package manager;
 
 import manager.thread.EnergyManager;
 import manager.thread.PlayerMovementManager;
+import model.GameBoard;
+import model.entity.Enemy;
 import model.entity.Player;
 import view.BaseView;
 import view.TitleScreenView;
@@ -10,11 +12,16 @@ public class GameManager {
 	
 	private static GameManager instance;
 	private Player player;
+	private Enemy enemy;
 	private BaseView currentView;
 	private boolean isActive = true;
 
 	private Thread playerMovementThread;
 	private Thread energyManagerThread;
+	
+	private boolean isPlayerTurn = false;
+	private boolean isFirstTurn = true;
+	private GameBoard gameBoard;
 
 	private GameManager() {
 		
@@ -90,5 +97,37 @@ public class GameManager {
 	
 	public void unPausePlayerMovementThread() {
 		PlayerMovementManager.getInstance(player).unpause();
+	}
+
+	public boolean isPlayerTurn() {
+		return isPlayerTurn;
+	}
+
+	public void setPlayerTurn(boolean isPlayerTurn) {
+		this.isPlayerTurn = isPlayerTurn;
+	}
+
+	public boolean isFirstTurn() {
+		return isFirstTurn;
+	}
+
+	public void setFirstTurn(boolean isFirstTurn) {
+		this.isFirstTurn = isFirstTurn;
+	}
+
+	public Enemy getEnemy() {
+		return enemy;
+	}
+
+	public void setEnemy(Enemy enemy) {
+		this.enemy = enemy;
+	}
+
+	public GameBoard getGameBoard() {
+		return gameBoard;
+	}
+
+	public void setGameBoard(GameBoard gameBoard) {
+		this.gameBoard = gameBoard;
 	}
 }

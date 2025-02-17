@@ -16,10 +16,13 @@ public class PropertyBlock extends GenericBlock{
 
 	public PropertyBlock(String name, String desc) {
 		super(name, desc);
+		setType("Property");
+		this.hasLandmark = false;
+		this.isFestival = false;
 	}
 
 	@Override
-	void onLand(Entity piece) {
+	public void onLand(Entity piece) {
 		// TODO Auto-generated method stub
 	}
 	
@@ -54,4 +57,23 @@ public class PropertyBlock extends GenericBlock{
 		this.owner = owner;
 	}
 
+	public int getConstructPrice() {
+		return constructPrice;
+	}
+
+	public int getToll() {
+		return toll;
+	}
+
+	public int getBuildingLevel() {
+		return buildingLevel;
+	}
+
+	public boolean isHasLandmark() {
+		return hasLandmark;
+	}
+
+	public int getPrice() {
+		return price;
+	}
 }

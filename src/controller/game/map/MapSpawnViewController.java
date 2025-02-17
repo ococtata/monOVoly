@@ -36,6 +36,9 @@ public class MapSpawnViewController extends BaseMapViewController {
 			monovolyMap.setPreviousView(mapSpawnView);
 			GameManager.getInstance().setCurrentView(monovolyMap);
 			
+			GameManager.getInstance().setFirstTurn(true);
+			GameManager.getInstance().setPlayerTurn(false);
+			
 			return false;
 		}
 		else if(newX == 0 && map[newY][newX] == ' ') {

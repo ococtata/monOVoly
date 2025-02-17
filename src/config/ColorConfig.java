@@ -15,4 +15,5 @@ public class ColorConfig {
     public static final String MAGENTA = "\033[0;35m"; 
     public static final String CYAN = "\033[0;36m"; 
     public static final String BLACK = "\033[0;30m";
+    public static final String GOLD = "\033[1;33m";
 }

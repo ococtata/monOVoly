@@ -8,7 +8,7 @@ public class BoardConfig {
 	public static final int BLOCK_WIDTH = 5;
 	public static final int BLOCK_HEIGHT = 3;
 	
-	public static final int BLOCK_PROPERTY_BASE_UPGRADE_COST = 50000;
+	public static final int BLOCK_PROPERTY_BASE_UPGRADE_COST = 30;
 	public static final int BLOCK_START_BASE_INCOME = 300000;
 	public static final int BLOCK_TAX_BASE_DEDUCT_PERCENTAGE = 10;
 	

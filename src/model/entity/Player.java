@@ -18,9 +18,9 @@ public class Player extends Entity {
 	
 	private Position mapPosition;
 
-	public Player(String name, int money, Position position, String id, int level,
+	public Player(String name, int money, String id, int level,
 			int coins, int gems, int barracksUpgradeLevel,int currentEnergy) {
-		super(name, money, position);
+		super(name, money);
 		this.id = id;
 		this.level = level;
 		this.coins = coins;

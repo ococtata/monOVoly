@@ -13,15 +13,19 @@ public class StartBlock extends GenericBlock{
 		super(name, desc);
 		this.income = BoardConfig.BLOCK_START_BASE_INCOME;
 		initializePieces();
+		setType("Start");
 	}
 
 	@Override
-	void onLand(Entity piece) {
+	public void onLand(Entity piece) {
 		increaseMoney(piece, income);
 	}
 	
 	private void initializePieces() {
+		GameManager.getInstance().getPlayer().setBoardIndex(0);
         getPiecesOnBlock().add(GameManager.getInstance().getPlayer());
-        getPiecesOnBlock().add(new Enemy("Enemy", 0, new Position(0, 0)));
+        Enemy enemy = new Enemy("Enemy", 0);
+        GameManager.getInstance().setEnemy(enemy);
+        getPiecesOnBlock().add(GameManager.getInstance().getEnemy());
     }
 }

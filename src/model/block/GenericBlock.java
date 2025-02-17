@@ -9,7 +9,9 @@ public abstract class GenericBlock {
 	private int number; 
     private String name; 
     private String desc;
-    private List<Entity> piecesOnBlock;
+    private String type;
+
+	private List<Entity> piecesOnBlock;
     private String blockColor;
 	
     public GenericBlock(String name, String desc) {
@@ -18,7 +20,7 @@ public abstract class GenericBlock {
 		this.piecesOnBlock = new ArrayList<Entity>();
 	}
     
-    abstract void onLand(Entity piece);
+    public abstract void onLand(Entity piece);
 
 	public List<Entity> getPiecesOnBlock() {
 		return piecesOnBlock;
@@ -66,7 +68,15 @@ public abstract class GenericBlock {
 		piece.setMoney(money);
 	}
 
-	protected void setPiecesOnBlock(List<Entity> piecesOnBlock) {
+	public void setPiecesOnBlock(List<Entity> piecesOnBlock) {
 		this.piecesOnBlock = piecesOnBlock;
+	}
+	
+    public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

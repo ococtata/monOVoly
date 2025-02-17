@@ -61,7 +61,7 @@ public class LoginViewController {
 			}
 		}
 		
-		Player newPlayer = new Player(name, 0, new Position(0, 0), id, level, coins, 
+		Player newPlayer = new Player(name, 0, id, level, coins, 
 				gems, barrUpgrade,currEnergy);
 		GameManager.getInstance().setPlayer(newPlayer);
 	}

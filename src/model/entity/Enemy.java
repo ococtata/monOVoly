@@ -6,8 +6,8 @@ import model.Position;
 
 public class Enemy extends Entity {
 
-	public Enemy(String name, int money, Position position) {
-		super(name, money, position);
+	public Enemy(String name, int money) {
+		super(name, money);
 		setPiece(ColorConfig.LIGHT_RED + BoardConfig.ENEMY_PIECE + ColorConfig.RESET);
 	}
 

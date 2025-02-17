@@ -1,6 +1,8 @@
 Format:
 - user data format: id#username#email#password#gems#money
 - player stat format: id#level#coins#gems#barracksupgrade#currentEnergy
+- block data format: type#name#desc
+	type -> start, tax, property
 
 Formula
 - maxEnergy = base * (level * 0.1)
@@ -18,7 +20,32 @@ Validation:
 
 ================================================================
 MAIN MENU
+- moving game (move to letters to open menu)
+- energy generate every 10 seconds (can buy upgrade to make it faster)
 
 
 ================================================================
 GAME
+- pick who goes first by picking 1 of 2 cards (1 goes first)
+- enemy will randomly choose (roll dice, use item, etc)
+- player will have 3 types of rolls (odd, any, even)
+- if the 2 rolled dices have the same number, roll again (do until not the same)
+- GUI:
+	-) show whose turn it is (the name)
+	-) the money (cash) and total asset
+- Whoever goes to 0 total asset -> LOSE
+
+================================================================
+BLOCKS
+- start -> if piece land on start block, gain 300k
+- tax -> if piece land on tax, loose 10% of total asset
+- property:
+	-) not owned:
+		-> price = base property price (150k) + (random 50k - 150k) => NOTE: random always on 10k interval
+	-) owned (self):
+		-> construct building = base building price (30k) + random (20k - 50k)
+		-> increase construct building price by 100k every upgrade
+	-) owned (enemy):
+		-> pay the toll (50% of total property value)
+		-> if the the property has a landmark, multiply the total toll by 1.25x
+		-> overtake by paying double the price (construction + building upgrade cost)

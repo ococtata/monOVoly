@@ -23,7 +23,6 @@ public class GameBoard {
         this.blockWidth = BoardConfig.BLOCK_WIDTH;
         this.blockHeight = BoardConfig.BLOCK_HEIGHT;
         initializeBoard();
-        initializePieces();
         initializeBorders();
     }
     
@@ -49,21 +48,6 @@ public class GameBoard {
     	return border;
     }
     
-    private String getInsideBorder(Boolean isEmpty, GenericBlock block) {
-        String border = "# ";
-        
-        if (isEmpty) {
-            border += BoardConfig.BOARD_BORDER.repeat(blockWidth - 3); 
-        } else {
-            int number = block.getNumber(); 
-            String format = String.format("%%-%ds", blockWidth - 3);
-            border += String.format(format, number);
-        }
-        
-        border += "#";
-        return border;
-    }
-    
     public void printBoard() {
         List<GenericBlock> orderedBlocks = getClockwiseBlocks();
         int blockIndex = 0;
@@ -83,8 +67,8 @@ public class GameBoard {
                 for (int colBlock = 0; colBlock < boardWidth; colBlock++) {
                     if (isBorderBlock(rowBlock, colBlock, boardWidth, boardHeight)) {
                         if (row == 1) { 
-                            String blockName = orderedBlocks.get(blockIndex).getName();
-                            System.out.printf(" # %-2s#", getPieceOnBlockString(orderedBlocks.get(blockIndex)));
+                            String pieceString = getPieceOnBlockString(orderedBlocks.get(blockIndex));
+                            System.out.printf(" # %-2s#", pieceString);
                             blockIndex++;
                         } else {
                             System.out.print(" #   #");
@@ -108,13 +92,21 @@ public class GameBoard {
     }
     
     private String getPieceOnBlockString(GenericBlock block) {
-    	String output = "";
-    	int len = block.getPiecesOnBlock().size();
-    	for(int i = 0; i < len; i++) {
-    		output += block.getPiecesOnBlock().get(i).getPiece();
-    	}
-    	
-    	return output;
+        String output = "";
+        int len = block.getPiecesOnBlock().size();
+        
+        if (len == 0) {
+            return "  ";  
+        }
+        
+        for (int i = 0; i < len; i++) {
+        	if(len == 1) {
+        		output += " ";
+        	}
+            output += block.getPiecesOnBlock().get(i).getPiece();
+        }
+
+        return output;
     }
     
     private boolean isBorderBlock(int row, int col, int width, int height) {
@@ -144,7 +136,14 @@ public class GameBoard {
         return orderedBlocks;
     }
 
-    private void initializePieces() {
-        
-    }
+	public List<GenericBlock> getBlockList() {
+		return blockList;
+	}
+
+	public void setBlockList(List<GenericBlock> blockList) {
+		this.blockList = blockList;
+	}
+	
+	
+
 }

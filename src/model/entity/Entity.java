@@ -7,15 +7,16 @@ public abstract class Entity {
 	private int money;
 	private int totalAssest;
 	private int rank;
-	private Position position;
+
 	private String piece;
 	private String color;
 	
-	public Entity(String name, int money, Position position) {
+	private int boardIndex;
+	
+	public Entity(String name, int money) {
 		super();
 		this.name = name;
 		this.money = money;
-		this.position = position;
 	}
 	
 	protected String getColor() {
@@ -37,12 +38,6 @@ public abstract class Entity {
 	}
 	public void setMoney(int money) {
 		this.money = money;
-	}
-	public Position getPosition() {
-		return position;
-	}
-	public void setPosition(Position position) {
-		this.position = position;
 	}
 	
 	public abstract void move();
@@ -69,5 +64,13 @@ public abstract class Entity {
 
 	public void setPiece(String piece) {
 		this.piece = piece;
+	}
+
+	public int getBoardIndex() {
+		return boardIndex;
+	}
+
+	public void setBoardIndex(int boardIndex) {
+		this.boardIndex = boardIndex;
 	}
 }
