@@ -41,7 +41,7 @@ BLOCKS
 - tax -> if piece land on tax, loose 10% of total asset
 - property:
 	-) not owned:
-		-> price = base property price (150k) + (random 50k - 150k) => NOTE: random always on 10k interval
+		-> price = base property price (125k) + (random 50k - 150k) => NOTE: random always on 10k interval
 	-) owned (self):
 		-> construct building = base building price (30k) + random (20k - 50k)
 		-> increase construct building price by 100k every upgrade

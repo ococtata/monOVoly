@@ -1,5 +1,6 @@
 package controller.game.monovoly;
 
+import config.BoardConfig;
 import manager.GameManager;
 import model.Dice;
 import model.GameBoard;
@@ -85,6 +86,7 @@ public class MonovolyMapController implements Scanner {
         	TextUtil.pressEnter();
         	moveWithAnimation(GameManager.getInstance().getEnemy(), rollResult);
         }
+        
     }
 
     private void gameMenu() {
@@ -119,6 +121,7 @@ public class MonovolyMapController implements Scanner {
         
         GenericBlock landedBlock = gameBoard.getBlockList().get(currentIndex);
         landedBlock.onLand(entity);
+        TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
         showBlockInfo(landedBlock);
     }
     

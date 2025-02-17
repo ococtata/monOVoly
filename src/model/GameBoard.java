@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import config.BoardConfig;
+import config.DataConfig;
+import model.block.CardBlock;
 import model.block.GenericBlock;
 import model.block.PropertyBlock;
 import model.block.StartBlock;
+import utility.FileUtil;
 
 public class GameBoard {
     private int boardHeight, boardWidth;
@@ -31,10 +34,26 @@ public class GameBoard {
     }
 
     private void initializeBoard() {
-    	blockList.add(new StartBlock("start", "desc"));
+    	List<String> propertyBlockData = FileUtil.readFile(DataConfig.FILE_DATA_BLOCK);
+    	blockList.add(new StartBlock("start", "start"));
         int amount = 2 * (boardHeight + boardWidth) - 4;
-        for(int i = 1; i < amount - 1; i++) {
-        	blockList.add(new PropertyBlock(""+i, "desc"));
+        int propertyCounter = 0;
+        
+        for (int i = 1; i < amount - 1; i++) {
+        	String[] propertyData = propertyBlockData.get(i).split("#");
+        	String type = propertyData[0];
+            String propertyName = propertyData[1];
+            String propertyDesc = propertyData[2];
+            String landmarkName = propertyData[3];
+            String landmarkDesc = propertyData[4];
+            
+            PropertyBlock property = new PropertyBlock(propertyName, propertyDesc, landmarkName, landmarkDesc);
+            blockList.add(property);
+            propertyCounter++;
+
+            if (propertyCounter % 3 == 0) {
+                blockList.add(new CardBlock("Card " + i, "Card description"));
+            }
         }
     }
     

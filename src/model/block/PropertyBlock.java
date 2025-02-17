@@ -12,13 +12,16 @@ public class PropertyBlock extends GenericBlock{
 	private int buildingLevel;
 	private int baseUpgradeCost = BoardConfig.BLOCK_PROPERTY_BASE_UPGRADE_COST;
 	private boolean hasLandmark;
+	private String landmarkName;
+	private String landmarkDesc;
 	private boolean isFestival;
 
-	public PropertyBlock(String name, String desc) {
+	public PropertyBlock(String name, String desc, String landmarkName, String landmarkDesc) {
 		super(name, desc);
 		setType("Property");
 		this.hasLandmark = false;
 		this.isFestival = false;
+		this.constructPrice = BoardConfig.BLOCK_PROPERTY_BASE_CONSTRUCTION_PRICE;
 	}
 
 	@Override
@@ -75,5 +78,33 @@ public class PropertyBlock extends GenericBlock{
 
 	public int getPrice() {
 		return price;
+	}
+
+	public String getLandmarkName() {
+		return landmarkName;
+	}
+
+	public void setLandmarkName(String landmarkName) {
+		this.landmarkName = landmarkName;
+	}
+
+	public String getLandmarkDesc() {
+		return landmarkDesc;
+	}
+
+	public void setLandmarkDesc(String landmarkDesc) {
+		this.landmarkDesc = landmarkDesc;
+	}
+
+	public boolean isFestival() {
+		return isFestival;
+	}
+
+	public void setFestival(boolean isFestival) {
+		this.isFestival = isFestival;
+	}
+
+	public void setHasLandmark(boolean hasLandmark) {
+		this.hasLandmark = hasLandmark;
 	}
 }

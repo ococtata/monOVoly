@@ -4,6 +4,7 @@ public class DataConfig {
 	// data
 	public static final String FILE_DATA_USER = "data/userdata.txt";
 	public static final String FILE_DATA_PLAYER_STAT = "data/playerstatdata.txt";
+	public static final String FILE_DATA_BLOCK = "data/blockdata.txt";
 	
 	// folder
 	public static final String FOLDER_MAP = "map";
