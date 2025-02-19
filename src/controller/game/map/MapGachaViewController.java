@@ -4,7 +4,9 @@ import config.MapConfig;
 import manager.GameManager;
 import manager.MapManager;
 import model.Position;
+import model.gacha.GachaCharacter;
 import view.BaseView;
+import view.game.feature.GachaView;
 import view.game.feature.NoticeView;
 import view.game.map.MapGachaView;
 
@@ -20,7 +22,11 @@ public class MapGachaViewController extends BaseMapViewController{
 		char[][] map = MapManager.getInstance().getCurrentMap();
 		
 		if(map[newY][newX] == MapConfig.GACHA) {
-			// gacha roll here
+			GachaView gachaView = new GachaView();
+			gachaView.setPreviousView(mapGachaView);
+			GameManager.getInstance().setCurrentView(gachaView);
+			gachaView.show();
+			
 			return false;
 		}
 		else if(newX == map[0].length - 1 && map[newY][newX] == ' ') {

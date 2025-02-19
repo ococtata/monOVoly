@@ -5,6 +5,7 @@ import config.ColorConfig;
 import manager.GameManager;
 import model.Position;
 import model.block.PropertyBlock;
+import model.entity.inventory.EnemyInventory;
 
 public class Enemy extends Entity {
 
@@ -13,6 +14,7 @@ public class Enemy extends Entity {
 		setColor(ColorConfig.LIGHT_RED);
 		setPiece(getColor() + BoardConfig.ENEMY_PIECE + ColorConfig.RESET);
 		setName("Enemy");
+		setInventory(new EnemyInventory());
 	}
 
 	@Override

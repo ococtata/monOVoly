@@ -5,7 +5,10 @@ import java.util.List;
 
 import config.GameConfig;
 import manager.GameManager;
+import model.block.GenericBlock;
 import model.block.PropertyBlock;
+import model.entity.inventory.BaseInventory;
+import model.gacha.character.BaseCharacter;
 import utility.TextUtil;
 
 public abstract class Entity {
@@ -21,6 +24,10 @@ public abstract class Entity {
 	private List<PropertyBlock> ownedProperties;
 	
 	private boolean isInJail;
+	private boolean isBankrupt;
+	
+	private BaseCharacter equippedCharacter;
+	private BaseInventory inventory;
 	
 	public Entity(String name, int money) {
 		super();
@@ -28,8 +35,13 @@ public abstract class Entity {
 		this.money = money;
 		this.ownedProperties = new ArrayList<PropertyBlock>();
 		this.isInJail = false;
+		this.isBankrupt = false;
 	}
 	
+	public void setInventory(BaseInventory inventory) {
+		this.inventory = inventory;
+	}
+
 	public void addProperty(PropertyBlock property) {
 		ownedProperties.add(property);
 	}
@@ -117,6 +129,14 @@ public abstract class Entity {
         TextUtil.pressEnter();
     }
 	
+	public void move(GenericBlock origin, GenericBlock destination) {
+        if (origin != null && destination != null) {
+            origin.removePiece(this); 
+            destination.addPiece(this);
+            this.setBoardIndex(destination.getIndex());
+        }
+    }
+	
 	public abstract Entity getEnemy();
 	
 	public abstract PropertyBlock chooseProperty();
@@ -188,5 +208,25 @@ public abstract class Entity {
 
 	public void setInJail(boolean isInJail) {
 		this.isInJail = isInJail;
+	}
+
+	public boolean isBankrupt() {
+		return isBankrupt;
+	}
+	
+	public void declareBankrupt() {
+		this.isBankrupt = true;
+	}
+
+	public BaseCharacter getEquippedCharacter() {
+		return equippedCharacter;
+	}
+
+	public BaseInventory getInventory() {
+		return inventory;
+	}
+
+	public void setEquippedCharacter(BaseCharacter equippedCharacter) {
+		this.equippedCharacter = equippedCharacter;
 	}
 }

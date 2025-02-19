@@ -8,6 +8,7 @@ import config.PlayerStatConfig;
 import manager.GameManager;
 import model.Position;
 import model.block.PropertyBlock;
+import model.entity.inventory.PlayerInventory;
 import utility.Scanner;
 import utility.TextUtil;
 
@@ -39,6 +40,7 @@ public class Player extends Entity implements Scanner {
 		
 		setColor(ColorConfig.LIGHT_GREEN);
 		setPiece(getColor() + BoardConfig.PLAYER_PIECE + ColorConfig.RESET);
+		setInventory(new PlayerInventory());
 	}
 	
 	private int calculateMaxEnergy() {
@@ -76,6 +78,10 @@ public class Player extends Entity implements Scanner {
 		else {
 			currentEnergy = finalEnergy;
 		}
+	}
+	
+	public void reduceGems(int amount) {
+		this.gems -= amount;
 	}
 
 	public void setCurrentEnergy(int currentEnergy) {

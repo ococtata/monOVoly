@@ -53,8 +53,7 @@ public class SendToPropertyCard extends GenericCard implements Scanner{
         System.out.println(" " + piece.getName() + " used " + this.getName() + " on " + target.getName() + "!");
         TextUtil.pressEnter();
 
-        target.setBoardIndex(chosenProperty.getIndex());
-        chosenProperty.addPiece(target);
+        target.move(currentBlock, chosenProperty);
         
         TextUtil.clearScreen();
         GameManager.getInstance().getGameBoard().printBoard();

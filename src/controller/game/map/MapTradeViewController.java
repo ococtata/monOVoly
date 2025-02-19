@@ -5,12 +5,12 @@ import manager.GameManager;
 import manager.MapManager;
 import model.Position;
 import view.BaseView;
-import view.game.map.MapBarracksView;
+import view.game.map.MapTradeView;
 
-public class MapBarracksViewController extends BaseMapViewController{
-	private MapBarracksView mapBarracksView;
+public class MapTradeViewController extends BaseMapViewController{
+	private MapTradeView mapBarracksView;
 	
-	public MapBarracksViewController(MapBarracksView mapBarracksView) {
+	public MapTradeViewController(MapTradeView mapBarracksView) {
 		this.mapBarracksView = mapBarracksView;
 	}
 

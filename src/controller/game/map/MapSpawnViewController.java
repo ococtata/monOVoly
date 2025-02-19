@@ -7,7 +7,7 @@ import manager.thread.PlayerMovementManager;
 import model.Position;
 import utility.Scanner;
 import view.game.feature.NoticeView;
-import view.game.map.MapBarracksView;
+import view.game.map.MapTradeView;
 import view.game.map.MapGachaView;
 import view.game.map.MapShopView;
 import view.game.map.MapSpawnView;
@@ -49,7 +49,7 @@ public class MapSpawnViewController extends BaseMapViewController {
 			return false;
 		}
 		else if(newX == map[0].length - 1 && map[newY][newX] == ' ') {
-			MapBarracksView mapBarracksView = new MapBarracksView();
+			MapTradeView mapBarracksView = new MapTradeView();
 			mapBarracksView.setPreviousView(mapSpawnView);
 			GameManager.getInstance().setCurrentView(mapBarracksView);
             

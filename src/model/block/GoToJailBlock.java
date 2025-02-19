@@ -25,9 +25,7 @@ public class GoToJailBlock extends GenericBlock {
         }
 
         System.out.println(" " + piece.getName() + " was sent to jail!");
-        piece.setBoardIndex(jailBlock.getIndex() + 1);
+        piece.move(gameBoard.getBlockList().get(piece.getBoardIndex()), gameBoard.getBlockList().get(jailBlock.getIndex() + 1));
         piece.setInJail(true);
-        this.removePiece(piece);
-        jailBlock.addPiece(piece);
     }
 }

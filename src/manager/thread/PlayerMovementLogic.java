@@ -13,7 +13,7 @@ import utility.Scanner;
 import view.BaseView;
 import view.TitleScreenView;
 import view.game.feature.NoticeView;
-import view.game.map.MapBarracksView;
+import view.game.map.MapTradeView;
 import view.game.map.MapGachaView;
 import view.game.map.MapShopView;
 import view.game.map.MapSpawnView;
@@ -132,8 +132,8 @@ public class PlayerMovementLogic implements Runnable, Scanner {
         else if(currentView instanceof MapGachaView) {
         	valid = ((MapGachaView) currentView).getMapGachaViewController().checkCollision(x, y);
         }
-        else if(currentView instanceof MapBarracksView) {
-        	valid = ((MapBarracksView) currentView).getMapBarracksViewController().checkCollision(x, y);
+        else if(currentView instanceof MapTradeView) {
+        	valid = ((MapTradeView) currentView).getMapBarracksViewController().checkCollision(x, y);
         }
         else if(currentView instanceof MapShopView) {
         	valid = ((MapShopView) currentView).getMapShopViewController().checkCollision(x, y);
