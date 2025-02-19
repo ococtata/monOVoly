@@ -2,7 +2,9 @@ package model.block;
 
 import java.util.InputMismatchException;
 
+import config.BoardConfig;
 import config.GameConfig;
+import controller.game.monovoly.MonovolyMapController;
 import model.entity.Enemy;
 import model.entity.Entity;
 import utility.Random;
@@ -18,9 +20,10 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
     private String landmarkName;
     private String landmarkDesc;
     private boolean isFestival;
+    private int festivalDuration;
 
-    public PropertyBlock(String name, String desc, String landmarkName, String landmarkDesc) {
-        super(name, desc);
+    public PropertyBlock(String name, String desc, int index, String landmarkName, String landmarkDesc) {
+        super(name, desc, index);
         setType("Property");
         this.hasLandmark = false;
         this.isFestival = false;
@@ -67,7 +70,7 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
     private void handlePlayerBuy(Entity piece) {
         int choice;
         do {
-            System.out.println(" " + this.getName() + " is unowned. Do you want to buy it?");
+            System.out.println(" " + this.getName() + " is UNOWNED. Do you want to buy it?");
             System.out.println(" 1. Yes");
             System.out.println(" 2. No");
             System.out.print(" >> ");
@@ -136,29 +139,21 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
     	payToll(piece);
     	piece.updateTotalAssets();
     	this.owner.updateTotalAssets();
-        
+    	showStats();
     	handleNonMaxLevelProperty(piece);
     }
     
-    private void buildLandmark(Entity piece) {
+    public void buildLandmark(Entity piece) {
         int landmarkCost = GameConfig.PROPERTY_BASE_LANDMARK_PRICE;
         if (piece.getMoney() >= landmarkCost) {
-            deductMoney(piece, landmarkCost);
+        	piece.pay(null, landmarkCost);
             hasLandmark = true;
             this.price += landmarkCost;
             piece.updateTotalAssets();
-            System.out.println(" " + piece.getName() + " built a landmark on " + this.getName() + "!");
+            System.out.println(" " + piece.getName() + " built a landmark on " + this.getName() + "for " + landmarkCost + "!");
+            showStats();
         } else {
             System.out.println(" " + piece.getName() + " doesn't have enough money to build a landmark.");
-        }
-    }
-
-    private void handleMaxLevelProperty(Entity piece) {
-        if (hasLandmark) {
-            System.out.println(" This property is a landmark and cannot be further upgraded.");
-        } 
-        else {
-            System.out.println(" Max building level reached!");
         }
     }
 
@@ -210,34 +205,34 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
 
     private void handlePlayerAction(Entity piece) {
         int choice = -1;
+        int optionNumber = 1;
         do {
             if (owner == null) {
                 handlePlayerBuy(piece);
                 return;
             }
-
+            TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
             System.out.println(" What do you want to do with " + this.getName() + "?");
 
             if (this.owner != piece) {
-                System.out.println(" 1. Overtake");
+                System.out.println(" " + optionNumber++ + ". Overtake"); 
             }
 
             if (owner == piece && buildingLevel < GameConfig.PROPERTY_MAX_BUILDING_LEVEL) {
-                System.out.println((this.owner != piece) ? " 2. Construct" : " 1. Construct");
-            }
+                System.out.println(" " + optionNumber++ + ". Construct");
+            } 
             else if (owner == piece && buildingLevel == GameConfig.PROPERTY_MAX_BUILDING_LEVEL && !this.hasLandmark) {
-            	System.out.println((this.owner != piece) ? " 2. Build Landmark" : " 1. Build Landmark");
-            }
-            else if (owner == piece && buildingLevel == GameConfig.PROPERTY_MAX_BUILDING_LEVEL && this.hasLandmark) {
-            	System.out.println((this.owner != piece) ? " 2. Nothing" : " 1. Nothing");
-            }
+                System.out.println(" " + optionNumber++ + ". Build Landmark");
+            } 
 
+            System.out.println(" " + optionNumber + ". Do Nothing"); 
             System.out.print(" >> ");
+
             try {
                 choice = scan.nextInt();
                 scan.nextLine();
 
-                int maxChoice = (this.owner != piece) ? 1 : 1; 
+                int maxChoice = optionNumber; 
 
                 if (choice < 1 || choice > maxChoice) {
                     System.out.println(" Invalid choice!");
@@ -249,31 +244,44 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
                 TextUtil.pressEnter();
                 choice = -1;
             }
-        } while (choice < 1 || choice > ((this.owner != piece) ? 1 : 1));
+        } while (choice < 1 || choice > optionNumber); 
 
-        if (choice == 1 && this.owner != piece) {
-            overtake(piece);
-        } else if (choice == 1 && owner == piece && 
-        		buildingLevel < GameConfig.PROPERTY_MAX_BUILDING_LEVEL) {
-            construct(piece);
+        int option = 1;
+
+        if (this.owner != piece) {
+            if (choice == option) {
+                overtake(piece);
+            }
+            option++;
         }
-        else if (choice == 1 && owner == piece && 
-        		buildingLevel == GameConfig.PROPERTY_MAX_BUILDING_LEVEL && !this.hasLandmark) {
-        	offerLandmarkUpgrade(piece);
+
+        if (owner == piece && buildingLevel < GameConfig.PROPERTY_MAX_BUILDING_LEVEL) {
+            if (choice == option) {
+                construct(piece);
+            }
+            option++;
         }
-        else if (choice == 1 && owner == piece && 
-        		buildingLevel == GameConfig.PROPERTY_MAX_BUILDING_LEVEL && this.hasLandmark) {
-        	handleMaxLevelProperty(piece);
+
+        if (owner == piece && buildingLevel == GameConfig.PROPERTY_MAX_BUILDING_LEVEL && !this.hasLandmark) {
+            if (choice == option) {
+                offerLandmarkUpgrade(piece);
+            }
+            option++;
+        }
+
+        if (choice == option) { 
+            System.out.println(" " + piece.getName() + " chose to do nothing.");
         }
     }
     
     private void buy(Entity piece) {
         if (piece.getMoney() >= this.price) {
-            deductMoney(piece, this.price);
+            piece.pay(null, this.price);
             setOwner(piece);
             piece.addProperty(this);
             piece.updateTotalAssets();
             System.out.println(" " + piece.getName() + " bought " + this.getName() + " for $" + this.price);
+            showStats();
         } 
         else {
             System.out.println(" " + piece.getName() + " doesn't have enough money to buy " + this.getName());
@@ -283,7 +291,7 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
     private void overtake(Entity piece) {
         int overtakePrice = price * GameConfig.PROPERTY_OVERTAKE_MULTIPLIER;
         if (piece.getMoney() >= overtakePrice) {
-            deductMoney(piece, overtakePrice);
+            piece.pay(piece.getEnemy(), overtakePrice);
             Entity previousOwner = owner;
             setOwner(piece);
             piece.addProperty(this);
@@ -292,27 +300,31 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
             	increaseMoney(previousOwner, overtakePrice);
             	previousOwner.removeProperty(this);
                 previousOwner.updateTotalAssets();
-                System.out.println(" " + piece.getName() + " overtook " + this.getName() + " from " + previousOwner.getName() + " for $" + overtakePrice);
+                System.out.println(" " + piece.getName() + " overtook " + this.getName() 
+                + " from " + previousOwner.getName() + " for $" + overtakePrice);
             } 
             else {
-                System.out.println(" " + piece.getName() + " overtook " + this.getName() + " for $" + overtakePrice);
+                System.out.println(" " + piece.getName() + " overtook " + this.getName() 
+                + " for $" + overtakePrice);
             }
-
+            showStats();
         } 
         else {
             System.out.println(" " + piece.getName() + " doesn't have enough money to overtake " + this.getName());
         }
     }
 
-    private void construct(Entity piece) {
+    public void construct(Entity piece) {
         if (buildingLevel < GameConfig.PROPERTY_MAX_BUILDING_LEVEL) {
             if (piece.getMoney() >= constructPrice) {
-                deductMoney(piece, constructPrice);
+                piece.pay(null, constructPrice);
                 buildingLevel++;
-                constructPrice += GameConfig.PROPERTY_BASE_CONSTRUCTION_COST;
-                price += GameConfig.PROPERTY_BASE_CONSTRUCTION_COST;
+                price += constructPrice;
                 piece.updateTotalAssets();
-                System.out.println(piece.getName() + " constructed a building on " + this.getName() + ". Level: " + buildingLevel);
+                System.out.println(" " + piece.getName() + " constructed a building on " + this.getName() + ". Level: " + 
+                		buildingLevel + " for $" + constructPrice + "!");
+                showStats();
+                constructPrice += GameConfig.PROPERTY_BASE_CONSTRUCTION_COST;
             } 
             else {
                 System.out.println(piece.getName() + " doesn't have enough money to construct on " + this.getName());
@@ -322,20 +334,20 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
     
     private void payToll(Entity piece) {
         if (owner != null && owner != piece) {
-            int amount = calculateRent(this);
+            int amount = calculateToll(this);
             if (piece.getMoney() >= amount) {
-                deductMoney(piece, amount);
+                piece.pay(piece.getEnemy(), amount);
                 owner.setMoney(owner.getMoney() + amount);
-                System.out.println(" " + piece.getName() + " paid $" + amount + " rent to " + owner.getName() + ".");
+                System.out.println(" " + piece.getName() + " paid $" + amount + " toll to " + owner.getName() + ".");
             } 
             else {
-                System.out.println(" " + piece.getName() + " doesn't have enough money to pay rent!");
+                System.out.println(" " + piece.getName() + " doesn't have enough money to pay the toll!");
                 
             }
         }
     }
 
-    public int calculateRent(PropertyBlock property) {
+    public int calculateToll(PropertyBlock property) {
         int baseRent = (property.getPrice() * GameConfig.PROPERTY_BASE_TOLL_PERCENTAGE) / 100;
         double multiplier = 1.0; 
 
@@ -349,13 +361,42 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
 
         return (int) (baseRent * multiplier);
     }
-
-
+    
+    public void startFestival() {
+        isFestival = true;
+        festivalDuration = GameConfig.CARD_FESTIVAL_DURATION;
+    }
+    
+    public void decrementFestivalDuration() {
+        if (isFestival) {
+            festivalDuration--;
+            if (festivalDuration <= 0) {
+                isFestival = false; 
+                festivalDuration = 0;
+                System.out.println(" Festival at " + this.getName() + " has ended.");
+                TextUtil.pressEnter();
+            }
+        }
+    }
+    
+    public void downgrade() {
+    	this.buildingLevel -= 1;
+    	this.price -= constructPrice;
+    	this.constructPrice -= GameConfig.PROPERTY_BASE_CONSTRUCTION_PRICE_INCREASE;
+    }
+    
+    private void showStats() {
+    	System.out.println();
+        TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+    	MonovolyMapController.showStats();
+        TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+    }
+    
     public Entity getOwner() {
         return owner;
     }
 
-    private void setOwner(Entity owner) {
+    public void setOwner(Entity owner) {
         this.owner = owner;
     }
 

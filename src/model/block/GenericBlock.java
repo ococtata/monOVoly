@@ -6,7 +6,7 @@ import java.util.List;
 import model.entity.Entity;
 
 public abstract class GenericBlock {
-	private int number; 
+	private int index; 
     private String name; 
     private String desc;
     private String type;
@@ -14,13 +14,22 @@ public abstract class GenericBlock {
 	private List<Entity> piecesOnBlock;
     private String blockColor;
 	
-    public GenericBlock(String name, String desc) {
+    public GenericBlock(String name, String desc, int index) {
 		this.name = name;
 		this.desc = desc;
 		this.piecesOnBlock = new ArrayList<Entity>();
+		this.index = index;
 	}
     
     public abstract void onLand(Entity piece);
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
 
 	public List<Entity> getPiecesOnBlock() {
 		return piecesOnBlock;
@@ -49,19 +58,6 @@ public abstract class GenericBlock {
 	public void setBlockColor(String blockColor) {
 		this.blockColor = blockColor;
 	}
-
-	public int getNumber() {
-		return number;
-	}
-	
-	public void deductMoney(Entity piece, int amount) {
-		int money = piece.getMoney() - amount;
-		if(money < 0) {
-			money = 0;
-		}
-		
-		piece.setMoney(money);
-	}
 	
 	public void increaseMoney(Entity piece, int amount) {
 		int money = piece.getMoney() + amount;
@@ -79,4 +75,14 @@ public abstract class GenericBlock {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+	
+	
 }

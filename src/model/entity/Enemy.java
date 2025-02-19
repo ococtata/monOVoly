@@ -2,7 +2,9 @@ package model.entity;
 
 import config.BoardConfig;
 import config.ColorConfig;
+import manager.GameManager;
 import model.Position;
+import model.block.PropertyBlock;
 
 public class Enemy extends Entity {
 
@@ -14,8 +16,22 @@ public class Enemy extends Entity {
 	}
 
 	@Override
-	public void move() {
-		// TODO Auto-generated method stub
+	public PropertyBlock chooseProperty() {
+		PropertyBlock chosen = null;
+		int highestPrice = -1;
 		
+        for (PropertyBlock property : getOwnedProperties()) {
+            if (property.getPrice() > highestPrice) {
+                highestPrice = property.getPrice();
+                chosen = property;
+            }
+        }
+        return chosen;
+	}
+
+	@Override
+	public Entity getEnemy() {
+		Player player = GameManager.getInstance().getPlayer();
+		return player;
 	}
 }

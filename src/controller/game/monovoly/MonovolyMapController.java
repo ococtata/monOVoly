@@ -6,14 +6,15 @@ import java.util.List;
 import config.BoardConfig;
 import config.GameConfig;
 import manager.GameManager;
-import model.Dice;
-import model.GameBoard;
+import model.block.CardBlock;
 import model.block.GenericBlock;
 import model.block.PropertyBlock;
 import model.card.CardFirstTurn;
 import model.entity.Enemy;
 import model.entity.Entity;
 import model.entity.Player;
+import model.game.Dice;
+import model.game.GameBoard;
 import utility.Random;
 import utility.Scanner;
 import utility.TextUtil;
@@ -43,7 +44,8 @@ public class MonovolyMapController implements Scanner, Random {
 			firstTurn();
 		}
 		else {
-			beginTurn();							
+			beginTurn();			
+			endTurn();
 			switchTurn();
 		}
     }
@@ -61,14 +63,86 @@ public class MonovolyMapController implements Scanner, Random {
     private void beginTurn() {
         Dice dice = new Dice();
         boolean rollAgain;
-        
+
         do {
-        	updateRank();
-        	TextUtil.clearScreen();
-        	GameManager.getInstance().getGameBoard().printBoard();
-        	TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-            rollAgain = GameManager.getInstance().isPlayerTurn() ? playerTurn(dice) : enemyTurn(dice);
+            updateRank();
+            TextUtil.clearScreen();
+            GameManager.getInstance().getGameBoard().printBoard();
+            TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+
+            Entity currentEntity = GameManager.getInstance().isPlayerTurn() ? GameManager.getInstance().getPlayer() : GameManager.getInstance().getEnemy();
+
+            if (currentEntity.isInJail()) {
+                rollAgain = handleJailTurn(currentEntity, dice);
+            } else {
+                rollAgain = GameManager.getInstance().isPlayerTurn() ? playerTurn(dice) : enemyTurn(dice);
+            }
+
         } while (rollAgain);
+    }
+    
+    
+    private boolean handleJailTurn(Entity entity, Dice dice) {
+        int choice = -1;
+        int jailTax = (int) GameConfig.JAIL_TAX_MODIFIER * (entity.getTotalAssest() * (GameConfig.BLOCK_TAX_BASE_DEDUCT_PERCENTAGE / 100));
+
+        if (entity instanceof Player) {
+            do {
+                System.out.println(" " + entity.getName() + " is in jail. What do you want to do?");
+                System.out.println(" 1. Roll doubles to get out.");
+                System.out.println(" 2. Pay jail tax of $" + jailTax + " to get out.");
+                System.out.print(" >> ");
+
+                try {
+                    choice = scan.nextInt();
+                    scan.nextLine();
+
+                    if (choice < 1 || choice > 2) {
+                        System.out.println(" Invalid choice!");
+                        TextUtil.pressEnter();
+                    }
+                } catch (InputMismatchException e) {
+                    scan.nextLine();
+                    System.out.println(" Invalid input!");
+                    TextUtil.pressEnter();
+                    choice = -1;
+                }
+            } while (choice < 1 || choice > 2);
+        } 
+        else { 
+            choice = rand.nextInt(2) + 1; 
+            System.out.println(" " + entity.getName() + " chose to " + (choice == 1 ? "roll dice!" : "pay tax!"));
+            TextUtil.pressEnter();
+        }
+
+        if (choice == 1) { 
+            int[] rollResult = {-1, -1};
+            System.out.println(entity.getName() + " is trying to get out of jail!");
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            rollResult = dice.roll("ANY");
+            System.out.println(" " + entity.getName() + " rolled " + rollResult[0] + " and " + rollResult[1] + ".");
+
+            if (rollResult[0] == rollResult[1]) {
+                entity.setInJail(false);
+                System.out.println(" " + entity.getName() + " successfully got out of jail!");
+                return true;
+            } else {
+                System.out.println(" " + entity.getName() + " failed to get out of jail.");
+                return false; 
+            }
+        } 
+        else { 
+        	entity.pay(null, jailTax);
+        	entity.setInJail(false);
+        	System.out.println(" " + entity.getName() + " paid the jail tax and is free!");
+        	return true; 
+        }
     }
 
     private boolean playerTurn(Dice dice) {
@@ -133,6 +207,13 @@ public class MonovolyMapController implements Scanner, Random {
     }
 
     private boolean enemyTurn(Dice dice) {
+    	System.out.println(" Enemy's turn");
+    	try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         int[] rollResult = handleEnemyRoll(dice);
         return processRoll(rollResult, GameManager.getInstance().getEnemy());
     }
@@ -210,16 +291,17 @@ public class MonovolyMapController implements Scanner, Random {
             int endIndex = Math.min((currentPage + 1) * pageSize, ownedProperties.size());
 
             System.out.println(" Your Properties (Page " + (currentPage + 1) + " of " + (int) Math.ceil((double) ownedProperties.size() / pageSize) + "):");
-            TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
 
             for (int i = startIndex; i < endIndex; i++) {
                 PropertyBlock property = ownedProperties.get(i);
-                System.out.println(" " + property.getName());
                 TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-                System.out.println(" Value: $" + property.getPrice());
-                System.out.println(" Toll: $" + property.calculateRent(property));
-                System.out.println(" Building Level: " + property.getBuildingLevel());
-                System.out.println(" Has Landmark: " + (property.hasLandmark() ? "Yes" : "No"));
+                System.out.println(" " + (i + 1) + ". "+ property.getName());
+                TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+                System.out.println("   Value: $" + property.getPrice());
+                System.out.println("   Toll: $" + property.calculateToll(property));
+                System.out.println("   Building Level: " + property.getBuildingLevel());
+                System.out.println("   Has Landmark: " + (property.hasLandmark() ? "Yes" : "No"));
+                System.out.println("   Has Festival: " + (property.isFestival() ? "Yes" : "No"));
                 System.out.println();
             }
             TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
@@ -245,8 +327,9 @@ public class MonovolyMapController implements Scanner, Random {
                 choice = scan.nextInt();
                 scan.nextLine(); 
             } catch (InputMismatchException e) {
+            	scan.nextLine();
                 System.out.println(" Invalid input. Please enter a number.");
-                scan.nextLine();
+                TextUtil.pressEnter();
                 continue; 
             }
 
@@ -257,6 +340,7 @@ public class MonovolyMapController implements Scanner, Random {
                     } 
                     else {
                         System.out.println(" You are already on the first page.");
+                        TextUtil.pressEnter();
                     }
                     break;
                 case 2:
@@ -265,12 +349,14 @@ public class MonovolyMapController implements Scanner, Random {
                     } 
                     else {
                         System.out.println(" You are already on the last page.");
+                        TextUtil.pressEnter();
                     }
                     break;
                 case 3:
                     return; 
                 default:
                     System.out.println(" Invalid choice.");
+                    TextUtil.pressEnter();
             }
         }
     }
@@ -290,9 +376,10 @@ public class MonovolyMapController implements Scanner, Random {
             gameBoard.printBoard(); 
             TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
             showStats();
+            TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
             
             try {
-                Thread.sleep(500);
+                Thread.sleep(350);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -302,39 +389,42 @@ public class MonovolyMapController implements Scanner, Random {
         
         GenericBlock landedBlock = gameBoard.getBlockList().get(currentIndex);
         System.out.println();
-        showBlockInfo(landedBlock);
+        showBlockInfo(entity, landedBlock);
         landedBlock.onLand(entity);
     }
     
-    private void showBlockInfo(GenericBlock block) {
-    	TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-        System.out.println(" Block Type: " + block.getType());
-        System.out.println(" Block Name: " + block.getName());
-        System.out.println(" Block Desc: " + block.getDesc());
-        System.out.println();
-
-        if (block instanceof PropertyBlock) {
-            PropertyBlock propertyBlock = (PropertyBlock) block;
-            Entity owner = propertyBlock.getOwner();
-
-            if (owner == null) { 
-            	System.out.println(" Owner: None"); 
-                System.out.println(" Price: $" + propertyBlock.getPrice()); 
-            } 
-            else { 
-                System.out.println(" Owner: " + owner.getName());
-                System.out.println(" Price: $" + propertyBlock.getPrice());
-                System.out.println(" Building Level: " + propertyBlock.getBuildingLevel());
-
-                if (propertyBlock.hasLandmark()) {
-                    System.out.print(" Landmark: ");
-                    showLandmarkInfo(propertyBlock);
-                } 
-                else {
-                    System.out.println(" Landmark: (NO)");
-                }
-            }
-        }
+    private void showBlockInfo(Entity piece, GenericBlock block) {
+    	System.out.println(" " + piece.getName() + " landed on a '" + block.getType() + "' block!");
+    	System.out.println();
+    	
+    	if(!(block instanceof CardBlock)) {
+    		System.out.println(" Name: " + block.getName());
+    		System.out.println(" Desc: " + block.getDesc());
+    		System.out.println();
+    		
+    		if (block instanceof PropertyBlock) {
+    			PropertyBlock propertyBlock = (PropertyBlock) block;
+    			Entity owner = propertyBlock.getOwner();
+    			
+    			if (owner == null) { 
+    				System.out.println(" Owner: None"); 
+    				System.out.println(" Price: $" + propertyBlock.getPrice()); 
+    			} 
+    			else { 
+    				System.out.println(" Owner: " + owner.getName());
+    				System.out.println(" Price: $" + propertyBlock.getPrice());
+    				System.out.println(" Building Level: " + propertyBlock.getBuildingLevel());
+    				
+    				if (propertyBlock.hasLandmark()) {
+    					System.out.print(" Landmark: ");
+    					showLandmarkInfo(propertyBlock);
+    				} 
+    				else {
+    					System.out.println(" Landmark: (NO)");
+    				}
+    			}
+    		}
+    	}
         TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
     }
     
@@ -343,7 +433,7 @@ public class MonovolyMapController implements Scanner, Random {
     	System.out.println("   " + property.getLandmarkDesc());
     }
     
-    private void showStats() {
+    public static void showStats() {
     	Player player = GameManager.getInstance().getPlayer();
     	Enemy enemy = GameManager.getInstance().getEnemy();
     	if(GameManager.getInstance().isPlayerTurn()) {
@@ -370,5 +460,14 @@ public class MonovolyMapController implements Scanner, Random {
     		player.setRank(2);
     		enemy.setRank(1);
     	}
+    }
+    
+    public void endTurn() {
+    	Entity piece = (GameManager.getInstance().isPlayerTurn() ? 
+    			GameManager.getInstance().getPlayer() : GameManager.getInstance().getEnemy());
+    	
+        for (PropertyBlock property : piece.getOwnedProperties()) {
+            property.decrementFestivalDuration();
+        }
     }
 }

@@ -3,17 +3,18 @@ package view.game.monovoly;
 import config.BoardConfig;
 import controller.game.monovoly.MonovolyMapController;
 import manager.GameManager;
-import model.Dice;
-import model.GameBoard;
+import model.game.Dice;
+import model.game.GameBoard;
 import utility.TextUtil;
 import view.BaseView;
 
 public class MonovolyMap extends BaseView{
 	private MonovolyMapController monovolyMapController;
-	
+	private boolean firstTurn;
 	public MonovolyMap() {
 		this.monovolyMapController = new MonovolyMapController(this);
 		GameManager.getInstance().setGameBoard(new GameBoard());
+		this.firstTurn = true;
 	}
 	
 	@Override

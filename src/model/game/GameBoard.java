@@ -1,4 +1,4 @@
-package model;
+package model.game;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class GameBoard {
 
     private void initializeBoard() {
         List<String> propertyBlockData = FileUtil.readFile(DataConfig.FILE_DATA_BLOCK);
-        blockList.add(new StartBlock("start", "start"));
+        blockList.add(new StartBlock("start", "start", 0));
 
         int amount = 2 * (boardHeight + boardWidth) - 4;
         int propertyCounter = 0;
@@ -57,33 +57,31 @@ public class GameBoard {
             String landmarkName = propertyData[3];
             String landmarkDesc = propertyData[4];
 
-            PropertyBlock property = new PropertyBlock(propertyName, propertyDesc, landmarkName, landmarkDesc);
+            PropertyBlock property = new PropertyBlock(propertyName, propertyDesc, i, landmarkName, landmarkDesc);
             blockList.add(property);
             propertyCounter++;
 
-            if (i == boardWidth - 2) { 
-            	blockList.add(new GoToJailBlock("Go to Jail", "You are going to jail!"));
-            	i++;
-            }
+            if (i == boardWidth - 2) {
+                blockList.add(new GoToJailBlock("Go to Jail", "You have been caught! Move directly to jail.", i));
+                i++;
+            } 
             else if (i == boardWidth + boardHeight - 3) {
-            	blockList.add(new WorldTravelBlock("World Travel", "Travel the world!"));
-            	i++;
-            }
+                blockList.add(new WorldTravelBlock("World Travel", "Take a trip and teleport to any block!", i));
+                i++;
+            } 
             else if (i == 2 * (boardWidth - 1) + (boardHeight - 2)) {
-            	blockList.add(new JailBlock("Jail", "Where prisoners are held"));
-            	i++;
-            }
+                blockList.add(new JailBlock("Jail", "A prison for those who've been naughty.", i));
+                i++;
+            } 
             else if (propertyCounter % 3 == 0 && cardCounter < amount / 3) {
-                blockList.add(new CardBlock("Card " + (cardCounter + 1), "Card description"));
+                blockList.add(new CardBlock("Mystery Card", "Draw a card for a surprise event!", i));
                 cardCounter++;
                 i++;
-            }
-            else if (i == amount - 3) {  
-                blockList.add(new TaxBlock("Tax Block", "Pay 10% tax"));
+            } 
+            else if (i == amount - 3) {
+                blockList.add(new TaxBlock("Tax Collection", "Pay 10% of your total wealth as tax. Glory to MonOVoly!", i));
                 i++;
             }
-
-
         }
     }
     
@@ -160,10 +158,17 @@ public class GameBoard {
         if (block instanceof PropertyBlock) {
             PropertyBlock propertyBlock = (PropertyBlock) block;
             Entity owner = propertyBlock.getOwner();
-
+            
+            
             if (owner != null) {
                 String ownerColor = owner.getColor();
-                label = ownerColor + label + ColorConfig.RESET + " ";
+                if(propertyBlock.isFestival()) {
+                	label += "F";
+                	label = ownerColor + label + ColorConfig.RESET;
+                }
+                else {
+                	label = ownerColor + label + ColorConfig.RESET + " ";                   	
+                }
             }
         }
 

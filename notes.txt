@@ -34,6 +34,24 @@ GAME
 	-) show whose turn it is (the name)
 	-) the money (cash) and total asset
 - Whoever goes to 0 total asset -> LOSE
+- Money reduction logic:
+	-) If they have enough money, just deduct it.
+	-) If not enough money, force them to sell properties until they can pay.
+	-) Sell to the enemy at 30% discount if the enemy can afford it.
+	   Otherwise, sell to the bank at 50% discount.
+	-) Repeat until they have enough money or run out of properties.
+	-) If they still can't pay after selling everything, they lose the game.
+- WIN -> receive 1
+
+================================================================
+ENEMY AI (priorities)
+- property:
+	-) property is unowned & has enough money -> buy 
+	-) property is owned (by player) & has enough money -> overtake
+	-) property is owned (by self) & has enough money :
+		> building not max level (3) -> upgrade building level
+		> building max level & has enough money -> construct landmark
+	-) else: skip turn
 
 ================================================================
 BLOCKS
@@ -44,8 +62,39 @@ BLOCKS
 		-> price = base property price (125k) + (random 50k - 150k) => NOTE: random always on 10k interval
 	-) owned (self):
 		-> construct building = base building price (30k) + random (20k - 50k)
+		-> increase the building value by the construct building price
 		-> increase construct building price by 100k every upgrade
 	-) owned (enemy):
 		-> pay the toll (30% of total property value)
 		-> if the the property has a landmark, multiply the total toll by 1.25x
-		-> overtake by paying double the price (construction + building upgrade cost)
+		-> overtake by paying double the value of the property 
+- go to jail -> send piece to jail
+- jail:
+	-) Visiting -> nothing happens
+	-) In jail -> Roll double to get out or pay (1.5x taxes)
+- card block -> trigger a random card
+
+================================================================
+CARDS
+- Send to jail -> allows entity to send their enemy to Go To Jail block and triggering it
+- Send to property -> allows entity to send their enemy to their owned property and triggering the pay toll:
+	-) player: show pagination of properties and enter the property name to send to
+	-) enemy: choose the most valued property
+	NOTE: ignore case
+- Festival  Time -> randomly choose 1 of owned property and enable festival (rent becomes 1.5x)
+- Tornado Disaster -> randomly choose 1 of owned property and decrease the building level. If the building level is the lowest level (0, doesn't have any upgrade), remove the ownership of the property
+- Free Upgrade -> choose 1 of owned property (player pick, enemy choose the highest value, that has no landmark) and increase the building level. If it is the highest level building, build the landmark, if the it already has a landmark, prompt user to choose another, enemy choose the second highest value and so on
+
+================================================================
+GACHA
+
+CHARACTER:
+- cost 150 gems to gacha
+- result in material (5 amount, rarity random)
+- rarity: common: grey, rare: blue, epic: purple, legendary: gold
+- need a certain amount of materials to unlock characters (trade)
+- make the legendary rarity 1% chance of appearing
+- can trade common and rare rarity for gems (25 common = 10 gems, 10 rare = 15 gems)
+
+PENDANT:
+

@@ -4,8 +4,8 @@ import model.entity.Entity;
 
 public class WorldTravelBlock extends GenericBlock {
 
-	public WorldTravelBlock(String name, String desc) {
-		super(name, desc);
+	public WorldTravelBlock(String name, String desc, int index) {
+		super(name, desc, index);
 		setType("World Travel");
 	}
 

@@ -1,4 +1,4 @@
-package model;
+package model.game;
 
 import config.ColorConfig;
 import utility.Random;
@@ -21,12 +21,12 @@ public class Dice implements Random {
     public int[] roll(String mode) {
         int roll1, roll2;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 7; i++) {
             TextUtil.clearScreen();
             roll1 = rand.nextInt(6);
             roll2 = rand.nextInt(6);
             printDice(roll1, roll2);
-            sleep(350);
+            sleep(300);
         }
 
         do {

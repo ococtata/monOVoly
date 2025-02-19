@@ -4,8 +4,8 @@ import model.entity.Entity;
 
 public class JailBlock extends GenericBlock {
 
-	public JailBlock(String name, String desc) {
-		super(name, desc);
+	public JailBlock(String name, String desc, int index) {
+		super(name, desc, index);
 		setType("Jail");
 	}
 

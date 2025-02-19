@@ -14,7 +14,7 @@ public class GameConfig {
     public static final int PROPERTY_OVERTAKE_MULTIPLIER = 2;    
     public static final int PROPERTY_MAX_BUILDING_LEVEL = 3;
     
-    public static final int PROPERTY_BASE_LANDMARK_PRICE = 10000000;    
+    public static final int PROPERTY_BASE_LANDMARK_PRICE = 1000000;    
 
     public static final int PROPERTY_RANDOM_PRICE_MIN = 50000;
     public static final int PROPERTY_RANDOM_PRICE_MAX = 150000;
@@ -25,4 +25,11 @@ public class GameConfig {
     public static final int PROPERTY_RANDOM_CONSTRUCTION_MIN = 20000;
     public static final int PROPERTY_RANDOM_CONSTRUCTION_MAX = 50000;
     public static final int PROPERTY_RANDOM_CONSTRUCTION_INTERVAL = 10000;
+    
+    public static final int CARD_FESTIVAL_DURATION = 3;
+    
+    public static final int SELL_PROPERTY_ENEMY_DISCOUNT_PERCENTAGE = 30;
+    public static final int SELL_PROPERTY_BANK_DISCOUNT_PERCENTAGE = 50;
+    
+    public static final double JAIL_TAX_MODIFIER = 1.5;
 }

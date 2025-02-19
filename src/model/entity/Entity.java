@@ -3,6 +3,8 @@ package model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import config.GameConfig;
+import manager.GameManager;
 import model.block.PropertyBlock;
 import utility.TextUtil;
 
@@ -18,11 +20,14 @@ public abstract class Entity {
 	private int boardIndex;
 	private List<PropertyBlock> ownedProperties;
 	
+	private boolean isInJail;
+	
 	public Entity(String name, int money) {
 		super();
 		this.name = name;
 		this.money = money;
 		this.ownedProperties = new ArrayList<PropertyBlock>();
+		this.isInJail = false;
 	}
 	
 	public void addProperty(PropertyBlock property) {
@@ -43,6 +48,79 @@ public abstract class Entity {
 	    this.totalAssest = this.money + totalPropertyValue;
 	}
 	
+	public void pay(Entity receiver, int amount) {
+		if (this.money >= amount) {
+            this.money -= amount;
+            if(receiver != null) {
+            	receiver.setMoney(receiver.getMoney() + amount);            	
+            }
+            updateTotalAssets();
+        } 
+		else {
+            int moneyNeeded = amount - this.money;
+            System.out.println(" " + this.name + " doesn't have enough money. Need $" + moneyNeeded + " more.");
+
+            while (this.money < amount && !ownedProperties.isEmpty()) {
+                PropertyBlock propertyToSell = chooseProperty();
+                if (propertyToSell != null) {
+                    sellProperty(propertyToSell, receiver);
+                } else {
+                    break;
+                }
+            }
+
+            if (this.money >= amount) {
+                this.money -= amount;
+                if(receiver != null) {
+                	receiver.setMoney(receiver.getMoney() + amount);            	
+                }
+                updateTotalAssets();
+            } 
+            else {
+                System.out.println(" " + this.name + " couldn't pay even after selling all properties. They lose!");
+            }
+        }
+	}
+	
+	private void sellProperty(PropertyBlock property, Entity buyer) {
+        int sellPrice;
+        
+        if (buyer instanceof Enemy || buyer instanceof Player) {
+            sellPrice = (int) (property.getPrice() *  (1 - (GameConfig.SELL_PROPERTY_ENEMY_DISCOUNT_PERCENTAGE / 100)));
+        } 
+        else {
+            sellPrice = (int) (property.getPrice() * (1 - (GameConfig.SELL_PROPERTY_BANK_DISCOUNT_PERCENTAGE / 100))); 
+        }
+
+        this.money += sellPrice;
+        removeProperty(property);
+        
+        if (buyer instanceof Enemy || buyer instanceof Player) {
+            property.setOwner(buyer);
+        }
+        
+        updateTotalAssets();
+
+        if (buyer instanceof Enemy || buyer instanceof Player) {
+          buyer.addProperty(property);
+          buyer.setMoney(buyer.getMoney() - sellPrice);
+          buyer.updateTotalAssets();
+        }
+
+        System.out.print(" " + this.name + " sold " + property.getName() + " for $" + sellPrice + " ");
+        if(buyer instanceof Enemy || buyer instanceof Player) {
+        	System.out.println("to " + buyer.getName() + " at a discount of " + GameConfig.SELL_PROPERTY_ENEMY_DISCOUNT_PERCENTAGE + "%!");
+        }
+        else {
+        	System.out.println("to the Bank at a discount of " + GameConfig.SELL_PROPERTY_BANK_DISCOUNT_PERCENTAGE + "%!");        	
+        }
+        TextUtil.pressEnter();
+    }
+	
+	public abstract Entity getEnemy();
+	
+	public abstract PropertyBlock chooseProperty();
+
 	public String getColor() {
 		return color;
 	}
@@ -64,8 +142,6 @@ public abstract class Entity {
 		this.money = money;
 	}
 	
-	public abstract void move();
-
 	public int getTotalAssest() {
 		return totalAssest;
 	}
@@ -104,5 +180,13 @@ public abstract class Entity {
 
 	public void setOwnedProperties(List<PropertyBlock> ownedProperties) {
 		this.ownedProperties = ownedProperties;
+	}
+
+	public boolean isInJail() {
+		return isInJail;
+	}
+
+	public void setInJail(boolean isInJail) {
+		this.isInJail = isInJail;
 	}
 }

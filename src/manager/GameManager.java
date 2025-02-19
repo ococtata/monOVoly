@@ -2,9 +2,9 @@ package manager;
 
 import manager.thread.EnergyManager;
 import manager.thread.PlayerMovementManager;
-import model.GameBoard;
 import model.entity.Enemy;
 import model.entity.Player;
+import model.game.GameBoard;
 import view.BaseView;
 import view.TitleScreenView;
 

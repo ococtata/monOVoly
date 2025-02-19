@@ -4,6 +4,7 @@ import config.ColorConfig;
 import manager.GameManager;
 import utility.Random;
 import utility.Scanner;
+import utility.TextUtil;
 
 public class CardFirstTurn implements Random, Scanner{
     private int card1, card2;
@@ -24,7 +25,9 @@ public class CardFirstTurn implements Random, Scanner{
 
     public void selectFirst() {
     	if(scan.hasNextLine()) {
-    		scan.nextLine();    		
+    		System.out.println(" Press ENTER to start...");
+    		scan.nextLine(); 
+    		TextUtil.clearScreen();
     	}
         System.out.println(" Pick a card to decide who moves first:");
         printHiddenCards();
