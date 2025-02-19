@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import config.BoardConfig;
+import config.ColorConfig;
 import config.DataConfig;
 import model.block.CardBlock;
 import model.block.GenericBlock;
+import model.block.GoToJailBlock;
+import model.block.JailBlock;
 import model.block.PropertyBlock;
 import model.block.StartBlock;
+import model.block.TaxBlock;
+import model.block.WorldTravelBlock;
+import model.entity.Entity;
 import utility.FileUtil;
+import utility.TextUtil;
 
 public class GameBoard {
     private int boardHeight, boardWidth;
@@ -34,26 +41,49 @@ public class GameBoard {
     }
 
     private void initializeBoard() {
-    	List<String> propertyBlockData = FileUtil.readFile(DataConfig.FILE_DATA_BLOCK);
-    	blockList.add(new StartBlock("start", "start"));
+        List<String> propertyBlockData = FileUtil.readFile(DataConfig.FILE_DATA_BLOCK);
+        blockList.add(new StartBlock("start", "start"));
+
         int amount = 2 * (boardHeight + boardWidth) - 4;
         int propertyCounter = 0;
-        
-        for (int i = 1; i < amount - 1; i++) {
-        	String[] propertyData = propertyBlockData.get(i).split("#");
-        	String type = propertyData[0];
+        int cardCounter = 0;
+
+        for (int i = 1; i <= amount - 1; i++) {
+            if (propertyBlockData.size() <= i) break;
+            String[] propertyData = propertyBlockData.get(i).split("#");
+            String type = propertyData[0];
             String propertyName = propertyData[1];
             String propertyDesc = propertyData[2];
             String landmarkName = propertyData[3];
             String landmarkDesc = propertyData[4];
-            
+
             PropertyBlock property = new PropertyBlock(propertyName, propertyDesc, landmarkName, landmarkDesc);
             blockList.add(property);
             propertyCounter++;
 
-            if (propertyCounter % 3 == 0) {
-                blockList.add(new CardBlock("Card " + i, "Card description"));
+            if (i == boardWidth - 2) { 
+            	blockList.add(new GoToJailBlock("Go to Jail", "You are going to jail!"));
+            	i++;
             }
+            else if (i == boardWidth + boardHeight - 3) {
+            	blockList.add(new WorldTravelBlock("World Travel", "Travel the world!"));
+            	i++;
+            }
+            else if (i == 2 * (boardWidth - 1) + (boardHeight - 2)) {
+            	blockList.add(new JailBlock("Jail", "Where prisoners are held"));
+            	i++;
+            }
+            else if (propertyCounter % 3 == 0 && cardCounter < amount / 3) {
+                blockList.add(new CardBlock("Card " + (cardCounter + 1), "Card description"));
+                cardCounter++;
+                i++;
+            }
+            else if (i == amount - 3) {  
+                blockList.add(new TaxBlock("Tax Block", "Pay 10% tax"));
+                i++;
+            }
+
+
         }
     }
     
@@ -70,13 +100,15 @@ public class GameBoard {
     public void printBoard() {
         List<GenericBlock> orderedBlocks = getClockwiseBlocks();
         int blockIndex = 0;
+        int labelIndex = 0;
 
         for (int rowBlock = 0; rowBlock < boardHeight; rowBlock++) {
             for (int colBlock = 0; colBlock < boardWidth; colBlock++) {
             	String empty = " ".repeat(blockWidth);
                 if (isBorderBlock(rowBlock, colBlock, boardWidth, boardHeight)) {
                     System.out.print(" " +borderTopBot);
-                } else {
+                } 
+                else {
                     System.out.print(" "+empty);
                 }
             }
@@ -89,10 +121,17 @@ public class GameBoard {
                             String pieceString = getPieceOnBlockString(orderedBlocks.get(blockIndex));
                             System.out.printf(" # %-2s#", pieceString);
                             blockIndex++;
-                        } else {
+                        } 
+                        else if(row == 0) {
+                        	String blockLabel = getBlockLabel(orderedBlocks.get(labelIndex));
+                        	System.out.printf(" # %-2s#", blockLabel);
+                        	labelIndex++;
+                        }
+                        else {
                             System.out.print(" #   #");
                         }
-                    } else {
+                    } 
+                    else {
                         System.out.print("      ");
                     }
                 }
@@ -102,12 +141,33 @@ public class GameBoard {
             for (int colBlock = 0; colBlock < boardWidth; colBlock++) {
                 if (isBorderBlock(rowBlock, colBlock, boardWidth, boardHeight)) {
                 	System.out.print(" " +borderTopBot);
-                } else {
+                } 
+                else {
                     System.out.print("      ");
                 }
             }
             System.out.println();
         }
+    }
+    
+    private String getBlockLabel(GenericBlock block) {
+        String label = block.getType();
+
+        if (label.length() > 2) {
+        	label = label.substring(0, 1).toUpperCase();
+        }
+        
+        if (block instanceof PropertyBlock) {
+            PropertyBlock propertyBlock = (PropertyBlock) block;
+            Entity owner = propertyBlock.getOwner();
+
+            if (owner != null) {
+                String ownerColor = owner.getColor();
+                label = ownerColor + label + ColorConfig.RESET + " ";
+            }
+        }
+
+        return label;
     }
     
     private String getPieceOnBlockString(GenericBlock block) {

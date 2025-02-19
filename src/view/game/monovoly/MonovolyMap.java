@@ -23,7 +23,6 @@ public class MonovolyMap extends BaseView{
 			GameManager.getInstance().getGameBoard().printBoard();
 			
 			TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-			System.out.println();
 			
 			monovolyMapController.startGame();
 			TextUtil.pressEnter();

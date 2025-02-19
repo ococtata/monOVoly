@@ -18,15 +18,15 @@ public class Dice implements Random {
 
     public Dice() {}
 
-    public int roll(String mode) {
+    public int[] roll(String mode) {
         int roll1, roll2;
 
         for (int i = 0; i < 5; i++) {
-        	TextUtil.clearScreen();
+            TextUtil.clearScreen();
             roll1 = rand.nextInt(6);
             roll2 = rand.nextInt(6);
             printDice(roll1, roll2);
-            sleep(500);
+            sleep(350);
         }
 
         do {
@@ -37,10 +37,14 @@ public class Dice implements Random {
             (mode.equals("ODD") && (roll1 + roll2) % 2 == 0) || 
             (mode.equals("EVEN") && (roll1 + roll2) % 2 != 0)
         );
+
         TextUtil.clearScreen();
         printDice(roll1 - 1, roll2 - 1);
-        return roll1 + roll2;
+        
+        int[] rolls = {roll1, roll2};
+        return rolls;
     }
+
 
     private void printDice(int roll1, int roll2) {
         String[] dice1Lines = DICE_FACES[roll1].split("\n");

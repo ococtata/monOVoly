@@ -23,7 +23,9 @@ public class CardFirstTurn implements Random, Scanner{
     }
 
     public void selectFirst() {
-    	scan.nextLine();
+    	if(scan.hasNextLine()) {
+    		scan.nextLine();    		
+    	}
         System.out.println(" Pick a card to decide who moves first:");
         printHiddenCards();
 
@@ -66,7 +68,7 @@ public class CardFirstTurn implements Random, Scanner{
         String[] rightLines = cardHidden.split("\n");
 
         for (int i = 0; i < leftLines.length; i++) {
-            System.out.println(leftLines[i] + "   " + rightLines[i]);
+            System.out.println(" " + leftLines[i] + "   " + rightLines[i]);
         }
     }
 

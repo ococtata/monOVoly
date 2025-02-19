@@ -1,6 +1,10 @@
 package model.entity;
 
-import model.Position;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.block.PropertyBlock;
+import utility.TextUtil;
 
 public abstract class Entity {
 	private String name;
@@ -12,14 +16,34 @@ public abstract class Entity {
 	private String color;
 	
 	private int boardIndex;
+	private List<PropertyBlock> ownedProperties;
 	
 	public Entity(String name, int money) {
 		super();
 		this.name = name;
 		this.money = money;
+		this.ownedProperties = new ArrayList<PropertyBlock>();
 	}
 	
-	protected String getColor() {
+	public void addProperty(PropertyBlock property) {
+		ownedProperties.add(property);
+	}
+	
+	public void removeProperty(PropertyBlock property) {
+		ownedProperties.remove(property);
+	}
+	
+	public void updateTotalAssets() {
+	    int totalPropertyValue = 0;
+
+	    for (PropertyBlock property : ownedProperties) {
+	        totalPropertyValue += property.getPrice();
+	    }
+
+	    this.totalAssest = this.money + totalPropertyValue;
+	}
+	
+	public String getColor() {
 		return color;
 	}
 
@@ -72,5 +96,13 @@ public abstract class Entity {
 
 	public void setBoardIndex(int boardIndex) {
 		this.boardIndex = boardIndex;
+	}
+
+	public List<PropertyBlock> getOwnedProperties() {
+		return ownedProperties;
+	}
+
+	public void setOwnedProperties(List<PropertyBlock> ownedProperties) {
+		this.ownedProperties = ownedProperties;
 	}
 }

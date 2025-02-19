@@ -31,7 +31,8 @@ public class Player extends Entity {
 		this.mapPosition = new Position(0, 0);
 		this.maxEnergy = calculateMaxEnergy();
 		
-		setPiece(ColorConfig.LIGHT_GREEN + BoardConfig.PLAYER_PIECE + ColorConfig.RESET);
+		setColor(ColorConfig.LIGHT_GREEN);
+		setPiece(getColor() + BoardConfig.PLAYER_PIECE + ColorConfig.RESET);
 	}
 	
 	private int calculateMaxEnergy() {

@@ -46,6 +46,6 @@ BLOCKS
 		-> construct building = base building price (30k) + random (20k - 50k)
 		-> increase construct building price by 100k every upgrade
 	-) owned (enemy):
-		-> pay the toll (50% of total property value)
+		-> pay the toll (30% of total property value)
 		-> if the the property has a landmark, multiply the total toll by 1.25x
 		-> overtake by paying double the price (construction + building upgrade cost)

@@ -8,13 +8,14 @@ public class Enemy extends Entity {
 
 	public Enemy(String name, int money) {
 		super(name, money);
-		setPiece(ColorConfig.LIGHT_RED + BoardConfig.ENEMY_PIECE + ColorConfig.RESET);
+		setColor(ColorConfig.LIGHT_RED);
+		setPiece(getColor() + BoardConfig.ENEMY_PIECE + ColorConfig.RESET);
+		setName("Enemy");
 	}
 
 	@Override
 	public void move() {
 		// TODO Auto-generated method stub
-
+		
 	}
-
 }

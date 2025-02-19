@@ -2,11 +2,11 @@ package model.block;
 
 import model.entity.Entity;
 
-public class PrisonBlock extends GenericBlock {
+public class JailBlock extends GenericBlock {
 
-	public PrisonBlock(String name, String desc) {
+	public JailBlock(String name, String desc) {
 		super(name, desc);
-		// TODO Auto-generated constructor stub
+		setType("Jail");
 	}
 
 	@Override
