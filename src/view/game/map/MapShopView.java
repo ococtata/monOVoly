@@ -18,15 +18,12 @@ public class MapShopView extends BaseView implements PlayerGUI{
 	}
 	@Override
 	public void show() {
-		TextUtil.clearScreen();
-		printTopBar();
-		MapManager.getInstance().printMap(MapManager.getInstance().getCurrentMap());
-		System.out.println(" Use W/A/S/D to move, or Q to quit!");	
-		GameManager.getInstance().runThreads();
-		while(true) {
-			if(!active) break;
-		}
-	}
+        TextUtil.clearScreen();
+        printTopBar();
+        MapManager.getInstance().printMap(MapManager.getInstance().getCurrentMap());
+        System.out.println(" Use W/A/S/D to move, or Q to quit!");
+    }
+	
 	public MapShopViewController getMapShopViewController() {
 		return mapShopViewController;
 	}

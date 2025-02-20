@@ -24,11 +24,10 @@ public class CardFirstTurn implements Random, Scanner{
     }
 
     public void selectFirst() {
-    	if(scan.hasNextLine()) {
-    		System.out.println(" Press ENTER to start...");
-    		scan.nextLine(); 
-    		TextUtil.clearScreen();
-    	}
+    	System.out.println(" Press ENTER to start...");
+		scan.nextLine(); 
+		TextUtil.clearScreen();
+		
         System.out.println(" Pick a card to decide who moves first:");
         printHiddenCards();
 
@@ -54,7 +53,7 @@ public class CardFirstTurn implements Random, Scanner{
             }
         }
 
-        animateCardFlip(choice);
+        revealCard(choice);
 
         int selectedCard = (choice == 1) ? card1 : card2;
         System.out.println(selectedCard == 1 ? " Player moves first!" : " Enemy moves first!");
@@ -65,43 +64,60 @@ public class CardFirstTurn implements Random, Scanner{
 
 
     private void printHiddenCards() {
-        String cardHidden = " ------- \n|       |\n|   ?   |\n|       |\n ------- ";
-        
-        String[] leftLines = cardHidden.split("\n");
-        String[] rightLines = cardHidden.split("\n");
-
-        for (int i = 0; i < leftLines.length; i++) {
-            System.out.println(" " + leftLines[i] + "   " + rightLines[i]);
-        }
+    	String[] cardHidden = {
+                "  -----------------  ",
+                " |                 | ",
+                " |                 | ",
+                " |        ?        | ",
+                " |                 | ",
+                " |                 | ",
+                "  -----------------  "
+            };
+    	
+    	 for (String line : cardHidden) {
+             for (int i = 0; i < 2; i++) {
+                 System.out.print("  " + line + "  ");
+             }
+             System.out.println();
+         }
     }
 
-    private void animateCardFlip(int choice) {
+    private void revealCard(int choice) {
         int revealedCard = (choice == 1) ? card1 : card2;
 
-        String cardRevealed = String.format(
-            " ------- \n|       |\n|   %s%d%s   |\n|       |\n ------- ", 
-            ColorConfig.GOLD, revealedCard, ColorConfig.RESET
-        );
-        
-        String cardHidden = " ------- \n|       |\n|   ?   |\n|       |\n ------- ";
+        String[] cardRevealed = {
+            ColorConfig.GOLD + "  -----------------  " + ColorConfig.RESET,
+            ColorConfig.GOLD + " |                 | " + ColorConfig.RESET,
+            ColorConfig.GOLD + " |                 | " + ColorConfig.RESET,
+            ColorConfig.GOLD + " |        " + revealedCard + "        | " + ColorConfig.RESET,
+            ColorConfig.GOLD + " |                 | " + ColorConfig.RESET,
+            ColorConfig.GOLD + " |                 | " + ColorConfig.RESET,
+            ColorConfig.GOLD + "  -----------------  " + ColorConfig.RESET,
+        };
+
+        String[] cardHidden = {
+                "  -----------------  ",
+                " |                 | ",
+                " |                 | ",
+                " |        ?        | ",
+                " |                 | ",
+                " |                 | ",
+                "  -----------------  "
+            };
 
         System.out.println("\n Revealing your card...\n");
-        sleep(500);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        String[] leftLines = (choice == 1) ? cardRevealed.split("\n") : cardHidden.split("\n");
-        String[] rightLines = (choice == 2) ? cardRevealed.split("\n") : cardHidden.split("\n");
+        String[] leftLines = (choice == 1) ? cardRevealed : cardHidden;
+        String[] rightLines = (choice == 2) ? cardRevealed : cardHidden;
 
         for (int i = 0; i < leftLines.length; i++) {
             System.out.println(" " + leftLines[i] + "   " + rightLines[i]);
         }
         System.out.println();
-    }
-
-    private void sleep(int time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 }

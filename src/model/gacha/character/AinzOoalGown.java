@@ -1,6 +1,7 @@
 package model.gacha.character;
 
 import config.CharacterConfig;
+import config.ColorConfig;
 import config.GameConfig;
 import model.entity.Entity;
 
@@ -13,6 +14,7 @@ public class AinzOoalGown extends BaseCharacter {
         setTitle(CharacterConfig.AINZ_TITLE);
         setSkillName(CharacterConfig.AINZ_SKILL_NAME);
         setSkillDesc(CharacterConfig.AINZ_SKILL_DESC);
+        setNameColor(ColorConfig.MAGENTA);
     }
 	
     public void useSkill(Entity entity) {

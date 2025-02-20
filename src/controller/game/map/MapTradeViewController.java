@@ -18,8 +18,11 @@ public class MapTradeViewController extends BaseMapViewController{
 	public boolean checkCollision(int newX, int newY) {
 		char[][] map = MapManager.getInstance().getCurrentMap();
 		
-		if(map[newY][newX] == MapConfig.BED) {
-			// bed
+		if(checkBasicCollision(map, newX, newY)) {
+        	return false;
+        }
+		
+		if(map[newY][newX] == MapConfig.TRADE) {
 			return false;
 		}
 		else if(newX == 0 && map[newY][newX] == ' ') {

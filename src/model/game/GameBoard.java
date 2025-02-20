@@ -66,7 +66,7 @@ public class GameBoard {
                 i++;
             } 
             else if (i == boardWidth + boardHeight - 3) {
-                blockList.add(new WorldTravelBlock("World Travel", "Take a trip and teleport to any block!", i));
+                blockList.add(new WorldTravelBlock("World Travel", "Take a trip and teleport randomly to any block!", i));
                 i++;
             } 
             else if (i == 2 * (boardWidth - 1) + (boardHeight - 2)) {

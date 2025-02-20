@@ -18,6 +18,10 @@ public class MapShopViewController extends BaseMapViewController{
 	public boolean checkCollision(int newX, int newY) {
 		char[][] map = MapManager.getInstance().getCurrentMap();
 		
+		if(checkBasicCollision(map, newX, newY)) {
+        	return false;
+        }
+		
 		if (newY == 0 && map[newY][newX] == ' ') {
             BaseView previousView = mapShopView.getPreviousView();
             GameManager.getInstance().setCurrentView(previousView);

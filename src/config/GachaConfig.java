@@ -3,8 +3,8 @@ package config;
 public class GachaConfig {
 	public enum Rarity {
         COMMON(ColorConfig.LIGHT_GREY),
-        RARE(ColorConfig.LIGHT_BLUE),
-        EPIC(ColorConfig.LIGHT_PURPLE),
+        RARE(ColorConfig.BLUE),
+        EPIC(ColorConfig.PURPLE),
         LEGENDARY(ColorConfig.GOLD);
 
         private final String color;
@@ -20,4 +20,9 @@ public class GachaConfig {
 	
 	public static final int CHARACTER_GACHA_COST = 150;
 	public static final int PENDANT_GACHA_COST = 100;
+	public static final int NUM_CARDS_PER_ROLL = 4;
+	
+	public static final double LEGENDARY_CHANCE = 0.01;
+    public static final double EPIC_CHANCE = 0.05;
+    public static final double RARE_CHANCE = 0.15;
 }

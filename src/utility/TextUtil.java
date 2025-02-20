@@ -5,9 +5,7 @@ import config.GeneralConfig;
 public class TextUtil implements Scanner{
 	public synchronized static void pressEnter() {
 		System.out.print(" Press ENTER to continue...");
-		if (scan.hasNextLine()) {
-            scan.nextLine();
-        }
+		scan.nextLine();
 	}
 	
 	public static void printHorizontalBorder(int len) {

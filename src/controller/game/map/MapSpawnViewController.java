@@ -3,9 +3,6 @@ package controller.game.map;
 import config.MapConfig;
 import manager.GameManager;
 import manager.MapManager;
-import manager.thread.PlayerMovementManager;
-import model.Position;
-import utility.Scanner;
 import view.game.feature.NoticeView;
 import view.game.map.MapTradeView;
 import view.game.map.MapGachaView;
@@ -24,6 +21,10 @@ public class MapSpawnViewController extends BaseMapViewController {
 	public boolean checkCollision(int newX, int newY) {
         char[][] map = MapManager.getInstance().getCurrentMap();
 		
+        if(checkBasicCollision(map, newX, newY)) {
+        	return false;
+        }
+        
 		if(map[newY][newX] == MapConfig.NOTICE) {
 			NoticeView noticeView = new NoticeView();
             noticeView.setPreviousView(mapSpawnView);

@@ -3,7 +3,7 @@ Format:
 - player stat format: id#level#coins#gems#barracksupgrade#currentEnergy
 - block data format: type#name#desc
 	type -> start, tax, property
-- gacha item data format: type#name#rarity
+- gacha character material format: rarity#name#for_card
 
 Formula
 - maxEnergy = base * (level * 0.1)

@@ -15,19 +15,16 @@ public class MapSpawnView extends BaseView implements PlayerGUI{
 		this.mapSpawnViewController = new MapSpawnViewController(this);
 		MapManager.getInstance().loadMap(DataConfig.FILE_MAP_SPAWN);
 		map = MapManager.getInstance().getCurrentMap();
+		GameManager.getInstance().runGame();
 	}
 
 	@Override
 	public void show() {
-		TextUtil.clearScreen();
-		printTopBar();
-		MapManager.getInstance().printMap(MapManager.getInstance().getCurrentMap());
-		System.out.println(" Use W/A/S/D to move, or Q to quit!");	
-		GameManager.getInstance().runThreads();
-		while(true) {
-			if(!active) break;
-		}
-	}
+        TextUtil.clearScreen();
+        printTopBar();
+        MapManager.getInstance().printMap(MapManager.getInstance().getCurrentMap());
+        System.out.println(" Use W/A/S/D to move, or Q to quit!");
+    }
 
 	public MapSpawnViewController getMapSpawnViewController() {
 		return mapSpawnViewController;

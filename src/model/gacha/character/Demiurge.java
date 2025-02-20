@@ -1,6 +1,7 @@
 package model.gacha.character;
 
 import config.CharacterConfig;
+import config.ColorConfig;
 import manager.GameManager;
 import model.block.GenericBlock;
 import model.block.PropertyBlock;
@@ -14,6 +15,7 @@ public class Demiurge extends BaseCharacter implements CharacterSkills {
         setTitle(CharacterConfig.DEMIURGE_TITLE);
         setSkillName(CharacterConfig.DEMIURGE_SKILL_NAME);
         setSkillDesc(CharacterConfig.DEMIURGE_SKILL_DESC);
+        setNameColor(ColorConfig.DEVIL_RED);
     }
 	
 	@Override

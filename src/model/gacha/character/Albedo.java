@@ -1,6 +1,7 @@
 package model.gacha.character;
 
 import config.CharacterConfig;
+import config.ColorConfig;
 import model.entity.Entity;
 import utility.Random;
 
@@ -11,6 +12,7 @@ public class Albedo extends BaseCharacter implements Random {
         setTitle(CharacterConfig.ALBEDO_TITLE);
         setSkillName(CharacterConfig.ALBEDO_SKILL_NAME);
         setSkillDesc(CharacterConfig.ALBEDO_SKILL_DESC);
+        setNameColor(ColorConfig.WHITE);
     }
 	
     public int useSkill(Entity entity, int amount) {

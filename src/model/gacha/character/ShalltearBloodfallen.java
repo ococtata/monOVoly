@@ -1,6 +1,7 @@
 package model.gacha.character;
 
 import config.CharacterConfig;
+import config.ColorConfig;
 import model.entity.Entity;
 
 public class ShalltearBloodfallen extends BaseCharacter implements CharacterSkills {
@@ -10,6 +11,7 @@ public class ShalltearBloodfallen extends BaseCharacter implements CharacterSkil
         setTitle(CharacterConfig.SHALLTEAR_TITLE);
         setSkillName(CharacterConfig.SHALLTEAR_SKILL_NAME);
         setSkillDesc(CharacterConfig.SHALLTEAR_SKILL_DESC);
+        setNameColor(ColorConfig.LIGHT_RED);
     }
 
     public int useSkill(Entity entity, int toll) {

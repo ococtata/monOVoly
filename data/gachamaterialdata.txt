@@ -1,0 +1,20 @@
+Common#Bone Fragment#Ainz Ooal Gown
+Rare#Arcane Bone Dust#Ainz Ooal Gown
+Epic#Momonga's Red Orb#Ainz Ooal Gown
+Legendary#Staff of Ainz Ooal Gown#Ainz Ooal Gown
+Common#Dark Essence#Albedo
+Rare#Death Knight Armor Scrap#Albedo
+Epic#Ginnungagap#Albedo
+Legendary#Hermes Trismegistus#Albedo
+Common#Ghoul Fang#Shalltear Bloodfallen
+Rare#Vampire Bloodstone#Shalltear Bloodfallen
+Epic#Peroroncino's Encyclopedia#Shalltear Bloodfallen
+Legendary#Spuit Lance#Shalltear Bloodfallen
+Common#Shadow Crystal#Demiurge
+Rare#Demonic Rune#Demiurge
+Epic#Hygieia's Chalice#Demiurge
+Legendary#Armageddon Evil#Demiurge
+Common#Bug Exoskeleton#Cocytus
+Rare#Wraith Core#Cocytus
+Epic#Decapitation Fang#Cocytus
+Legendary#God Slaying Emperor Blade#Cocytus

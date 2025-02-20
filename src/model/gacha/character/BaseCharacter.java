@@ -7,6 +7,7 @@ public abstract class BaseCharacter implements CharacterSkills {
 	private String title;
 	private String skillName;
 	private String skillDesc;
+	private String nameColor;
 	
 	public BaseCharacter() {}
 	
@@ -48,5 +49,13 @@ public abstract class BaseCharacter implements CharacterSkills {
 
 	protected void setSkillName(String skillName) {
 		this.skillName = skillName;
+	}
+
+	public String getNameColor() {
+		return nameColor;
+	}
+
+	public void setNameColor(String nameColor) {
+		this.nameColor = nameColor;
 	}
 }

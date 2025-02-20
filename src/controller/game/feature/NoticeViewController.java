@@ -16,7 +16,6 @@ public class NoticeViewController implements Random{
 	public NoticeViewController(NoticeView noticeView) {
 		this.noticeView = noticeView;
 		maxNoticeIndex = getNoticeFileCount();
-		GameManager.getInstance().pausePlayerMovementThread();
 	}
 	
 	public int getNoticeFileCount() {

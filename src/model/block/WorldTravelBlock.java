@@ -1,8 +1,12 @@
 package model.block;
 
-import model.entity.Entity;
+import java.util.List;
 
-public class WorldTravelBlock extends GenericBlock {
+import manager.GameManager;
+import model.entity.Entity;
+import utility.Random;
+
+public class WorldTravelBlock extends GenericBlock implements Random {
 
 	public WorldTravelBlock(String name, String desc, int index) {
 		super(name, desc, index);
@@ -11,8 +15,14 @@ public class WorldTravelBlock extends GenericBlock {
 
 	@Override
 	public void onLand(Entity piece) {
-		// TODO Auto-generated method stub
+        List<GenericBlock> blockList = GameManager.getInstance().getGameBoard().getBlockList();
 		
+        int randomIndex = rand.nextInt(blockList.size());
+        GenericBlock randomBlock = blockList.get(randomIndex);
+        
+        piece.move(this, randomBlock);
+        System.out.println(" " + piece.getName() + " was teleported to " + randomBlock.getName() + "!");
+        randomBlock.onLand(piece);
 	}
 
 }

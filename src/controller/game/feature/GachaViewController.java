@@ -9,16 +9,9 @@ public class GachaViewController {
 	
 	public GachaViewController(GachaView gachaView) {
 		this.gachaView = gachaView;
-		
-		GameManager.getInstance().pausePlayerMovementThread();
-	}
-
-	public void showPendantGachaMenu() {
-		
 	}
 	
 	public void exitGachaView() {
-		GameManager.getInstance().unPausePlayerMovementThread();
 		GameManager.getInstance().setCurrentView(GameManager.getInstance().getCurrentView().getPreviousView()); 
         GameManager.getInstance().getCurrentView().show();
 	}

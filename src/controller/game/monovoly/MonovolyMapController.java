@@ -29,7 +29,6 @@ public class MonovolyMapController implements Scanner, Random {
 
     public MonovolyMapController(MonovolyMap monovolyMap) {
         this.monovolyMap = monovolyMap;
-        GameManager.getInstance().pausePlayerMovementThread();
         Enemy enemy = new Enemy("Enemy", 0);
         GameManager.getInstance().setEnemy(enemy);
         GameManager.getInstance().getPlayer().setMoney(GameConfig.STARTING_MONEY);
@@ -209,7 +208,7 @@ public class MonovolyMapController implements Scanner, Random {
     private boolean enemyTurn(Dice dice) {
     	System.out.println(" Enemy's turn");
     	try {
-			Thread.sleep(1000);
+			Thread.sleep(1200);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

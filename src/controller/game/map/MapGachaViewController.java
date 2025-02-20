@@ -21,6 +21,10 @@ public class MapGachaViewController extends BaseMapViewController{
 	public boolean checkCollision(int newX, int newY) {
 		char[][] map = MapManager.getInstance().getCurrentMap();
 		
+		if(checkBasicCollision(map, newX, newY)) {
+        	return false;
+        }
+		
 		if(map[newY][newX] == MapConfig.GACHA) {
 			GachaView gachaView = new GachaView();
 			gachaView.setPreviousView(mapGachaView);

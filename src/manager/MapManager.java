@@ -14,7 +14,7 @@ public class MapManager {
     private static MapManager instance;
 
     private final List<char[][]> mapList = new ArrayList<>();
-    private char[][] currentMap;
+    private static char[][] currentMap;
 
     private MapManager() {}
 
@@ -34,7 +34,7 @@ public class MapManager {
     }
 
     public void loadMap(String path) {
-        this.currentMap = convertToCharArray(FileUtil.readFile(path));
+    	currentMap = convertToCharArray(FileUtil.readFile(path));
     }
 
     public void printMap(char[][] currentMap) {
@@ -54,7 +54,7 @@ public class MapManager {
     }
 
     public void setCurrentMap(char[][] currentMap) {
-        this.currentMap = currentMap;
+        MapManager.currentMap = currentMap;
     }
 
     public List<char[][]> getMapList() {

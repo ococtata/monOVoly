@@ -1,14 +1,18 @@
 package manager;
 
 import manager.thread.EnergyManager;
-import manager.thread.PlayerMovementManager;
 import model.entity.Enemy;
 import model.entity.Player;
 import model.game.GameBoard;
+import utility.Scanner;
 import view.BaseView;
 import view.TitleScreenView;
+import view.game.map.MapGachaView;
+import view.game.map.MapShopView;
+import view.game.map.MapSpawnView;
+import view.game.map.MapTradeView;
 
-public class GameManager {
+public class GameManager implements Scanner{
 	
 	private static GameManager instance;
 	private Player player;
@@ -16,7 +20,6 @@ public class GameManager {
 	private BaseView currentView;
 	private boolean isActive = true;
 
-	private Thread playerMovementThread;
 	private Thread energyManagerThread;
 	
 	private boolean isPlayerTurn = false;
@@ -43,8 +46,58 @@ public class GameManager {
 	}
 	
 	private void initializeThreads() {
-		playerMovementThread = PlayerMovementManager.getInstance(player).getPlayerMovementThread();
 		energyManagerThread = EnergyManager.getInstance(player).getEnergyManagerThread();
+	}
+	
+	public void runGame() {
+		while (isActive) {
+            BaseView currentView = getCurrentView();
+            if (currentView != null) { 
+                currentView.show();
+
+                if (scan.hasNextLine()) { 
+                    String input = scan.nextLine();
+                    if (!input.isEmpty()) { 
+                    	char firstChar = input.charAt(0);
+                    	if (currentView instanceof MapSpawnView) {
+                			((MapSpawnView) currentView).getMapSpawnViewController().handleMovement(firstChar);
+                		} 
+                		else if(currentView instanceof MapGachaView) {
+                			((MapGachaView) currentView).getMapGachaViewController().handleMovement(firstChar);
+                		}
+                		else if(currentView instanceof MapShopView) {
+                			((MapShopView) currentView).getMapShopViewController().handleMovement(firstChar);
+                		}
+                		else if(currentView instanceof MapTradeView) {
+                			((MapTradeView) currentView).getMapTradeViewController().handleMovement(firstChar);
+                		}
+                    		
+                    	// make take multiple input (prone to error cuz of map not updating fast enough before the check collision)
+//                    	for(char firstChar : input.toCharArray()) {
+//                    		if(firstChar == '\n') continue;
+//                    		if (currentView instanceof MapSpawnView) {
+//                    			((MapSpawnView) currentView).getMapSpawnViewController().handleMovement(firstChar);
+//                    		} 
+//                    		else if(currentView instanceof MapGachaView) {
+//                    			((MapGachaView) currentView).getMapGachaViewController().handleMovement(firstChar);
+//                    		}
+//                    		else if(currentView instanceof MapShopView) {
+//                    			((MapShopView) currentView).getMapShopViewController().handleMovement(firstChar);
+//                    		}
+//                    		else if(currentView instanceof MapTradeView) {
+//                    			((MapTradeView) currentView).getMapTradeViewController().handleMovement(firstChar);
+//                    		}
+//                    		try {
+//								Thread.sleep(150);
+//							} catch (InterruptedException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//                    	}
+                    }
+                }
+            }
+		}
 	}
 
 	public Player getPlayer() {
@@ -54,10 +107,6 @@ public class GameManager {
 	public void setPlayer(Player player) {
 		this.player = player;
 		initializeThreads();
-	}
-
-	public Thread getPlayerMovementThread() {
-		return playerMovementThread;
 	}
 	
 	public BaseView getCurrentView() {
@@ -78,25 +127,11 @@ public class GameManager {
 	}
 	
 	public void startThreads() {
-		playerMovementThread.start();
 		energyManagerThread.start();
-	}
-	
-	public void runThreads() {
-		playerMovementThread.run();
-		energyManagerThread.run();
 	}
 
 	public Thread getEnergyManagerThread() {
 		return energyManagerThread;
-	}
-	
-	public void pausePlayerMovementThread() {
-		PlayerMovementManager.getInstance(player).pause();
-	}	
-	
-	public void unPausePlayerMovementThread() {
-		PlayerMovementManager.getInstance(player).unpause();
 	}
 
 	public boolean isPlayerTurn() {

@@ -46,6 +46,12 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
 
     @Override
     public void onLand(Entity piece) {
+    	try {
+    		Thread.sleep(500);
+    	} catch (InterruptedException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
         if (owner == null) {
         	handleNonMaxLevelProperty(piece);
         } 
@@ -55,6 +61,8 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
         else {
             handleOwnerLanding(piece);
         }
+        
+        System.out.println(" This property is " + (this.owner == null ? " unowned" : "owned by " + owner.getName()));
     }
 
     private void handleEnemyBuy(Entity piece) {

@@ -9,27 +9,23 @@ import view.BaseView;
 import view.PlayerGUI;
 
 public class MapTradeView extends BaseView implements PlayerGUI{
-	private MapTradeViewController mapBarracksViewController;
+	private MapTradeViewController mapTradeViewController;
 	
 	public MapTradeView() {
-		this.mapBarracksViewController = new MapTradeViewController(this);
+		this.mapTradeViewController = new MapTradeViewController(this);
 		MapManager.getInstance().loadMap(DataConfig.FILE_MAP_BARRACKS);		
 		map = MapManager.getInstance().getCurrentMap();
 	}
 
 	@Override
 	public void show() {
-		TextUtil.clearScreen();
-		printTopBar();
-		MapManager.getInstance().printMap(MapManager.getInstance().getCurrentMap());
-		System.out.println(" Use W/A/S/D to move, or Q to quit!");	
-		GameManager.getInstance().runThreads();
-		while(true) {
-			if(!active) break;
-		}
-	}
+        TextUtil.clearScreen();
+        printTopBar();
+        MapManager.getInstance().printMap(MapManager.getInstance().getCurrentMap());
+        System.out.println(" Use W/A/S/D to move, or Q to quit!");
+    }
 
-	public MapTradeViewController getMapBarracksViewController() {
-		return mapBarracksViewController;
+	public MapTradeViewController getMapTradeViewController() {
+		return mapTradeViewController;
 	}
 }

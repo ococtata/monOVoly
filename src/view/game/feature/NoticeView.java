@@ -18,7 +18,6 @@ public class NoticeView extends BaseView {
 	
 	public NoticeView() {
 		this.noticeViewController = new NoticeViewController(this);
-		show();	
 	}
 
 	@Override
@@ -27,12 +26,10 @@ public class NoticeView extends BaseView {
 		TextUtil.printHeader("NOTICE", width, height);
 		noticeViewController.showNoticeDesc();
 		System.out.println();
-		TextUtil.pressEnter();
+		System.out.println(" Press ENTER to continue...");
 		
 		if(previousView != null) {
-			GameManager.getInstance().unPausePlayerMovementThread();
 			GameManager.getInstance().setCurrentView(previousView);
-            previousView.show();
 		}
 	}
 	
