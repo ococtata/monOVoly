@@ -2,52 +2,54 @@ package view.game.feature;
 
 import config.GeneralConfig;
 import controller.game.feature.GachaViewController;
-import manager.GameManager;
+import model.gacha.GachaCharacter;
 import utility.Scanner;
 import utility.TextUtil;
 import view.BaseView;
+import view.PlayerGUI;
 
-public class GachaView extends BaseView implements Scanner{
+public class GachaView extends BaseView implements Scanner, PlayerGUI{
 	private GachaViewController gachaViewController;
+	private GachaCharacter gachaCharacter;
 	
 	public GachaView() {
 		this.gachaViewController = new GachaViewController(this);
+		this.gachaCharacter = new GachaCharacter();
 	}
 	
 	@Override
     public void show() {
-        while (true) {
+		while (true) {
         	TextUtil.clearScreen();
-            TextUtil.printHeader("GACHA", GeneralConfig.WIDTH, GeneralConfig.HEIGHT);
-            System.out.println(" What do you want to gacha?");
-            System.out.println(" 1. Character");
-            System.out.println(" 2. Pendant");
-            System.out.println(" 3. Go Back"); 
+            TextUtil.printHeader("CHARACTER GACHA", GeneralConfig.WIDTH, GeneralConfig.HEIGHT);
+            printGachaTopBar();
+            TextUtil.printHorizontalBorder(GeneralConfig.WIDTH);
+            System.out.println(" 1. Roll");
+            System.out.println(" 2. Go Back");
             System.out.println();
             System.out.print(" >> "); 
-            String input = scan.nextLine();
+
+            String input = scan.nextLine(); 
 
             try {
                 int choice = Integer.parseInt(input);
 
                 switch (choice) {
                     case 1:
-                        gachaViewController.showCharacterGachaMenu(); 
-                        return;
+                    	gachaCharacter.roll();
+                    	break;
                     case 2:
-                        gachaViewController.showPendantGachaMenu(); 
-                        return;
-                    case 3:
-                        gachaViewController.exitGachaView();
+                		gachaViewController.exitGachaView();
                         return;
                     default:
-                        System.out.println(" Invalid choice. Please enter 1, 2 or 3.");
+                        System.out.println(" Input must be 1 or 2!");
                         TextUtil.pressEnter();
+                        break; 
                 }
             } catch (NumberFormatException e) {
-                System.out.println(" Invalid input. Please enter an integer.");
+                System.out.println(" Input must be an integer!");
                 TextUtil.pressEnter();
             }
         }
-    }
+	}
 }

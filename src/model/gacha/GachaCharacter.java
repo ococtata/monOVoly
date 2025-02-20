@@ -19,39 +19,6 @@ public class GachaCharacter implements IGacha, GetAllMaterial, Scanner{
 	}
 	
 	@Override
-    public void showMenu() {
-        while (true) {
-        	TextUtil.clearScreen();
-            TextUtil.printHeader("CHARACTER GACHA", GeneralConfig.WIDTH, GeneralConfig.HEIGHT);
-            System.out.println(" 1. Roll");
-            System.out.println(" 2. Go Back");
-            System.out.println();
-            System.out.print(" >> "); 
-
-            String input = scan.nextLine(); 
-
-            try {
-                int choice = Integer.parseInt(input);
-
-                switch (choice) {
-                    case 1:
-                        roll();
-                        return;
-                    case 2:
-                        return;
-                    default:
-                        System.out.println(" Input must be 1 or 2!");
-                        TextUtil.pressEnter();
-                        break; 
-                }
-            } catch (NumberFormatException e) {
-                System.out.println(" Input must be an integer!");
-                TextUtil.pressEnter();
-            }
-        }
-    }
-	
-	@Override
     public void roll() {
 		Player player = GameManager.getInstance().getPlayer();
 		int cost = GachaConfig.CHARACTER_GACHA_COST;
@@ -63,7 +30,6 @@ public class GachaCharacter implements IGacha, GetAllMaterial, Scanner{
             System.out.println(" Not enough gems!");
             TextUtil.pressEnter();
         }
-        showMenu();
     }
 	
 	 private void animateMaterialReveal(List<CharacterMaterial> materials) {
@@ -73,7 +39,7 @@ public class GachaCharacter implements IGacha, GetAllMaterial, Scanner{
             drawCardBox(material.getRarity());
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
