@@ -28,14 +28,14 @@ public class CardFirstTurn implements Random, Scanner{
 		scan.nextLine(); 
 		TextUtil.clearScreen();
 		
-        System.out.println(" Pick a card to decide who moves first:");
+        System.out.println(" Pick a card to decide who moves first:\n");
         printHiddenCards();
 
         int choice = 0;
         boolean validChoice = false;
         
         while (!validChoice) {
-            System.out.print(" Enter 1 (left card) or 2 (right card): ");
+            System.out.print(" \nEnter 1 (left card) or 2 (right card): ");
             String input = scan.nextLine();
 
             try {
@@ -104,7 +104,7 @@ public class CardFirstTurn implements Random, Scanner{
                 " |                 | ",
                 "  -----------------  "
             };
-
+        TextUtil.clearScreen();
         System.out.println("\n Revealing your card...\n");
         try {
             Thread.sleep(500);

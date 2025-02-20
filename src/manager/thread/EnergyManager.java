@@ -6,6 +6,7 @@ public class EnergyManager {
 	private static EnergyManager instance;
 	private Thread energyManagerThread;
 	private EnergyManagerLogic energyManagerLogic;
+	private boolean isRunning = false;
 	
 	private EnergyManager(Player player) {
 		energyManagerLogic = new EnergyManagerLogic(player);
@@ -19,16 +20,22 @@ public class EnergyManager {
 	}
 	
 	public void start() {
-        if (!energyManagerThread.isAlive()) {
-    		energyManagerThread = new Thread(energyManagerLogic);
-    		energyManagerThread.setDaemon(true);
-    		energyManagerThread.start();
+		if (!isRunning) { 
+            energyManagerThread = new Thread(energyManagerLogic);
+            energyManagerThread.setDaemon(true);
+            energyManagerThread.start();
+            isRunning = true; 
+        } 
+		else {
+            energyManagerLogic.activate(); 
         }
     }
 
-    public void stop() {
-    	energyManagerLogic.deactivate();	
-    	energyManagerThread.interrupt();
+	public void stop() {
+        if (isRunning) { 
+            energyManagerLogic.deactivate();
+            isRunning = false;
+        }
     }
     
     public Thread getEnergyManagerThread() {

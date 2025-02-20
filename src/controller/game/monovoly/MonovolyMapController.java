@@ -116,10 +116,10 @@ public class MonovolyMapController implements Scanner, Random {
 
         if (choice == 1) { 
             int[] rollResult = {-1, -1};
-            System.out.println(entity.getName() + " is trying to get out of jail!");
+            System.out.println(" " + entity.getName() + " is trying to get out of jail!");
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1250);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

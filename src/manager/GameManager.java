@@ -1,5 +1,7 @@
 package manager;
 
+import java.util.List;
+
 import manager.thread.EnergyManager;
 import model.entity.Enemy;
 import model.entity.Player;
@@ -25,17 +27,20 @@ public class GameManager implements Scanner{
 	private boolean isPlayerTurn = false;
 	private boolean isFirstTurn = true;
 	private GameBoard gameBoard;
+	
+	private List<Player> players;
 
 	private GameManager() {
 		
 	}
-	
+
 	public static GameManager getInstance() {
 		if(instance == null) instance = new GameManager();
 		return instance;
 	}
 	
 	private void initializeGame() {
+		SaveLoadManager.getInstance().loadAll();
 		MapManager.getInstance().loadAllMaps();
 	}
 	
@@ -127,7 +132,7 @@ public class GameManager implements Scanner{
 	}
 	
 	public void startThreads() {
-		energyManagerThread.start();
+		EnergyManager.getInstance(player).start();
 	}
 
 	public Thread getEnergyManagerThread() {
@@ -164,5 +169,13 @@ public class GameManager implements Scanner{
 
 	public void setGameBoard(GameBoard gameBoard) {
 		this.gameBoard = gameBoard;
+	}
+	
+	public List<Player> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(List<Player> players) {
+		this.players = players;
 	}
 }

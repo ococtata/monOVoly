@@ -1,9 +1,12 @@
 Format:
-- user data format: id#username#email#password#gems#money
-- player stat format: id#level#coins#gems#barracksupgrade#currentEnergy
+- user data format: player_id#username#email#password
+- player stat format: player_id#level#coins#gems#currentEnergy
 - block data format: type#name#desc
 	type -> start, tax, property
-- gacha character material format: rarity#name#for_card
+- gacha character material format: material_id#rarity#name#for_card
+- player inventory format: 
+	-> Material: player_id#material_id#amount
+	-> Character: player_id#character_name
 
 Formula
 - maxEnergy = base * (level * 0.1)

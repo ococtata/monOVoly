@@ -14,7 +14,7 @@ public class AinzOoalGown extends BaseCharacter {
         setTitle(CharacterConfig.AINZ_TITLE);
         setSkillName(CharacterConfig.AINZ_SKILL_NAME);
         setSkillDesc(CharacterConfig.AINZ_SKILL_DESC);
-        setNameColor(ColorConfig.MAGENTA);
+        setNameColor(ColorConfig.PURPLE);
     }
 	
     public void useSkill(Entity entity) {

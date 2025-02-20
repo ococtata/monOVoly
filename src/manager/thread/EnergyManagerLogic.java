@@ -14,19 +14,34 @@ public class EnergyManagerLogic implements Runnable {
 	public void deactivate() {
         active = false;
     }
+	
+	public void activate() {
+		active = true;
+	}
 
 	@Override
 	public void run() {
-		while(active) {
-			try {
-				Thread.sleep(PlayerStatConfig.ENERGY_REGEN_TICK_SPEED);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			player.increaseEnergy(calculateEnergyRegen());
-		}
+		while (true) { 
+            if (active) {
+            	try {
+					Thread.sleep(PlayerStatConfig.ENERGY_REGEN_TICK_SPEED);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+                player.increaseEnergy(calculateEnergyRegen());
+            } else {
+            	synchronized (this) {
+            		try {
+            			wait();
+            		} catch (InterruptedException e) {
+            			// TODO Auto-generated catch block
+            			e.printStackTrace();
+            		}					
+				}
+            }
+        }
 	}
 	
 	private int calculateEnergyRegen() {

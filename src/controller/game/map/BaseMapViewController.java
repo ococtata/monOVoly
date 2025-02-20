@@ -3,10 +3,13 @@ package controller.game.map;
 import config.MapConfig;
 import manager.GameManager;
 import manager.MapManager;
+import manager.SaveLoadManager;
+import manager.thread.EnergyManager;
 import model.Position;
 import model.entity.Player;
 import view.BaseView;
 import view.TitleScreenView;
+import view.game.feature.InventoryView;
 
 public abstract class BaseMapViewController {
 	
@@ -35,8 +38,16 @@ public abstract class BaseMapViewController {
                 newX++;
                 break;
             case 'q':
+            	SaveLoadManager.getInstance().saveAll();
+            	EnergyManager.getInstance(player).stop();
                 TitleScreenView titleScreenView = new TitleScreenView();
-                titleScreenView.show();
+                GameManager.getInstance().setCurrentView(titleScreenView);
+                return false;
+            case 'i':
+            	BaseView currentView = GameManager.getInstance().getCurrentView(); 
+                InventoryView inventoryView = new InventoryView();
+                inventoryView.setPreviousView(currentView); 
+                GameManager.getInstance().setCurrentView(inventoryView);
                 return false;
             default:
                 break;

@@ -11,6 +11,7 @@ public abstract class BaseView implements Scanner {
 	protected char[][] map;
 	
 	protected BaseView previousView;
+	protected BaseView pendingPreviousView;
 
 	public BaseView() {
 		GameManager.getInstance().setCurrentView(this);

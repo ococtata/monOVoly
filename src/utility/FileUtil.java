@@ -36,11 +36,38 @@ public class FileUtil {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true));
 			bw.write(line);
-			bw.write("\n");
+			bw.newLine();
 			bw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	public static void writeToFile(String filePath, String data) {
+        try {
+        	BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
+        	bw.write(data);
+        	bw.close();
+        } 
+        catch (IOException e) {
+        	// TODO Auto-generated catch block
+        	e.printStackTrace();
+        }
+    }
+	
+	public static void writeLinesToFile(String filePath, List<String> lines) {
+        try {
+        	BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
+            for (String line : lines) {
+                bw.write(line);
+                bw.newLine();
+            }
+            
+            bw.close();
+        } catch (IOException e) {
+        	// TODO Auto-generated catch block
+        	e.printStackTrace();
+        }
+    }
 }

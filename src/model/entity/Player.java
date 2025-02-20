@@ -1,7 +1,5 @@
 package model.entity;
 
-import java.util.List;
-
 import config.BoardConfig;
 import config.ColorConfig;
 import config.PlayerStatConfig;
@@ -15,6 +13,9 @@ import utility.TextUtil;
 public class Player extends Entity implements Scanner {
 	
 	private String id;
+	private String username;
+	private String email;
+	private String password;
 	private int coins;
 	private int gems;
 	
@@ -25,16 +26,17 @@ public class Player extends Entity implements Scanner {
 	
 	private Position mapPosition;
 
-	public Player(String name, int money, String id, int level,
-			int coins, int gems, int barracksUpgradeLevel,int currentEnergy) {
+	public Player(String id, String name, String email, String password, int money, int level,
+			int coins, int gems,int currentEnergy) {
 		super(name, money);
 		this.id = id;
 		this.level = level;
 		this.coins = coins;
 		this.gems = gems;
-		this.barracksUpgradeLevel = barracksUpgradeLevel;
 		this.currentEnergy = currentEnergy;
 		
+		this.email = email;
+		this.password = password;
 		this.mapPosition = new Position(0, 0);
 		this.maxEnergy = calculateMaxEnergy();
 		
@@ -214,4 +216,18 @@ public class Player extends Entity implements Scanner {
 		Enemy enemy = GameManager.getInstance().getEnemy();
 		return enemy;
 	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+	
+	
 }	
