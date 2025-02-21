@@ -2,6 +2,7 @@ package model.gacha.character;
 
 import config.CharacterConfig;
 import config.ColorConfig;
+import manager.MaterialLoaderManager;
 import model.entity.Entity;
 import utility.Random;
 

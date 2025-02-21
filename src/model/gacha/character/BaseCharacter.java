@@ -1,6 +1,12 @@
 package model.gacha.character;
 
+import java.util.List;
+
+import manager.GameManager;
+import manager.MaterialLoaderManager;
 import model.entity.Entity;
+import model.entity.inventory.PlayerInventory;
+import model.gacha.material.CharacterMaterial;
 
 public abstract class BaseCharacter implements CharacterSkills {
 	private static int characterCounter = 0;
@@ -11,6 +17,8 @@ public abstract class BaseCharacter implements CharacterSkills {
     private String skillName;
     private String skillDesc;
     private String nameColor;
+    
+    private List<CharacterMaterial> requiredMaterials;
 
     public BaseCharacter() {
         this.id = String.format("CH%03d", ++characterCounter);
@@ -66,4 +74,22 @@ public abstract class BaseCharacter implements CharacterSkills {
     public void setNameColor(String nameColor) {
         this.nameColor = nameColor;
     }
+
+	public boolean isTradable() {
+		PlayerInventory inventory = (PlayerInventory) GameManager.getInstance().getPlayer().getInventory();
+		for(BaseCharacter character : inventory.getCharacterList()) {
+			if(character == this) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public List<CharacterMaterial> getRequiredMaterials() {
+		return requiredMaterials;
+	}
+	
+	public void loadRequiredMaterials() {
+	    this.requiredMaterials = MaterialLoaderManager.getInstance().getRequiredMaterials(this);
+	}
 }

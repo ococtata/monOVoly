@@ -137,7 +137,7 @@ public class MaterialListView extends BaseView implements Scanner {
 
             if (choice >= 1 && choice <= 4) {
                 sortBy = choice;
-
+                System.out.println();
                 System.out.println(" Sort order: ");
                 System.out.println(" 1. Ascending");
                 System.out.println(" 2. Descending");

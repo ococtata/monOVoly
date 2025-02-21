@@ -5,13 +5,14 @@ import manager.GameManager;
 import manager.MapManager;
 import model.Position;
 import view.BaseView;
+import view.game.feature.TradeView;
 import view.game.map.MapTradeView;
 
 public class MapTradeViewController extends BaseMapViewController{
-	private MapTradeView mapBarracksView;
+	private MapTradeView mapTradeView;
 	
-	public MapTradeViewController(MapTradeView mapBarracksView) {
-		this.mapBarracksView = mapBarracksView;
+	public MapTradeViewController(MapTradeView mapTradeView) {
+		this.mapTradeView = mapTradeView;
 	}
 
 	@Override
@@ -23,10 +24,14 @@ public class MapTradeViewController extends BaseMapViewController{
         }
 		
 		if(map[newY][newX] == MapConfig.TRADE) {
+			TradeView tradeView = new TradeView();
+			tradeView.setPreviousView(mapTradeView);
+			GameManager.getInstance().setCurrentView(tradeView);
+			tradeView.show();
 			return false;
 		}
 		else if(newX == 0 && map[newY][newX] == ' ') {
-			BaseView previousView = mapBarracksView.getPreviousView();
+			BaseView previousView = mapTradeView.getPreviousView();
 			GameManager.getInstance().setCurrentView(previousView);
             previousView.show();
             

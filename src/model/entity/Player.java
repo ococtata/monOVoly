@@ -21,7 +21,6 @@ public class Player extends Entity implements Scanner {
 	
 	private int level;
 	private int maxEnergy;
-	private int barracksUpgradeLevel;
 	private int currentEnergy;
 	
 	private Position mapPosition;
@@ -120,14 +119,6 @@ public class Player extends Entity implements Scanner {
 
 	public void setCoins(int coins) {
 		this.coins = coins;
-	}
-
-	public int getBarracksUpgradeLevel() {
-		return barracksUpgradeLevel;
-	}
-
-	public void setBarracksUpgradeLevel(int barracksUpgradeLevel) {
-		this.barracksUpgradeLevel = barracksUpgradeLevel;
 	}
 
 	@Override

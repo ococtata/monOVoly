@@ -94,11 +94,18 @@ GACHA
 
 CHARACTER:
 - cost 150 gems to gacha
-- result in material (5 amount, rarity random)
+- result in material (4 amount, rarity random)
 - rarity: common: grey, rare: blue, epic: purple, legendary: gold
 - need a certain amount of materials to unlock characters (trade)
 - make the legendary rarity 1% chance of appearing
 - can trade common and rare rarity for gems (25 common = 10 gems, 10 rare = 15 gems)
 
 PENDANT:
+
+================================================================
+INVENTORY
+- Material
+	-) show number, name, rarity, amount, for character
+	-) can be sorted by name, rarity, amount, for character (can asc/dsc)
+
 

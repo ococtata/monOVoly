@@ -5,6 +5,7 @@ import java.util.List;
 
 import config.DataConfig;
 import config.GachaConfig.Rarity;
+import model.gacha.character.BaseCharacter;
 import model.gacha.material.CharacterMaterial;
 import utility.FileUtil;
 
@@ -21,7 +22,7 @@ public class MaterialLoaderManager {
 		return instance;
 	}
 	
-	public static void loadMaterials() {
+	private void loadMaterials() {
         materials.clear();
         List<String> lines = FileUtil.readFile(DataConfig.FILE_DATA_GACHA_MATERIAL);
 
@@ -50,4 +51,25 @@ public class MaterialLoaderManager {
         }
         return null;
     }
+	
+	public CharacterMaterial getMaterialByRarityAndForCard(Rarity rarity, BaseCharacter forCard) {
+		for (CharacterMaterial material : materials) {
+            if (material.getRarity().equals(rarity) && material.getCharacter().equals(forCard)) {
+                return material;
+            }
+        }
+        return null;
+	}
+	
+	public List<CharacterMaterial> getRequiredMaterials(BaseCharacter character){
+		List<CharacterMaterial> required = new ArrayList<CharacterMaterial>();
+		
+		for(CharacterMaterial mat : materials) {
+			if(mat.getCharacter().getName().equals(character.getName())) {
+				required.add(mat);
+			}
+		}
+		
+		return required;
+	}
 }

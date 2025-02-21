@@ -157,7 +157,7 @@ public class SaveLoadManager {
 
 	private void loadPlayerCharacters(Player player) {
         PlayerInventory inventory = (PlayerInventory) player.getInventory();
-        List<BaseCharacter> allCharacters = CharacterLoaderManager.getInstance().loadAllCharacters(); 
+        List<BaseCharacter> allCharacters = CharacterLoaderManager.getInstance().getCharacterList(); 
         List<String> lines = FileUtil.readFile(DataConfig.FILE_DATA_PLAYER_INVENTORY);
 
         if (lines == null) return;

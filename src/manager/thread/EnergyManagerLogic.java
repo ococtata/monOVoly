@@ -45,8 +45,7 @@ public class EnergyManagerLogic implements Runnable {
 	}
 	
 	private int calculateEnergyRegen() {
-		int finalEnergy = PlayerStatConfig.ENERGY_REGEN_BASE_AMOUNT * 
-				(1 + player.getBarracksUpgradeLevel());
+		int finalEnergy = PlayerStatConfig.ENERGY_REGEN_BASE_AMOUNT;
 		return finalEnergy;
 	}	
 }

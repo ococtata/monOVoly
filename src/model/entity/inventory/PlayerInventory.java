@@ -47,6 +47,16 @@ public class PlayerInventory extends BaseInventory {
         }
         return null;
     }
+
+	public void decreaseMaterial(CharacterMaterial mat, int amount) {
+		for(CharacterMaterial material : materialList) {
+			if(mat.getId().equals(material.getId())) {
+				material.decrease(amount);
+				break;
+			}
+		}
+		
+	}
     
     
 }

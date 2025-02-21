@@ -60,10 +60,6 @@ private static int materialCounter = 0;
         return rarity;
     }
 
-    public String amount() {
-        return name;
-    }
-
     public String getForCard() {
         return forCard;
     }
@@ -86,6 +82,10 @@ private static int materialCounter = 0;
 
 	public String getName() {
 		return name;
+	}
+
+	public void decrease(int amount) {
+		setAmount(getAmount() - amount); 	
 	}
 	
 	

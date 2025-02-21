@@ -12,9 +12,10 @@ import model.gacha.character.ShalltearBloodfallen;
 
 public class CharacterLoaderManager {
 	private static CharacterLoaderManager instance;
+	private List<BaseCharacter> characterList;
 	
 	private CharacterLoaderManager() {
-		// TODO Auto-generated constructor stub
+		this.characterList = loadAllCharacters();
 	}
 	
 	public static CharacterLoaderManager getInstance() {
@@ -23,14 +24,21 @@ public class CharacterLoaderManager {
 	}
 	
 	 public List<BaseCharacter> loadAllCharacters() {
-	        List<BaseCharacter> allCharacters = new ArrayList<BaseCharacter>();
-	        allCharacters.add(new AinzOoalGown());
-	        allCharacters.add(new Albedo());
-	        allCharacters.add(new Cocytus());
-	        allCharacters.add(new Demiurge());
-	        allCharacters.add(new ShalltearBloodfallen());
+        List<BaseCharacter> allCharacters = new ArrayList<BaseCharacter>();
+        allCharacters.add(new AinzOoalGown());
+        allCharacters.add(new Albedo());
+        allCharacters.add(new Cocytus());
+        allCharacters.add(new Demiurge());
+        allCharacters.add(new ShalltearBloodfallen());
+        
+        for(BaseCharacter character : allCharacters) {
+        	character.loadRequiredMaterials();
+        }
+        
+        return allCharacters;
+    }
 
-	        return allCharacters;
-	    }
-
+	public List<BaseCharacter> getCharacterList() {
+		return characterList;
+	}	 
 }
