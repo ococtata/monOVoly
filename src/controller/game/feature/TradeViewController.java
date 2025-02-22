@@ -3,6 +3,7 @@ package controller.game.feature;
 import java.util.ArrayList;
 import java.util.List;
 
+import config.ColorConfig;
 import manager.CharacterLoaderManager;
 import manager.GameManager;
 import manager.MaterialLoaderManager;
@@ -72,39 +73,43 @@ public class TradeViewController {
         inventory.addCharacter(character);
     }
 
-    public boolean canTradeRarity(Player player, String fromRarity, String toRarity, int amount) {
-        List<CharacterMaterial> materials = getMaterials(player);
-        PlayerInventory inventory = (PlayerInventory) player.getInventory();
-        int fromCount = 0;
-
-        for (CharacterMaterial material : materials) {
-            if (material.getRarity().toString().equals(fromRarity)) { 
-                fromCount += inventory.findMaterialById(material.getId()).getAmount();
-            }
+    public boolean canTradeRarity(Player player, CharacterMaterial fromMat, int amount) {
+        if (fromMat == null || player == null) {
+            return false;
         }
 
+        PlayerInventory inventory = (PlayerInventory) player.getInventory();
+        if (inventory == null) {
+            return false;
+        }
+
+        int fromCount = inventory.findMaterialById(fromMat.getId()).getAmount();
         return fromCount >= amount;
     }
 
-    public void performTradeRarity(Player player, String fromRarity, String toRarity, int amount) {
+    public void performTrade(Player player, CharacterMaterial fromMat, CharacterMaterial toMat, int amount) {
         List<CharacterMaterial> materials = getMaterials(player);
-        List<CharacterMaterial> toRemove = new ArrayList<CharacterMaterial>();
         PlayerInventory inventory = (PlayerInventory) player.getInventory();
+
+        if (inventory == null || fromMat == null || toMat == null) {
+            System.out.println("I nvalid trade parameters.");
+            return;
+        }
+
+        int totalAvailable = inventory.findMaterialById(fromMat.getId()).getAmount();
         
-        int count = 0;
-
-        for (CharacterMaterial material : materials) {
-            if (material.getRarity().toString().equals(fromRarity) && count < amount) { 
-                int amountToRemove = Math.min(inventory.findMaterialById(material.getId()).getAmount(), amount - count);
-                inventory.decreaseMaterial(material, amountToRemove);
-                count += amountToRemove;
-                toRemove.add(material);
-            }
+        if (totalAvailable < amount) {
+            System.out.println(" Not enough materials to trade.");
+            return;
         }
 
-        CharacterMaterial newMaterial = MaterialLoaderManager.getInstance().getMaterialById(toRarity);
-        if (newMaterial != null) {
-        	inventory.addMaterial(newMaterial.getId(), 1);
+        inventory.decreaseMaterial(fromMat, amount);
+
+        inventory.addMaterial(toMat.getId(), 1);
+
+        System.out.println(" Successfully traded " + amount + " " 
+        	    + fromMat.getRarity().getColor() + fromMat.getName() + ColorConfig.RESET 
+        	    + " for 1 " 
+        	    + toMat.getRarity().getColor() + toMat.getName() + ColorConfig.RESET);    
         }
-    }
 }

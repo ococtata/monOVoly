@@ -52,6 +52,10 @@ public class PlayerInventory extends BaseInventory {
 		for(CharacterMaterial material : materialList) {
 			if(mat.getId().equals(material.getId())) {
 				material.decrease(amount);
+				
+				if(material.getAmount() == 0) {
+					materialList.remove(material);
+				}
 				break;
 			}
 		}

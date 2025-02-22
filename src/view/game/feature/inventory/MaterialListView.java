@@ -141,6 +141,7 @@ public class MaterialListView extends BaseView implements Scanner {
                 System.out.println(" Sort order: ");
                 System.out.println(" 1. Ascending");
                 System.out.println(" 2. Descending");
+                System.out.println(" 3. Back");
                 System.out.print(" >> ");
 
                 int orderChoice;
@@ -152,6 +153,10 @@ public class MaterialListView extends BaseView implements Scanner {
                     System.out.println(" Invalid input.");
                     TextUtil.pressEnter();
                     continue;
+                }
+                
+                if(orderChoice == 3) {
+                	return;
                 }
 
                 ascending = (orderChoice == 1); 

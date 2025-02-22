@@ -1,8 +1,10 @@
 package view.game.feature;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import config.ColorConfig;
+import config.GachaConfig;
 import config.GeneralConfig;
 import controller.game.feature.TradeViewController;
 import manager.GameManager;
@@ -65,14 +67,14 @@ public class TradeView extends BaseView implements Scanner {
 	private void tradeForCharacter(Player player) {
 	    List<CharacterMaterial> materials = tradeViewController.getMaterials(player);
 	    if (materials == null || materials.isEmpty()) {
-	        System.out.println("No materials found.");
+	        System.out.println(" No materials found.");
 	        TextUtil.pressEnter();
 	        return;
 	    }
 
 	    List<BaseCharacter> characters = tradeViewController.getCharactersForTrade();
 	    if (characters.isEmpty()) {
-	        System.out.println("No characters available for trade.");
+	        System.out.println(" No characters available for trade.");
 	        TextUtil.pressEnter();
 	        return;
 	    }
@@ -94,7 +96,7 @@ public class TradeView extends BaseView implements Scanner {
 	            System.out.printf(" %d. %s%s%s\n", i + 1, charColor, character.getName(), ColorConfig.RESET);
 
 	            List<CharacterMaterial> requiredMaterials = character.getRequiredMaterials();
-	            System.out.print("    Required:\n");
+	            System.out.print("    Required Materials:\n");
 	            for (CharacterMaterial reqMat : requiredMaterials) {
 	                int ownedAmount = 0;
 
@@ -175,20 +177,26 @@ public class TradeView extends BaseView implements Scanner {
 	    }
 	}
 
-    private void tradeForHigherRarity(Player player) {
+	private void tradeForHigherRarity(Player player) {
+        List<CharacterMaterial> materials = tradeViewController.getMaterials(player);
+        List<BaseCharacter> characters = tradeViewController.getCharactersForTrade();
+
         while (true) {
             TextUtil.clearScreen();
-            System.out.println(" Trade Materials for Higher Rarity:");
-            
-            System.out.printf(" 1. 20 %sCommon%s ->  1 %sRare%s\n", ColorConfig.LIGHT_GREY, ColorConfig.RESET, ColorConfig.BLUE, ColorConfig.RESET);
-            System.out.printf(" 2. 10 %sRare%s -> 1 %sEpic%s\n", ColorConfig.BLUE, ColorConfig.RESET, ColorConfig.PURPLE, ColorConfig.RESET);
-            System.out.printf(" 3. 5 %sEpic%s -> 1 %sLegendary%s\n", ColorConfig.PURPLE, ColorConfig.RESET, ColorConfig.GOLD, ColorConfig.RESET);
-            System.out.println(" 4. Back");
+            System.out.println(" Trade Materials for Higher Rarity:\n");
+
+            for (int i = 0; i < characters.size(); i++) {
+                BaseCharacter character = characters.get(i);
+                String charColor = character.isTradable() ? character.getNameColor() : ColorConfig.RESET;
+                System.out.printf(" %d. %s%s%s\n", i + 1, charColor, character.getName(), ColorConfig.RESET);
+            }
+
+            System.out.printf(" %d. Back\n", characters.size() + 1);
             System.out.print(" >> ");
 
-            int choice;
+            int charChoice;
             try {
-                choice = scan.nextInt();
+                charChoice = scan.nextInt();
                 scan.nextLine();
             } catch (Exception e) {
                 scan.nextLine();
@@ -197,34 +205,154 @@ public class TradeView extends BaseView implements Scanner {
                 continue;
             }
 
-            switch (choice) {
-                case 1:
-                    tradeRarity(player, "COMMON", "RARE", 20);
-                    break;
-                case 2:
-                    tradeRarity(player, "RARE", "EPIC", 10);
-                    break;
-                case 3:
-                    tradeRarity(player, "EPIC", "LEGENDARY", 5);
-                    break;
-                case 4:
-                    return;
-                default:
-                    System.out.println("Invalid choice.");
-                    TextUtil.pressEnter();
+            if (charChoice >= 1 && charChoice <= characters.size()) {
+                BaseCharacter selectedChar = characters.get(charChoice - 1);
+                tradeForHigherRarityForCharacter(player, selectedChar, materials);
+                return;
+            } 
+            else if (charChoice == characters.size() + 1) {
+                return;
+            } 
+            else {
+                System.out.println(" Invalid choice.");
+                TextUtil.pressEnter();
             }
         }
     }
 
-    private void tradeRarity(Player player, String fromRarity, String toRarity, int amount) {
-        if (tradeViewController.canTradeRarity(player, fromRarity, toRarity, amount)) {
-            tradeViewController.performTradeRarity(player, fromRarity, toRarity, amount);
-            System.out.println("Successfully traded!");
-        } 
-        else {
-            System.out.println("Not enough materials to trade.");
+    private void tradeForHigherRarityForCharacter(Player player, BaseCharacter character, List<CharacterMaterial> materials) {
+        while (true) {
+            TextUtil.clearScreen();
+            System.out.println(" Trade Materials for Higher Rarity for " + character.getName() + ":\n");
+
+            List<CharacterMaterial> requiredMaterials = character.getRequiredMaterials();
+
+            System.out.print(" Required Materials:\n");
+            for (GachaConfig.Rarity rarity : GachaConfig.Rarity.values()) {
+                CharacterMaterial reqMat = null;
+                for (CharacterMaterial mat : requiredMaterials) {
+                    if (mat.getRarity() == rarity) {
+                        reqMat = mat;
+                        break;
+                    }
+                }
+
+                if (reqMat != null) {
+                    int ownedAmount = 0;
+                    for (CharacterMaterial mat : materials) {
+                        if (mat.getId().equals(reqMat.getId())) {
+                            ownedAmount = mat.getAmount();
+                            break;
+                        }
+                    }
+                    	
+                    boolean hasEnough = ownedAmount >= reqMat.getAmount();
+	                String statusColor = hasEnough ? ColorConfig.RESET : ColorConfig.RED;
+	                String statusText = hasEnough ? "" : " (Not enough!)";
+
+	                System.out.printf(" - %s%s%s (%dx/%dx)%s\n", reqMat.getRarity().getColor(), reqMat.getName(), ColorConfig.RESET, 
+	                        ownedAmount, reqMat.getAmount(), statusColor + statusText + ColorConfig.RESET);
+                }
+            }
+            System.out.println();
+            TextUtil.printHorizontalBorder(WIDTH);
+            System.out.println();
+            System.out.println(" What do you want to trade?");
+
+            List<String> tradeOptions = new ArrayList<String>();
+
+            int maxNameLength = 0;
+            for (CharacterMaterial mat : requiredMaterials) {
+                maxNameLength = Math.max(maxNameLength, mat.getName().length());
+            }
+
+            for (int i = 0; i < GachaConfig.Rarity.values().length - 1; i++) {
+                GachaConfig.Rarity fromRarity = GachaConfig.Rarity.values()[i];
+                GachaConfig.Rarity toRarity = GachaConfig.Rarity.values()[i + 1];
+
+                CharacterMaterial fromMat = null, toMat = null;
+                for (CharacterMaterial mat : requiredMaterials) {
+                    if (mat.getRarity() == fromRarity) fromMat = mat;
+                    if (mat.getRarity() == toRarity) toMat = mat;
+                }
+
+                if (fromMat != null && toMat != null) {
+                    int tradeAmount = getTradeAmount(fromRarity);
+
+                    String fromName = fromMat.getRarity().getColor() + fromMat.getName() + ColorConfig.RESET;
+                    String toName = toMat.getRarity().getColor() + toMat.getName() + ColorConfig.RESET;
+
+                    String format = " %d. %-4d %-"+ (maxNameLength + 10) +"s -> 1 %-"+ (maxNameLength + 10) +"s";
+
+                    String tradeOption = String.format(format, i + 1, tradeAmount, fromName, toName);
+                    System.out.println(tradeOption);
+                    tradeOptions.add(tradeOption);
+                }
+            }
+
+            System.out.println(" " +(GachaConfig.Rarity.values().length) + ". Back");
+            System.out.print(" >> ");
+
+            int tradeChoice;
+            try {
+                tradeChoice = scan.nextInt();
+                scan.nextLine();
+            } 
+            catch (Exception e) {
+                scan.nextLine();
+                System.out.println(" Invalid input.");
+                TextUtil.pressEnter();
+                continue;
+            }
+
+            if (tradeChoice >= 1 && tradeChoice <= tradeOptions.size()) {
+                CharacterMaterial fromMat = null, toMat = null;
+
+                for (CharacterMaterial mat : requiredMaterials) {
+                    if (mat.getRarity() == GachaConfig.Rarity.values()[tradeChoice - 1]) {
+                        fromMat = mat;
+                    }
+                    if (mat.getRarity() == GachaConfig.Rarity.values()[tradeChoice]) {
+                        toMat = mat;
+                    }
+                }
+
+                if (fromMat == null || toMat == null) {
+                    System.out.println("Invalid trade selection.");
+                    TextUtil.pressEnter();
+                    continue;
+                }
+
+                int tradeAmount = getTradeAmount(fromMat.getRarity());
+
+                if (tradeViewController.canTradeRarity(player, fromMat, tradeAmount)) {
+                    tradeViewController.performTrade(player, fromMat, toMat, tradeAmount);
+                    TextUtil.pressEnter();
+                } else {
+                    System.out.println(" Not enough materials to trade.");
+                    TextUtil.pressEnter();
+                }
+            }
+            else if (tradeChoice == GachaConfig.Rarity.values().length) {
+                break; 
+            } 
+            else {
+                System.out.println(" Invalid choice.");
+                TextUtil.pressEnter();
+            }
         }
-        TextUtil.pressEnter();
     }
 
+    private int getTradeAmount(GachaConfig.Rarity fromRarity) {
+        switch (fromRarity) {
+            case COMMON:
+                return 20;
+            case RARE:
+                return 10;
+            case EPIC:
+                return 5;
+            default:
+                return 0; 
+        }
+    }
 }

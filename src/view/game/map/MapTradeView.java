@@ -22,7 +22,7 @@ public class MapTradeView extends BaseView implements PlayerGUI{
         TextUtil.clearScreen();
         printTopBar();
         MapManager.getInstance().printMap(MapManager.getInstance().getCurrentMap());
-        System.out.println(" Use W/A/S/D to move, or Q to quit!");
+        printControls();
     }
 
 	public MapTradeViewController getMapTradeViewController() {

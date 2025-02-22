@@ -5,6 +5,7 @@ import java.util.List;
 import manager.GameManager;
 import model.entity.inventory.PlayerInventory;
 import model.gacha.character.BaseCharacter;
+import model.gacha.material.CharacterMaterial;
 import view.game.feature.inventory.CharacterListView;
 
 public class CharacterListViewController {
@@ -22,4 +23,7 @@ public class CharacterListViewController {
 		this.characters = inventory.getCharacterList();
 	}
 
+	public List<BaseCharacter> getCharacters() {
+		return characters;
+	}
 }

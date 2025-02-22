@@ -18,7 +18,7 @@ public class CharacterConfig {
     public static final String ALBEDO_SKILL_DESC = String.format("When landing on an opponent's property, %d%% chance to ignore rent or reduce it by 50%%. (Defense against expensive properties)", ALBEDO_IGNORE_CHANCE_PERCENTAGE);
 
     public static final String SHALLTEAR_NAME = "Shalltear Bloodfallen";
-    public static final String SHALLTEAR_TITLE = "Vampire War Maiden";
+    public static final String SHALLTEAR_TITLE = "The Bloody Valkyrie";
     public static final String SHALLTEAR_SKILL_NAME = "Blood Tribute";
     public static final String SHALLTEAR_SKILL_DESC = String.format("When an opponent lands on your property, steal %d%% of their money instead of just rent. (Boosts passive income)", SHALLTEAR_TRIBUTE_PERCENTAGE);
 
@@ -28,7 +28,7 @@ public class CharacterConfig {
     public static final String DEMIURGE_SKILL_DESC = "When passing the start block, choose a player to teleport to any property you own. (Strategic positioning)";
 
     public static final String COCYTUS_NAME = "Cocytus";
-    public static final String COCYTUS_TITLE = "Frozen Warrior";
+    public static final String COCYTUS_TITLE = "Ruler of Glaciers";
     public static final String COCYTUS_SKILL_NAME = "Glacial Execution";
     public static final String COCYTUS_SKILL_DESC = "If an opponent lands on your property, they skip their next turn due to being 'frozen'. (Crowd control effect)";
 }

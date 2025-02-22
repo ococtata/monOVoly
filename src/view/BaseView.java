@@ -20,6 +20,15 @@ public abstract class BaseView implements Scanner {
 	
 	protected boolean active = false;
 	
+	protected void printControls() {
+		System.out.println("  |-----------------------|");
+		System.out.println("  |        Controls       |");
+		System.out.println("  |  W/A/S/D -> Move      |");
+		System.out.println("  |  I       -> Inventory |");
+		System.out.println("  |  Q       -> Quit      |");
+		System.out.println("  |-----------------------|");
+
+	}
 	public abstract void show();
 	
 	public void deactivateView() {
