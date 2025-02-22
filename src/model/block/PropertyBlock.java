@@ -7,6 +7,8 @@ import config.GameConfig;
 import controller.game.monovoly.MonovolyMapController;
 import model.entity.Enemy;
 import model.entity.Entity;
+import model.gacha.character.Albedo;
+import model.gacha.character.ShalltearBloodfallen;
 import utility.Random;
 import utility.Scanner;
 import utility.TextUtil;
@@ -145,6 +147,9 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
 
     private void handleOpponentLanding(Entity piece) {
     	payToll(piece);
+    	if(this.owner.getEquippedCharacter() instanceof ShalltearBloodfallen) {
+    		this.owner.getEquippedCharacter().useSkill(piece);
+    	}
     	piece.updateTotalAssets();
     	this.owner.updateTotalAssets();
     	showStats();
@@ -343,6 +348,11 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
     private void payToll(Entity piece) {
         if (owner != null && owner != piece) {
             int amount = calculateToll(this);
+            
+            if(piece.getEquippedCharacter() instanceof Albedo) {
+            	piece.getEquippedCharacter().useSkill(piece);
+            }
+            
             if (piece.getMoney() >= amount) {
                 piece.pay(piece.getEnemy(), amount);
                 owner.setMoney(owner.getMoney() + amount);

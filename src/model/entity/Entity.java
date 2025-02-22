@@ -25,6 +25,7 @@ public abstract class Entity {
 	
 	private boolean isInJail;
 	private boolean isBankrupt;
+	private boolean isFrozen;
 	
 	private BaseCharacter equippedCharacter;
 	private BaseInventory inventory;
@@ -36,6 +37,7 @@ public abstract class Entity {
 		this.ownedProperties = new ArrayList<PropertyBlock>();
 		this.isInJail = false;
 		this.isBankrupt = false;
+		this.isFrozen = false;
 	}
 	
 	public void setInventory(BaseInventory inventory) {
@@ -228,5 +230,13 @@ public abstract class Entity {
 
 	public void setEquippedCharacter(BaseCharacter equippedCharacter) {
 		this.equippedCharacter = equippedCharacter;
+	}
+
+	public boolean isFrozen() {
+		return isFrozen;
+	}
+
+	public void setFrozen(boolean isFrozen) {
+		this.isFrozen = isFrozen;
 	}
 }

@@ -76,29 +76,6 @@ public class GameManager implements Scanner{
                 		else if(currentView instanceof MapTradeView) {
                 			((MapTradeView) currentView).getMapTradeViewController().handleMovement(firstChar);
                 		}
-                    		
-                    	// make take multiple input (prone to error cuz of map not updating fast enough before the check collision)
-//                    	for(char firstChar : input.toCharArray()) {
-//                    		if(firstChar == '\n') continue;
-//                    		if (currentView instanceof MapSpawnView) {
-//                    			((MapSpawnView) currentView).getMapSpawnViewController().handleMovement(firstChar);
-//                    		} 
-//                    		else if(currentView instanceof MapGachaView) {
-//                    			((MapGachaView) currentView).getMapGachaViewController().handleMovement(firstChar);
-//                    		}
-//                    		else if(currentView instanceof MapShopView) {
-//                    			((MapShopView) currentView).getMapShopViewController().handleMovement(firstChar);
-//                    		}
-//                    		else if(currentView instanceof MapTradeView) {
-//                    			((MapTradeView) currentView).getMapTradeViewController().handleMovement(firstChar);
-//                    		}
-//                    		try {
-//								Thread.sleep(150);
-//							} catch (InterruptedException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//							}
-//                    	}
                     }
                 }
             }

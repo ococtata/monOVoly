@@ -13,11 +13,15 @@ import model.card.CardFirstTurn;
 import model.entity.Enemy;
 import model.entity.Entity;
 import model.entity.Player;
+import model.gacha.character.AinzOoalGown;
+import model.gacha.character.Cocytus;
+import model.gacha.character.Demiurge;
 import model.game.Dice;
 import model.game.GameBoard;
 import utility.Random;
 import utility.Scanner;
 import utility.TextUtil;
+import view.BaseView;
 import view.game.monovoly.MonovolyMap;
 
 public class MonovolyMapController implements Scanner, Random {
@@ -26,6 +30,8 @@ public class MonovolyMapController implements Scanner, Random {
     private int playerEvenRollsLeft = 3;
     private int enemyOddRollsLeft = 3;
     private int enemyEvenRollsLeft = 3;
+    private boolean playerQuit = false;
+    private boolean isGameOver = false;
 
     public MonovolyMapController(MonovolyMap monovolyMap) {
         this.monovolyMap = monovolyMap;
@@ -39,14 +45,16 @@ public class MonovolyMapController implements Scanner, Random {
     }
     
     public void startGame() {
-    	if(GameManager.getInstance().isFirstTurn()) {
-			firstTurn();
-		}
-		else {
-			beginTurn();			
-			endTurn();
-			switchTurn();
-		}
+    	if (GameManager.getInstance().isFirstTurn()) {
+            firstTurn();
+        } 
+    	else {
+            beginTurn();
+            if(!isGameOver){
+                endTurn();
+                switchTurn();
+            }
+        }
     }
     
     private void switchTurn() {
@@ -73,8 +81,13 @@ public class MonovolyMapController implements Scanner, Random {
 
             if (currentEntity.isInJail()) {
                 rollAgain = handleJailTurn(currentEntity, dice);
-            } else {
+            } 
+            else {
                 rollAgain = GameManager.getInstance().isPlayerTurn() ? playerTurn(dice) : enemyTurn(dice);
+            }
+            
+            if (isGameOver) { 
+                break;
             }
 
         } while (rollAgain);
@@ -83,8 +96,8 @@ public class MonovolyMapController implements Scanner, Random {
     
     private boolean handleJailTurn(Entity entity, Dice dice) {
         int choice = -1;
-        int jailTax = (int) GameConfig.JAIL_TAX_MODIFIER * (entity.getTotalAssest() * (GameConfig.BLOCK_TAX_BASE_DEDUCT_PERCENTAGE / 100));
-
+        int jailTax = (int) (GameConfig.JAIL_TAX_MODIFIER * ((int) entity.getTotalAssest() * (GameConfig.BLOCK_TAX_BASE_DEDUCT_PERCENTAGE / 100)));
+        
         if (entity instanceof Player) {
             do {
                 System.out.println(" " + entity.getName() + " is in jail. What do you want to do?");
@@ -130,6 +143,7 @@ public class MonovolyMapController implements Scanner, Random {
             if (rollResult[0] == rollResult[1]) {
                 entity.setInJail(false);
                 System.out.println(" " + entity.getName() + " successfully got out of jail!");
+                TextUtil.pressEnter();
                 return true;
             } else {
                 System.out.println(" " + entity.getName() + " failed to get out of jail.");
@@ -140,6 +154,7 @@ public class MonovolyMapController implements Scanner, Random {
         	entity.pay(null, jailTax);
         	entity.setInJail(false);
         	System.out.println(" " + entity.getName() + " paid the jail tax and is free!");
+        	TextUtil.pressEnter();
         	return true; 
         }
     }
@@ -158,6 +173,11 @@ public class MonovolyMapController implements Scanner, Random {
             	TextUtil.clearScreen();
             	showProperties();
             	return true;
+            }
+            else if(choice == 5) {
+            	playerQuit = true;
+            	gameOver(GameManager.getInstance().getPlayer());
+                return false;
             }
         } catch (InputMismatchException e) { 
             System.out.println("Invalid input. Please enter a number.");
@@ -269,6 +289,7 @@ public class MonovolyMapController implements Scanner, Random {
         System.out.println(" 2. Roll dice (ANY)");
         System.out.println(" 3. Roll dice (EVEN) [" + playerEvenRollsLeft + "/3]");
         System.out.println(" 4. View My Properties");
+        System.out.println(" 5. Exit Game");
         System.out.print(" >> ");
     }
     
@@ -384,6 +405,17 @@ public class MonovolyMapController implements Scanner, Random {
             }
 
             currentIndex = nextIndex;
+            
+            if (currentIndex == 0) { 
+                if (entity instanceof Player && entity.getEquippedCharacter() instanceof Demiurge) {
+                    Demiurge demiurge = (Demiurge) entity.getEquippedCharacter();
+                    demiurge.useSkill(GameManager.getInstance().getEnemy());
+                }
+                if (entity instanceof Enemy && entity.getEquippedCharacter() instanceof Demiurge) {
+                    Demiurge demiurge = (Demiurge) entity.getEquippedCharacter();
+                    demiurge.useSkill(GameManager.getInstance().getPlayer());
+                }
+            }
         }
         
         GenericBlock landedBlock = gameBoard.getBlockList().get(currentIndex);
@@ -422,6 +454,12 @@ public class MonovolyMapController implements Scanner, Random {
     					System.out.println(" Landmark: (NO)");
     				}
     			}
+    			
+    			if (owner != null && owner != piece && 
+    					owner.getEquippedCharacter() instanceof Cocytus) {
+    	            Cocytus cocytus = (Cocytus) owner.getEquippedCharacter();
+    	            cocytus.useSkill(owner, piece);
+    	        }
     		}
     	}
         TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
@@ -462,11 +500,51 @@ public class MonovolyMapController implements Scanner, Random {
     }
     
     public void endTurn() {
-    	Entity piece = (GameManager.getInstance().isPlayerTurn() ? 
-    			GameManager.getInstance().getPlayer() : GameManager.getInstance().getEnemy());
-    	
+        Entity piece = (GameManager.getInstance().isPlayerTurn() ?
+                GameManager.getInstance().getPlayer() : GameManager.getInstance().getEnemy());
+
+        if (piece.getMoney() < 0) {
+            if (piece.getEquippedCharacter() instanceof AinzOoalGown) {
+                AinzOoalGown ainz = (AinzOoalGown) piece.getEquippedCharacter();
+                if (!ainz.hasResurrected()) {
+                    ainz.useSkill(piece);
+                } 
+                else {
+                    gameOver(piece);
+                }
+            } 
+            else {
+                System.out.println(" " + piece.getName() + " is bankrupt!");
+                TextUtil.pressEnter();
+                gameOver(piece);
+            }
+        }
+
         for (PropertyBlock property : piece.getOwnedProperties()) {
             property.decrementFestivalDuration();
         }
+    }
+
+    private void gameOver(Entity loser) {
+        if (loser instanceof Enemy) {
+        	GameManager.getInstance().setEnemy(null);
+        } 
+        
+        if(!playerQuit){
+            if (GameManager.getInstance().getPlayer() == null) {
+                System.out.println(" Enemy wins!");
+            } else {
+                System.out.println(" Player wins!");
+            }
+            TextUtil.pressEnter();
+        }
+        
+        playerQuit = false;
+        isGameOver = true;
+
+        BaseView previousView = GameManager.getInstance().getCurrentView().getPreviousView();
+
+        GameManager.getInstance().setCurrentView(previousView);
+        previousView.show();
     }
 }

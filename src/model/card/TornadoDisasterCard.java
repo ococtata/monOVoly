@@ -20,7 +20,6 @@ public class TornadoDisasterCard extends GenericCard implements Random {
 
         if (ownedProperties.isEmpty()) {
             System.out.println(" " + piece.getName() + " have no properties for the tornado to destroy.");
-            TextUtil.pressEnter();
             return;
         }
 

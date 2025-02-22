@@ -1,5 +1,6 @@
 package view.game.feature.inventory;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import config.ColorConfig;
 import config.GeneralConfig;
 import controller.game.feature.inventory.CharacterListViewController;
 import manager.GameManager;
+import model.entity.Entity;
 import model.gacha.character.BaseCharacter;
 import model.gacha.material.CharacterMaterial;
 import utility.Scanner;
@@ -26,7 +28,7 @@ public class CharacterListView extends BaseView implements Scanner {
 	
 	@Override
     public void show() {
-		List<BaseCharacter> characters = characterListViewController.getCharacters();
+        List<BaseCharacter> characters = characterListViewController.getCharacters();
         int pageSize = 10;
         int currentPage = 0;
 
@@ -34,7 +36,7 @@ public class CharacterListView extends BaseView implements Scanner {
             TextUtil.clearScreen();
             TextUtil.printHeader("Character List", GeneralConfig.WIDTH, GeneralConfig.HEIGHT);
             System.out.println();
-            
+
             if (characters == null || characters.isEmpty()) {
                 System.out.println(" You don't have any characters unlocked!\n");
                 TextUtil.pressEnter();
@@ -42,23 +44,26 @@ public class CharacterListView extends BaseView implements Scanner {
                 getPreviousView().show();
                 return;
             }
-            
+
             int startIndex = currentPage * pageSize;
             int endIndex = Math.min((currentPage + 1) * pageSize, characters.size());
 
             System.out.println(" Your Unlocked Characters (Page " + (currentPage + 1) + " of " + (int) Math.ceil((double) characters.size() / pageSize) + "):");
-            
+
             showTable(startIndex, endIndex, characters);
 
             if (endIndex < characters.size()) {
                 System.out.println(" 1. Previous Page");
                 System.out.println(" 2. Next Page");
-                System.out.println(" 3. Back to Inventory");
+                System.out.println(" 3. Equip Character");
+                System.out.println(" 4. Back to Inventory");
             } else if (currentPage > 0) {
                 System.out.println(" 1. Previous Page");
-                System.out.println(" 3. Back to Inventory");
+                System.out.println(" 3. Equip Character");
+                System.out.println(" 4. Back to Inventory");
             } else {
-             	System.out.println(" 3. Back to Inventory");
+                System.out.println(" 3. Equip Character");
+                System.out.println(" 4. Back to Inventory");
             }
 
             System.out.print(" >> ");
@@ -66,20 +71,19 @@ public class CharacterListView extends BaseView implements Scanner {
             int choice;
             try {
                 choice = scan.nextInt();
-                scan.nextLine(); 
+                scan.nextLine();
             } catch (InputMismatchException e) {
-                scan.nextLine(); 
+                scan.nextLine();
                 System.out.println(" Invalid input. Please enter a number.");
                 TextUtil.pressEnter();
-                continue; 
+                continue;
             }
 
             switch (choice) {
                 case 1:
                     if (currentPage > 0) {
                         currentPage--;
-                    } 
-                    else {
+                    } else {
                         System.out.println(" You are already on the first page.");
                         TextUtil.pressEnter();
                     }
@@ -87,53 +91,90 @@ public class CharacterListView extends BaseView implements Scanner {
                 case 2:
                     if (endIndex < characters.size()) {
                         currentPage++;
-                    } 
-                    else {
+                    } else {
                         System.out.println(" You are already on the last page.");
                         TextUtil.pressEnter();
                     }
                     break;
                 case 3:
-                	GameManager.getInstance().setCurrentView(getPreviousView());
-                	getPreviousView().show();
-                	return;
+                    equipCharacter(characters, startIndex, endIndex);
+                    break;
+                case 4:
+                    GameManager.getInstance().setCurrentView(getPreviousView());
+                    getPreviousView().show();
+                    return;
                 default:
                     System.out.println(" Invalid choice.");
                     TextUtil.pressEnter();
             }
-        } 
+        }
     }
-	
-	private void showTable(int startIndex, int endIndex, List<BaseCharacter> characters) {
-	    int maxNameLength = "Name".length();
-	    int maxTitleLength = "Title".length();
-	    int maxSkillNameLength = "Skill Name".length();
-	    int maxSkillDescLength = "Skill Desc".length();
 
-	    for (int i = startIndex; i < endIndex; i++) {
-	        BaseCharacter character = characters.get(i);
-	        maxNameLength = Math.max(maxNameLength, character.getName().length());
-	        maxTitleLength = Math.max(maxTitleLength, character.getTitle().length());
-	        maxSkillNameLength = Math.max(maxSkillNameLength, character.getSkillName().length());
-	        maxSkillDescLength = Math.max(maxSkillDescLength, character.getSkillDesc().length());
-	    }
+    private void equipCharacter(List<BaseCharacter> characters, int startIndex, int endIndex) {
+        System.out.print(" Enter the number of the character to equip: ");
+        int characterNumber;
+        try {
+            characterNumber = scan.nextInt();
+            scan.nextLine();
+        } catch (InputMismatchException e) {
+            scan.nextLine();
+            System.out.println(" Invalid input. Please enter a number.");
+            TextUtil.pressEnter();
+            return;
+        }
 
-	    int borderLength = 21 + maxNameLength + maxTitleLength + maxSkillNameLength + maxSkillDescLength;
+        if (characterNumber < startIndex + 1 || characterNumber > endIndex) {
+            System.out.println(" Invalid character number.");
+            TextUtil.pressEnter();
+            return;
+        }
 
-	    TextUtil.printHorizontalBorder(borderLength);
-	    System.out.printf(" | %-5s | %-"+ maxNameLength +"s | %-"+ maxTitleLength +"s | %-"+ maxSkillNameLength +"s | %-"+ maxSkillDescLength +"s |\n",
-	                      "No.", "Name", "Title", "Skill Name", "Skill Desc");
-	    TextUtil.printHorizontalBorder(borderLength);
+        Entity player = GameManager.getInstance().getPlayer();
+        player.setEquippedCharacter(characters.get(characterNumber - 1));
+        System.out.println(" " + characters.get(characterNumber - 1).getName() + " equipped!");
+        TextUtil.pressEnter();
+    }
 
-	    for (int i = startIndex; i < endIndex; i++) {
-	        BaseCharacter character = characters.get(i);
-	        String nameColor = character.getNameColor();
-	        System.out.printf(" | %-5s | %s%-"+ maxNameLength +"s%s | %-"+ maxTitleLength +"s | %-"+ maxSkillNameLength +"s | %-"+ maxSkillDescLength +"s |\n",
-	                          i + 1, nameColor, character.getName(), ColorConfig.RESET,
-	                          character.getTitle(), character.getSkillName(), character.getSkillDesc());
-	        TextUtil.printHorizontalBorder(borderLength);
-	    }
-	}
+    private void showTable(int startIndex, int endIndex, List<BaseCharacter> characters) {
+        int maxNameLength = "Name".length();
+        int maxTitleLength = "Title".length();
+        int maxSkillNameLength = "Skill Name".length();
+        int maxSkillDescLength = "Skill Desc".length();
 
+        List<String> displayNames = new ArrayList<String>();
 
+        for (int i = startIndex; i < endIndex; i++) {
+            BaseCharacter character = characters.get(i);
+            String nameColor = character.getNameColor();
+            String equippedStatus = "";
+            if (GameManager.getInstance().getPlayer().getEquippedCharacter() == character) {
+                equippedStatus = ColorConfig.GREEN + " (Equipped)" + ColorConfig.RESET;
+            }
+            String displayName = nameColor + character.getName() + ColorConfig.RESET + equippedStatus;
+            displayNames.add(displayName);
+
+            maxTitleLength = Math.max(maxTitleLength, character.getTitle().length());
+            maxSkillNameLength = Math.max(maxSkillNameLength, character.getSkillName().length());
+            maxSkillDescLength = Math.max(maxSkillDescLength, character.getSkillDesc().length());
+        }
+
+        for (String displayName : displayNames) {
+            maxNameLength = Math.max(maxNameLength, displayName.length());
+        }
+
+        int borderLength = 21 + maxNameLength + maxTitleLength + maxSkillNameLength + maxSkillDescLength;
+
+        TextUtil.printHorizontalBorder(borderLength);
+        System.out.printf(" | %-5s | %-" + maxNameLength + "s | %-" + maxTitleLength + "s | %-" + maxSkillNameLength + "s | %-" + maxSkillDescLength + "s |\n",
+                "No.", "Name", "Title", "Skill Name", "Skill Desc");
+        TextUtil.printHorizontalBorder(borderLength);
+
+        for (int i = startIndex; i < endIndex; i++) {
+            BaseCharacter character = characters.get(i);
+            System.out.printf(" | %-5s | %-" + maxNameLength + "s | %-" + maxTitleLength + "s | %-" + maxSkillNameLength + "s | %-" + maxSkillDescLength + "s |\n",
+                    i + 1, displayNames.get(i - startIndex),
+                    character.getTitle(), character.getSkillName(), character.getSkillDesc());
+            TextUtil.printHorizontalBorder(borderLength);
+        }
+    }
 }

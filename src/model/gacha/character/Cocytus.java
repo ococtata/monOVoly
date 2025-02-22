@@ -3,6 +3,7 @@ package model.gacha.character;
 import config.CharacterConfig;
 import config.ColorConfig;
 import model.entity.Entity;
+import utility.TextUtil;
 
 public class Cocytus extends BaseCharacter implements CharacterSkills {
 
@@ -22,7 +23,8 @@ public class Cocytus extends BaseCharacter implements CharacterSkills {
 	
 	@Override
     public boolean glacialExecution(Entity opponent) {
-        System.out.println(" " + getName() + " used Glacial Execution! Opponent's next turn is skipped.");
+        opponent.setFrozen(true);
+        System.out.println(" " + getName() + " used Glacial Execution! " + opponent.getName() + "'s next turn is skipped.");
         return true;
     }
 }

@@ -2,7 +2,7 @@ package config;
 
 public class CharacterConfig {
 
-	public static final int AINZ_REVIVE_MONEY_PERCENTAGE = 50;
+	public static final int AINZ_REVIVE_MONEY_PERCENTAGE = 100;
 	public static final int ALBEDO_IGNORE_CHANCE_PERCENTAGE = 50;
 	public static final int ALBEDO_REDUCE_CHANCE_PERCENTAGE = 100 - ALBEDO_IGNORE_CHANCE_PERCENTAGE;
 	public static final int SHALLTEAR_TRIBUTE_PERCENTAGE = 10;
@@ -20,12 +20,12 @@ public class CharacterConfig {
     public static final String SHALLTEAR_NAME = "Shalltear Bloodfallen";
     public static final String SHALLTEAR_TITLE = "The Bloody Valkyrie";
     public static final String SHALLTEAR_SKILL_NAME = "Blood Tribute";
-    public static final String SHALLTEAR_SKILL_DESC = String.format("When an opponent lands on your property, steal %d%% of their money instead of just rent. (Boosts passive income)", SHALLTEAR_TRIBUTE_PERCENTAGE);
-
+    public static final String SHALLTEAR_SKILL_DESC = String.format("When an opponent lands on your property, steal %d%% of their money in addition to the toll. (Boosts passive income)", SHALLTEAR_TRIBUTE_PERCENTAGE);
+   
     public static final String DEMIURGE_NAME = "Demiurge";
     public static final String DEMIURGE_TITLE = "Tactical Genius";
     public static final String DEMIURGE_SKILL_NAME = "Infernal Strategy";
-    public static final String DEMIURGE_SKILL_DESC = "When passing the start block, choose a player to teleport to any property you own. (Strategic positioning)";
+    public static final String DEMIURGE_SKILL_DESC = "Upon passing/landing on the start block, force an opponent to teleport to a property of your choice.. (Strategic positioning)";
 
     public static final String COCYTUS_NAME = "Cocytus";
     public static final String COCYTUS_TITLE = "Ruler of Glaciers";
