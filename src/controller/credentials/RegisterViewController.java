@@ -1,10 +1,14 @@
 package controller.credentials;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import config.CredentialsConfig;
 import config.DataConfig;
 import config.SecurityConfig;
+import manager.GameManager;
+import manager.SaveLoadManager;
+import model.entity.Player;
 import security.Encryption;
 import utility.FileUtil;
 import utility.TextUtil;
@@ -24,9 +28,10 @@ public class RegisterViewController {
 		String userData = String.format("%s#%s#%s#%s", id, username, email, ecryptedPassword);
 		FileUtil.appendToFile(DataConfig.FILE_DATA_USER, userData);
 		
-		String playerStat = String.format("%s#1#0#0#1#0", id);	
+		String playerStat = String.format("%s#1#0#0#0", id);	
 		FileUtil.appendToFile(DataConfig.FILE_DATA_PLAYER_STAT, playerStat);
 		
+		SaveLoadManager.getInstance().loadAll();
 		System.out.println(" User successfully registered!");
 		TextUtil.pressEnter();
 		return true;

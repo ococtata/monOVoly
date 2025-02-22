@@ -1,5 +1,6 @@
 package manager.thread;
 
+import manager.GameManager;
 import model.entity.Player;
 
 public class EnergyManager {
@@ -20,14 +21,14 @@ public class EnergyManager {
 	}
 	
 	public void start() {
-		if (!isRunning) { 
+		if (!isRunning) {
+            energyManagerLogic = new EnergyManagerLogic(GameManager.getInstance().getPlayer());
             energyManagerThread = new Thread(energyManagerLogic);
             energyManagerThread.setDaemon(true);
             energyManagerThread.start();
-            isRunning = true; 
-        } 
-		else {
-            energyManagerLogic.activate(); 
+            isRunning = true;
+        } else {
+            energyManagerLogic.activate();
         }
     }
 
