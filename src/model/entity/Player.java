@@ -1,5 +1,7 @@
 package model.entity;
 
+import java.awt.Color;
+
 import config.BoardConfig;
 import config.ColorConfig;
 import config.PlayerStatConfig;
@@ -16,33 +18,34 @@ public class Player extends Entity implements Scanner {
 	private String username;
 	private String email;
 	private String password;
-	private int coins;
 	private int gems;
 	
 	private int level;
 	private int maxEnergy;
 	private int currentEnergy;
+	private int currentExp;
 	
 	private Position mapPosition;
 
 	public Player(String id, String name, String email, String password, int money, int level,
-			int coins, int gems,int currentEnergy) {
-		super(name, money);
-		this.id = id;
-		this.level = level;
-		this.coins = coins;
-		this.gems = gems;
-		this.currentEnergy = currentEnergy;
-		
-		this.email = email;
-		this.password = password;
-		this.mapPosition = new Position(0, 0);
-		this.maxEnergy = calculateMaxEnergy();
-		
-		setColor(ColorConfig.LIGHT_GREEN);
-		setPiece(getColor() + BoardConfig.PLAYER_PIECE + ColorConfig.RESET);
-		setInventory(new PlayerInventory());
-	}
+            int gems, int currentExp, int currentEnergy) {
+        super(name, money);
+        this.id = id;
+        this.level = level;
+        this.gems = gems;
+        this.currentExp = currentExp;
+        this.currentEnergy = currentEnergy;
+
+        this.email = email;
+        this.password = password;
+        this.mapPosition = new Position(0, 0);
+        this.maxEnergy = calculateMaxEnergy();
+
+        setColor(ColorConfig.LIGHT_GREEN);
+        setPiece(getColor() + BoardConfig.PLAYER_PIECE + ColorConfig.RESET);
+        setInventory(new PlayerInventory());
+        setName(ColorConfig.GREEN + name + ColorConfig.RESET);
+    }
 	
 	private int calculateMaxEnergy() {
 		float modifier = (float) (1 + (level * 0.1));
@@ -113,16 +116,8 @@ public class Player extends Entity implements Scanner {
 		this.id = id;
 	}
 
-	public int getCoins() {
-		return coins;
-	}
-
-	public void setCoins(int coins) {
-		this.coins = coins;
-	}
-
 	@Override
-	public PropertyBlock chooseProperty() {
+    public PropertyBlock chooseProperty() {
         PropertyBlock chosen = null;
 
         int pageSize = 3;
@@ -140,10 +135,10 @@ public class Player extends Entity implements Scanner {
                 TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
                 System.out.println(" " + (i + 1) + ". " + property.getName());
                 TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-                System.out.println("   Value: $" + property.getPrice());
-                System.out.println("   Toll: $" + property.calculateToll(property));
-                System.out.println("   Building Level: " + property.getBuildingLevel());
-                System.out.println("   Has Landmark: " + (property.hasLandmark() ? "Yes" : "No"));
+                System.out.println("    Value: $" + property.getPrice());
+                System.out.println("    Toll: $" + property.calculateToll(property));
+                System.out.println("    Building Level: " + property.getBuildingLevel());
+                System.out.println("    Has Landmark: " + (property.hasLandmark() ? "Yes" : "No"));
                 System.out.println();
             }
             TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
@@ -152,12 +147,10 @@ public class Player extends Entity implements Scanner {
                 System.out.println(" 1. Previous Page");
                 System.out.println(" 2. Next Page");
                 System.out.println(" Type property name to choose");
-            } 
-            else if (currentPage > 0) {
+            } else if (currentPage > 0) {
                 System.out.println(" 1. Previous Page");
                 System.out.println(" Type property name to choose");
-            } 
-            else {
+            } else {
                 System.out.println(" Type property name to choose");
             }
 
@@ -189,15 +182,19 @@ public class Player extends Entity implements Scanner {
                     System.out.println(" Invalid choice. Please enter 1 or 2, or a property name.");
                     TextUtil.pressEnter();
                 }
-            } catch (NumberFormatException e) {
+            } 
+            catch (NumberFormatException e) {
+                boolean propertyFound = false;
                 for (PropertyBlock property : getOwnedProperties()) {
                     if (property.getName().equalsIgnoreCase(input)) {
                         chosen = property;
                         return chosen;
                     }
                 }
-                System.out.println(" Invalid input. Please enter 1 or 2, or a valid property name.");
-                TextUtil.pressEnter();
+                if(!propertyFound){
+                    System.out.println(" Invalid property name.");
+                    TextUtil.pressEnter();
+                }
             }
         }
     }
@@ -219,6 +216,28 @@ public class Player extends Entity implements Scanner {
 	public String getUsername() {
 		return username;
 	}
-	
-	
+
+	public int getCurrentExp() {
+        return currentExp;
+    }
+
+    public void setCurrentExp(int currentExp) {
+        this.currentExp = currentExp;
+    }
+
+    public void addExp(int amount) {
+        this.currentExp += amount;
+        checkLevelUp();
+    }
+
+    private void checkLevelUp() {
+        int expToLevelUp = level * 10;
+        if (currentExp >= expToLevelUp) {
+            level++;
+            currentExp -= expToLevelUp;
+            System.out.println("Congratulations! You leveled up to level " + level + "!");
+            maxEnergy = calculateMaxEnergy();
+            System.out.println("Your max energy is now " + maxEnergy);
+        }
+    }
 }	

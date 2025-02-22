@@ -12,6 +12,7 @@ public class ShalltearBloodfallen extends BaseCharacter implements CharacterSkil
         setSkillName(CharacterConfig.SHALLTEAR_SKILL_NAME);
         setSkillDesc(CharacterConfig.SHALLTEAR_SKILL_DESC);
         setNameColor(ColorConfig.LIGHT_RED);
+        setId(CharacterConfig.SHALLTEAR_ID);
     }
 
     public int useSkill(Entity entity, int toll) {
@@ -25,7 +26,11 @@ public class ShalltearBloodfallen extends BaseCharacter implements CharacterSkil
         int tribute = (int) (opponent.getMoney() * 0.1);
         if (opponent.getMoney() >= tribute) {
             opponent.setMoney(opponent.getMoney() - tribute);
-            System.out.println(" " + getName() + " used Blood Tribute and stole $" + tribute + " from " + opponent.getName() + "!");
+            String name = getNameColor() + getName() + ColorConfig.RESET;
+            System.out.println(" " + name + " used Blood Tribute and stole $" + tribute + " from " + opponent.getName() + "!");
+            System.out.println();
+            System.out.println(" The total toll is now $" + (rent + tribute));
+            
             return rent + tribute; 
         } 
         else {

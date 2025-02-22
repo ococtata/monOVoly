@@ -10,7 +10,7 @@ public interface CharacterSkills {
     default int bloodTribute(int rent, Entity opponent) { 
     	return rent;
     }
-    default void infernalStrategy(Entity entity) {}
+    default void infernalStrategy(Entity owner) {}
     default boolean glacialExecution(Entity opponent) {
 		return false; 
 	}

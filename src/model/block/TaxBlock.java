@@ -4,7 +4,7 @@ import config.GameConfig;
 import model.entity.Entity;
 
 public class TaxBlock extends GenericBlock{
-	private int taxPercentage;
+	private double taxPercentage;
 
 	public TaxBlock(String name, String desc, int index) {
 		super(name, desc, index);
@@ -13,10 +13,10 @@ public class TaxBlock extends GenericBlock{
 	}
 
 	@Override
-	public void onLand(Entity piece) {
-		int tax = (int) piece.getMoney() / taxPercentage;
-		piece.pay(piece.getEnemy(), tax);
-		System.out.printf(" %s paid $%d in taxes.\n", piece.getName(), tax);
-	}
+    public void onLand(Entity piece) {
+        int tax = (int) (piece.getMoney() * taxPercentage);
+        piece.pay(null, tax);
+        System.out.printf(" %s paid $%d in taxes.\n", piece.getName(), tax);
+    }
 
 }

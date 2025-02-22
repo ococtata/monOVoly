@@ -13,6 +13,7 @@ public class Cocytus extends BaseCharacter implements CharacterSkills {
         setSkillName(CharacterConfig.COCYTUS_SKILL_NAME);
         setSkillDesc(CharacterConfig.COCYTUS_SKILL_DESC);
         setNameColor(ColorConfig.LIGHT_BLUE);
+        setId(CharacterConfig.COCYTUS_ID);
 	}
 	
 	public boolean useSkill(Entity entity, Entity opponent) {
@@ -24,7 +25,8 @@ public class Cocytus extends BaseCharacter implements CharacterSkills {
 	@Override
     public boolean glacialExecution(Entity opponent) {
         opponent.setFrozen(true);
-        System.out.println(" " + getName() + " used Glacial Execution! " + opponent.getName() + "'s next turn is skipped.");
+        String name = getNameColor() + getName() + ColorConfig.RESET;
+        System.out.println(" " + name + " used Glacial Execution! " + opponent.getName() + "'s next turn is skipped.");
         return true;
     }
 }

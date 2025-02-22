@@ -22,7 +22,7 @@ public class SendToPropertyCard extends GenericCard implements Scanner{
 	@Override
     public void onTrigger(Entity piece) {
 		if(piece.getEnemy().isInJail()) {
-    		System.out.println(" " + piece.getName() + " is in jail, cannot be moved!");
+    		System.out.println(" " + piece.getEnemy().getName() + " is in jail, cannot be moved!");
     		return;
     	}
         GameManager gameManager = GameManager.getInstance();
@@ -32,11 +32,10 @@ public class SendToPropertyCard extends GenericCard implements Scanner{
 
         if (ownedProperties.isEmpty()) {
             System.out.println(" " + piece.getName() + " doesn't own any properties yet.");
-            TextUtil.pressEnter();
             return;
         }
         
-        PropertyBlock chosenProperty = chooseProperty(ownedProperties, piece);
+        PropertyBlock chosenProperty = piece.chooseProperty();
 
         GenericBlock currentBlock = null;
         for (GenericBlock block : gameManager.getGameBoard().getBlockList()) {
@@ -57,96 +56,8 @@ public class SendToPropertyCard extends GenericCard implements Scanner{
         
         TextUtil.clearScreen();
         GameManager.getInstance().getGameBoard().printBoard();
+        TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+
         chosenProperty.onLand(target);
     }
-	
-	private PropertyBlock chooseProperty(List<PropertyBlock> ownedProperties, Entity piece) {
-	    PropertyBlock chosen = null;
-
-	    if (piece instanceof Player) {
-	        int pageSize = 3;
-	        int currentPage = 0;
-
-	        while (true) {
-	            TextUtil.clearScreen();
-	            int startIndex = currentPage * pageSize;
-	            int endIndex = Math.min((currentPage + 1) * pageSize, ownedProperties.size());
-
-	            System.out.println(" Your Properties (Page " + (currentPage + 1) + " of " + (int) Math.ceil((double) ownedProperties.size() / pageSize) + "):");
-	            TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-
-	            for (int i = startIndex; i < endIndex; i++) {
-	                PropertyBlock property = ownedProperties.get(i);
-	                System.out.println(" " + (i + 1) + ". " + property.getName()); 
-	                TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-	                System.out.println("   Value: $" + property.getPrice());
-	                System.out.println("   Toll: $" + property.calculateToll(property));
-	                System.out.println("   Building Level: " + property.getBuildingLevel());
-	                System.out.println("   Has Landmark: " + (property.hasLandmark() ? "Yes" : "No"));
-	                System.out.println();
-	            }
-	            TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-
-	            if (endIndex < ownedProperties.size()) {
-	                System.out.println(" 1. Previous Page");
-	                System.out.println(" 2. Next Page");
-	                System.out.println(" Type property name to choose"); 
-	            } else if (currentPage > 0) {
-	                System.out.println(" 1. Previous Page");
-	                System.out.println(" Type property name to choose"); 
-	            } else {
-	                System.out.println(" Type property name to choose"); 
-	            }
-
-	            System.out.print(" >> ");
-
-	            String input = scan.nextLine();
-
-	            try {
-	                int choice = Integer.parseInt(input);
-	                if (choice == 1) {
-	                    if (currentPage > 0) {
-	                        currentPage--;
-	                    } 
-	                    else {
-	                        System.out.println(" You are already on the first page.");
-	                        TextUtil.pressEnter();
-	                    }
-	                } 
-	                else if (choice == 2) {
-	                    if (endIndex < ownedProperties.size()) {
-	                        currentPage++;
-	                    } 
-	                    else {
-	                        System.out.println(" You are already on the last page.");
-	                        TextUtil.pressEnter();
-	                    }
-	                } else {
-	                    System.out.println(" Invalid choice. Please enter 1 or 2, or a property name.");
-	                    TextUtil.pressEnter();
-	                }
-	            } catch (NumberFormatException e) {
-	                for (PropertyBlock property : ownedProperties) {
-	                    if (property.getName().equalsIgnoreCase(input)) {
-	                        chosen = property;
-	                        return chosen;
-	                    }
-	                }
-	                System.out.println(" Invalid input. Please enter 1 or 2, or a valid property name.");
-	                TextUtil.pressEnter();
-	            }
-	        }
-	    } 
-	    else if (piece instanceof Enemy) {
-	        int highestPrice = -1;
-	        for (PropertyBlock property : ownedProperties) {
-	            if (property.getPrice() > highestPrice) {
-	                highestPrice = property.getPrice();
-	                chosen = property;
-	            }
-	        }
-	        return chosen;
-	    }
-	    return null;
-	}
 }

@@ -16,7 +16,6 @@ import model.block.TaxBlock;
 import model.block.WorldTravelBlock;
 import model.entity.Entity;
 import utility.FileUtil;
-import utility.TextUtil;
 
 public class GameBoard {
     private int boardHeight, boardWidth;
@@ -42,7 +41,7 @@ public class GameBoard {
 
     private void initializeBoard() {
         List<String> propertyBlockData = FileUtil.readFile(DataConfig.FILE_DATA_BLOCK);
-        blockList.add(new StartBlock("start", "start", 0));
+        blockList.add(new StartBlock("Go!", "In the end, it all comes back to this.", 0));
 
         int amount = 2 * (boardHeight + boardWidth) - 4;
         int propertyCounter = 0;
@@ -167,12 +166,14 @@ public class GameBoard {
                 	label = ownerColor + label + ColorConfig.RESET;
                 }
                 else {
-                	label = ownerColor + label + ColorConfig.RESET + " ";                   	
+                	label = ownerColor + label + ColorConfig.RESET;                   	
                 }
             }
         }
+        
+        String color = getColorForBlock(block);
 
-        return label;
+        return color + label + ColorConfig.RESET + " ";
     }
     
     private String getPieceOnBlockString(GenericBlock block) {
@@ -228,6 +229,28 @@ public class GameBoard {
 		this.blockList = blockList;
 	}
 	
-	
+	private String getColorForBlock(GenericBlock block) {
+	    if (block instanceof StartBlock) {
+	        return ColorConfig.LIGHT_GREY;
+	    } 
+	    else if (block instanceof CardBlock) {
+	        return ColorConfig.GOLD; 
+	    } 
+	    else if (block instanceof TaxBlock) {
+	        return ColorConfig.LIGHT_RED; 
+	    } 
+	    else if (block instanceof WorldTravelBlock) {
+	        return ColorConfig.PURPLE; 
+	    } 
+	    else if (block instanceof GoToJailBlock) {
+	        return ColorConfig.CYAN; 
+	    } 
+	    else if (block instanceof JailBlock) {
+	        return ColorConfig.ORANGE; 
+	    } 
+	    else {
+	        return ColorConfig.RESET;
+	    }
+	}
 
 }

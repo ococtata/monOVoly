@@ -83,6 +83,4 @@ public abstract class GenericBlock {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
-	
-	
 }

@@ -2,6 +2,8 @@ package model.card;
 
 import config.ColorConfig;
 import manager.GameManager;
+import model.entity.Enemy;
+import model.entity.Player;
 import utility.Random;
 import utility.Scanner;
 import utility.TextUtil;
@@ -35,7 +37,7 @@ public class CardFirstTurn implements Random, Scanner{
         boolean validChoice = false;
         
         while (!validChoice) {
-            System.out.print(" \nEnter 1 (left card) or 2 (right card): ");
+            System.out.print(" \n Enter 1 (left card) or 2 (right card): ");
             String input = scan.nextLine();
 
             try {
@@ -56,7 +58,12 @@ public class CardFirstTurn implements Random, Scanner{
         revealCard(choice);
 
         int selectedCard = (choice == 1) ? card1 : card2;
-        System.out.println(selectedCard == 1 ? " Player moves first!" : " Enemy moves first!");
+        
+        Player player = GameManager.getInstance().getPlayer();
+        Enemy enemy = GameManager.getInstance().getEnemy();
+        System.out.println(selectedCard == 1 ? 
+        		" " + player.getName() + " moves first!" : 
+        		" " + enemy.getName() + " moves first!");
         if (selectedCard == 1) {
             GameManager.getInstance().setPlayerTurn(true);
         }

@@ -21,15 +21,13 @@ public class StartBlock extends GenericBlock implements Scanner {
         setType("Start");
     }
 
-    public void onPass(Entity piece) {
-        increaseMoney(piece, income);
-        System.out.println(" You passed Start and received $" + income + "!");
-    }
-
     @Override
     public void onLand(Entity piece) {
         increaseMoney(piece, income);
-        System.out.println(" You landed on Start and received $" + income + "!");
+        System.out.println(" " + piece.getName() + " landed on " + getName() + " and received $" + income + "!");
+        System.out.println();
+        TextUtil.pressEnter();
+        System.out.println();
         upgradeProperty(piece);
     }
 
@@ -40,15 +38,17 @@ public class StartBlock extends GenericBlock implements Scanner {
     }
 
     private void upgradeProperty(Entity piece) {
+    	 TextUtil.printHorizontalBorder(
+ 				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
         List<PropertyBlock> ownedProperties = piece.getOwnedProperties();
 
         if (ownedProperties.isEmpty()) {
-            System.out.println(" You have no properties to upgrade.");
+            System.out.println(" " + piece.getName() + " have no properties to upgrade.");
             TextUtil.pressEnter();
             return;
         }
 
-        System.out.println(" You landed on Start! You can upgrade one of your properties.");
+        System.out.println(" " + piece.getName() + " can upgrade one of their properties.\n");
         System.out.println(" Select a property to upgrade:");
 
         PropertyBlock chosen = piece.chooseProperty();

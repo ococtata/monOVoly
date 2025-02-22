@@ -61,7 +61,7 @@ public class GameManager implements Scanner{
                 currentView.show();
 
                 if (scan.hasNextLine()) { 
-                    String input = scan.nextLine();
+                    String input = scan.nextLine().toLowerCase();
                     if (!input.isEmpty()) { 
                     	char firstChar = input.charAt(0);
                     	if (currentView instanceof MapSpawnView) {

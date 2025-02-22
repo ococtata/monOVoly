@@ -1,5 +1,6 @@
 package view;
 
+import config.ColorConfig;
 import manager.GameManager;
 
 public interface PlayerGUI {
@@ -9,9 +10,12 @@ public interface PlayerGUI {
 	}
 	
 	default String getEnergy() {
-		String energy = String.format("Energy: %d/%d", 
+		String energy = String.format("Energy: %s%d%s/%s%d%s", 
+				ColorConfig.YELLOW,
 				GameManager.getInstance().getPlayer().getCurrentEnergy(),
-				GameManager.getInstance().getPlayer().getMaxEnergy());
+				ColorConfig.RESET, ColorConfig.YELLOW,
+				GameManager.getInstance().getPlayer().getMaxEnergy(), 
+				ColorConfig.RESET);
 		return energy;
 	}
 	

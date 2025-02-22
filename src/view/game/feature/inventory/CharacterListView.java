@@ -97,7 +97,7 @@ public class CharacterListView extends BaseView implements Scanner {
                     }
                     break;
                 case 3:
-                    equipCharacter(characters, startIndex, endIndex);
+                	equipOrUnequipCharacter(characters, startIndex, endIndex);
                     break;
                 case 4:
                     GameManager.getInstance().setCurrentView(getPreviousView());
@@ -110,8 +110,8 @@ public class CharacterListView extends BaseView implements Scanner {
         }
     }
 
-    private void equipCharacter(List<BaseCharacter> characters, int startIndex, int endIndex) {
-        System.out.print(" Enter the number of the character to equip: ");
+	private void equipOrUnequipCharacter(List<BaseCharacter> characters, int startIndex, int endIndex) {
+        System.out.print(" Enter the number of the character to equip/unequip: ");
         int characterNumber;
         try {
             characterNumber = scan.nextInt();
@@ -130,51 +130,64 @@ public class CharacterListView extends BaseView implements Scanner {
         }
 
         Entity player = GameManager.getInstance().getPlayer();
-        player.setEquippedCharacter(characters.get(characterNumber - 1));
-        System.out.println(" " + characters.get(characterNumber - 1).getName() + " equipped!");
+        BaseCharacter selectedCharacter = characters.get(characterNumber - 1);
+
+        if (player.getEquippedCharacter() == selectedCharacter) {
+            player.setEquippedCharacter(null);
+            System.out.println(" " + selectedCharacter.getName() + " unequipped!");
+        } 
+        else {
+            player.setEquippedCharacter(selectedCharacter);
+            System.out.println(" " + selectedCharacter.getNameColor() +
+            selectedCharacter.getName() + ColorConfig.RESET
+            + " equipped!");
+        }
+        System.out.println();
         TextUtil.pressEnter();
     }
 
-    private void showTable(int startIndex, int endIndex, List<BaseCharacter> characters) {
-        int maxNameLength = "Name".length();
-        int maxTitleLength = "Title".length();
-        int maxSkillNameLength = "Skill Name".length();
-        int maxSkillDescLength = "Skill Desc".length();
+	private void showTable(int startIndex, int endIndex, List<BaseCharacter> characters) {
+	    int maxNoLength = "No.".length();
+	    int maxNameLength = "Name".length();
+	    int maxTitleLength = "Title".length();
+	    int maxSkillNameLength = "Skill Name".length();
+	    int maxSkillDescLength = "Skill Desc".length();
 
-        List<String> displayNames = new ArrayList<String>();
+	    List<String> displayNames = new ArrayList<>();
 
-        for (int i = startIndex; i < endIndex; i++) {
-            BaseCharacter character = characters.get(i);
-            String nameColor = character.getNameColor();
-            String equippedStatus = "";
-            if (GameManager.getInstance().getPlayer().getEquippedCharacter() == character) {
-                equippedStatus = ColorConfig.GREEN + " (Equipped)" + ColorConfig.RESET;
-            }
-            String displayName = nameColor + character.getName() + ColorConfig.RESET + equippedStatus;
-            displayNames.add(displayName);
+	    for (int i = startIndex; i < endIndex; i++) {
+	        BaseCharacter character = characters.get(i);
+	        String nameColor = character.getNameColor();
+	        String equippedStatus = "";
+	        if (GameManager.getInstance().getPlayer().getEquippedCharacter() == character) {
+	            equippedStatus = ColorConfig.GREEN + " (Equipped)" + ColorConfig.RESET;
+	        }
+	        String displayName = nameColor + character.getName() + ColorConfig.RESET + equippedStatus;
+	        displayNames.add(displayName);
 
-            maxTitleLength = Math.max(maxTitleLength, character.getTitle().length());
-            maxSkillNameLength = Math.max(maxSkillNameLength, character.getSkillName().length());
-            maxSkillDescLength = Math.max(maxSkillDescLength, character.getSkillDesc().length());
-        }
+	        maxTitleLength = Math.max(maxTitleLength, character.getTitle().length());
+	        maxSkillNameLength = Math.max(maxSkillNameLength, character.getSkillName().length());
+	        maxSkillDescLength = Math.max(maxSkillDescLength, character.getSkillDesc().length());
+	    }
 
-        for (String displayName : displayNames) {
-            maxNameLength = Math.max(maxNameLength, displayName.length());
-        }
+	    for (String displayName : displayNames) {
+	        String cleanName = displayName.replaceAll("\\e\\[[\\d;]*m", "");
+	        maxNameLength = Math.max(maxNameLength, cleanName.length());
+	    }
 
-        int borderLength = 21 + maxNameLength + maxTitleLength + maxSkillNameLength + maxSkillDescLength;
+	    int borderLength = 21 + maxNameLength + maxTitleLength + maxSkillNameLength + maxSkillDescLength;
 
-        TextUtil.printHorizontalBorder(borderLength);
-        System.out.printf(" | %-5s | %-" + maxNameLength + "s | %-" + maxTitleLength + "s | %-" + maxSkillNameLength + "s | %-" + maxSkillDescLength + "s |\n",
-                "No.", "Name", "Title", "Skill Name", "Skill Desc");
-        TextUtil.printHorizontalBorder(borderLength);
+	    TextUtil.printHorizontalBorder(borderLength);
+	    System.out.printf(" | %-5s | %-" + maxNameLength + "s | %-" + maxTitleLength + "s | %-" + maxSkillNameLength + "s | %-" + maxSkillDescLength + "s |\n",
+	            "No.", "Name", "Title", "Skill Name", "Skill Desc");
+	    TextUtil.printHorizontalBorder(borderLength);
 
-        for (int i = startIndex; i < endIndex; i++) {
-            BaseCharacter character = characters.get(i);
-            System.out.printf(" | %-5s | %-" + maxNameLength + "s | %-" + maxTitleLength + "s | %-" + maxSkillNameLength + "s | %-" + maxSkillDescLength + "s |\n",
-                    i + 1, displayNames.get(i - startIndex),
-                    character.getTitle(), character.getSkillName(), character.getSkillDesc());
-            TextUtil.printHorizontalBorder(borderLength);
-        }
-    }
+	    for (int i = startIndex; i < endIndex; i++) {
+	        BaseCharacter character = characters.get(i);
+	        System.out.printf(" | %-5s | %-" + maxNameLength + "s | %-" + maxTitleLength + "s | %-" + maxSkillNameLength + "s | %-" + maxSkillDescLength + "s |\n",
+	                i + 1, displayNames.get(i - startIndex),
+	                character.getTitle(), character.getSkillName(), character.getSkillDesc());
+	        TextUtil.printHorizontalBorder(borderLength);
+	    }
+	}
 }

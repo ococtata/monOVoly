@@ -40,5 +40,12 @@ public class CharacterLoaderManager {
 
 	public List<BaseCharacter> getCharacterList() {
 		return characterList;
+	}
+
+	public BaseCharacter getCharacterById(String equippedCharId) {
+		for(BaseCharacter character : characterList) {
+			if(character.getId().equals(equippedCharId)) return character;
+		}
+		return null;
 	}	 
 }
