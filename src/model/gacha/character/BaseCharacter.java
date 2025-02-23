@@ -2,15 +2,15 @@ package model.gacha.character;
 
 import java.util.List;
 
+import config.BoardConfig;
 import manager.GameManager;
 import manager.MaterialLoaderManager;
 import model.entity.Entity;
 import model.entity.inventory.PlayerInventory;
 import model.gacha.material.CharacterMaterial;
+import utility.TextUtil;
 
 public abstract class BaseCharacter implements CharacterSkills {
-	private static int characterCounter = 0;
-
     private String id;
     private String name;
     private String title;
@@ -21,7 +21,6 @@ public abstract class BaseCharacter implements CharacterSkills {
     private List<CharacterMaterial> requiredMaterials;
 
     public BaseCharacter() {
-        this.id = String.format("CH%03d", ++characterCounter);
     }
 
     public void useSkill(Entity entity) {
@@ -29,6 +28,10 @@ public abstract class BaseCharacter implements CharacterSkills {
         System.out.println();
         System.out.println(" Desc: " + getSkillDesc());
         System.out.println();
+        TextUtil.pressEnter();
+        System.out.println();
+        TextUtil.printHorizontalBorder(
+				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
     }
 
     public String getId() {
@@ -91,5 +94,9 @@ public abstract class BaseCharacter implements CharacterSkills {
 	
 	public void loadRequiredMaterials() {
 	    this.requiredMaterials = MaterialLoaderManager.getInstance().getRequiredMaterials(this);
+	}
+
+	protected void setId(String id) {
+		this.id = id;
 	}
 }

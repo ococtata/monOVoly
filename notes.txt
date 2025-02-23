@@ -1,6 +1,6 @@
 Format:
 - user data format: player_id#username#email#password
-- player stat format: player_id#level#coins#gems#currentEnergy
+- player stat format: player_id#level#gems#currExp#currentEnergy
 - block data format: type#name#desc
 	type -> start, tax, property
 - gacha character material format: material_id#rarity#name#for_card
@@ -30,6 +30,7 @@ MAIN MENU
 
 ================================================================
 GAME
+- enemy will equip a random character only if the player has a character in their inventory
 - pick who goes first by picking 1 of 2 cards (1 goes first)
 - enemy will randomly choose (roll dice, use item, etc)
 - player will have 3 types of rolls (odd, any, even)
@@ -99,6 +100,32 @@ CHARACTER:
 - need a certain amount of materials to unlock characters (trade)
 - make the legendary rarity 1% chance of appearing
 - can trade common and rare rarity for gems (25 common = 10 gems, 10 rare = 15 gems)
+
+CHARACTER DETAIL:
+- Ainz Ooal Gown (ID: CH001)
+	-) Title: Undead Overlord
+	-) Skill Name: Dark Resurrection
+	-) Skill Desc: Revive with 100% of original money after bankruptcy (once per game).
+
+- Albedo (ID: CH002)
+	-) Title: Guardian Overseer
+	-) Skill Name: Absolute Defense
+	-) Skill Desc: 50% chance to ignore toll, or reduce it by 50%.
+
+- Shalltear Bloodfallen (ID: CH003)
+	-) Title: The Bloody Valkyrie
+	-) Skill Name: Blood Tribute
+	-) Skill Desc: Steal 10% of opponent's money when they land on your property.
+
+- Demiurge (ID: CH004)
+	-) Title: Tactical Genius
+	-) Skill Name: Infernal Strategy
+	-) Skill Desc: Teleport an opponent to a chosen property when passing/landing on start.
+
+- Cocytus (ID: CH005)
+	-) Title: Ruler of Glaciers
+	-) Skill Name: Glacial Execution
+	-) Skill Desc: Freeze opponents for one turn when they land on your property.
 
 PENDANT:
 

@@ -5,9 +5,11 @@ import java.util.InputMismatchException;
 import config.BoardConfig;
 import config.GameConfig;
 import controller.game.monovoly.MonovolyMapController;
+import manager.GameManager;
 import model.entity.Enemy;
 import model.entity.Entity;
 import model.gacha.character.Albedo;
+import model.gacha.character.Cocytus;
 import model.gacha.character.ShalltearBloodfallen;
 import utility.Random;
 import utility.Scanner;
@@ -48,12 +50,6 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
 
     @Override
     public void onLand(Entity piece) {
-    	try {
-    		Thread.sleep(500);
-    	} catch (InterruptedException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
-    	}
         if (owner == null) {
         	handleNonMaxLevelProperty(piece);
         } 
@@ -146,14 +142,18 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
     }
 
     private void handleOpponentLanding(Entity piece) {
-    	payToll(piece);
-    	if(this.owner.getEquippedCharacter() instanceof ShalltearBloodfallen) {
-    		this.owner.getEquippedCharacter().useSkill(piece);
-    	}
-    	piece.updateTotalAssets();
-    	this.owner.updateTotalAssets();
-    	showStats();
-    	handleNonMaxLevelProperty(piece);
+        int toll = payToll(piece); 
+        if (this.owner.getEquippedCharacter() instanceof ShalltearBloodfallen) {
+            toll = ((ShalltearBloodfallen) this.owner.getEquippedCharacter()).useSkill(piece, toll);
+        }
+        else if (this.owner.getEquippedCharacter() instanceof Cocytus) {
+            ((Cocytus) this.owner.getEquippedCharacter()).useSkill(owner, piece);
+        }
+        
+        piece.updateTotalAssets();
+        this.owner.updateTotalAssets();
+        showStats();
+        handleNonMaxLevelProperty(piece);
     }
     
     public void buildLandmark(Entity piece) {
@@ -224,7 +224,6 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
                 handlePlayerBuy(piece);
                 return;
             }
-            TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
             System.out.println(" What do you want to do with " + this.getName() + "?");
 
             if (this.owner != piece) {
@@ -345,24 +344,44 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
         }
     }
     
-    private void payToll(Entity piece) {
+    public void constructFree(Entity piece) {
+        if (buildingLevel < GameConfig.PROPERTY_MAX_BUILDING_LEVEL) {
+            buildingLevel++;
+            price += constructPrice;
+            piece.updateTotalAssets();
+            System.out.println(" " + piece.getName() + " constructed a building on " + this.getName() + ". Level: " +
+                    buildingLevel + " for free!");
+            constructPrice += GameConfig.PROPERTY_BASE_CONSTRUCTION_COST;
+        }
+    }
+    
+    public void buildLandmarkFree(Entity piece) {
+        if (!hasLandmark) {
+            hasLandmark = true;
+            this.price += GameConfig.PROPERTY_BASE_LANDMARK_PRICE;
+            piece.updateTotalAssets();
+            System.out.println(" " + piece.getName() + " built a landmark on " + this.getName() + " for free!");
+        }
+    }
+    
+    private int payToll(Entity piece) {
         if (owner != null && owner != piece) {
             int amount = calculateToll(this);
-            
-            if(piece.getEquippedCharacter() instanceof Albedo) {
-            	piece.getEquippedCharacter().useSkill(piece);
+
+            if (piece.getEquippedCharacter() instanceof Albedo) {
+                amount = ((Albedo) piece.getEquippedCharacter()).useSkill(piece, amount);
             }
-            
+
             if (piece.getMoney() >= amount) {
                 piece.pay(piece.getEnemy(), amount);
                 owner.setMoney(owner.getMoney() + amount);
                 System.out.println(" " + piece.getName() + " paid $" + amount + " toll to " + owner.getName() + ".");
-            } 
-            else {
+            } else {
                 System.out.println(" " + piece.getName() + " doesn't have enough money to pay the toll!");
-                
             }
+            return amount;
         }
+        return 0;
     }
 
     public int calculateToll(PropertyBlock property) {

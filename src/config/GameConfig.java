@@ -2,9 +2,10 @@ package config;
 
 public class GameConfig {
 	public static final int STARTING_MONEY = 5000000;
+	public static final int ENERGY_COST_TO_PLAY = 10;
 
 	public static final int BLOCK_START_BASE_INCOME = 300000;
-    public static final int BLOCK_TAX_BASE_DEDUCT_PERCENTAGE = 10;
+	public static final double BLOCK_TAX_BASE_DEDUCT_PERCENTAGE = 0.10;
 
     public static final int PROPERTY_BASE_PRICE = 125000;
     public static final int PROPERTY_BASE_TOLL_PERCENTAGE = 30;

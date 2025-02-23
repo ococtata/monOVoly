@@ -63,73 +63,85 @@ public abstract class Entity {
 	}
 	
 	public void pay(Entity receiver, int amount) {
-		if (this.money >= amount) {
-            this.money -= amount;
-            if(receiver != null) {
-            	receiver.setMoney(receiver.getMoney() + amount);            	
-            }
-            updateTotalAssets();
-        } 
-		else {
-            int moneyNeeded = amount - this.money;
-            System.out.println(" " + this.name + " doesn't have enough money. Need $" + moneyNeeded + " more.");
+	    if (this.money >= amount) {
+	        this.money -= amount;
+	        if (receiver != null) {
+	            receiver.setMoney(receiver.getMoney() + amount);
+	        }
+	        updateTotalAssets();
+	    } 
+	    else {
+	        int moneyNeeded = amount - this.money;
+	        System.out.println(" " + this.name + " doesn't have enough money. Need $" + moneyNeeded + " more.");
 
-            while (this.money < amount && !ownedProperties.isEmpty()) {
-                PropertyBlock propertyToSell = chooseProperty();
-                if (propertyToSell != null) {
-                    sellProperty(propertyToSell, receiver);
-                } else {
-                    break;
-                }
-            }
+	        while (this.money < amount && !ownedProperties.isEmpty()) {
+	            PropertyBlock propertyToSell = chooseProperty();
+	            if (propertyToSell != null) {
+	                if (receiver instanceof Enemy || receiver instanceof Player) {
+	                    int sellPrice = (int) (propertyToSell.getPrice() * (1 - (GameConfig.SELL_PROPERTY_ENEMY_DISCOUNT_PERCENTAGE / 100.0)));
+	                    if (receiver.getMoney() >= sellPrice) {
+	                        sellProperty(propertyToSell, receiver);
+	                    } 
+	                    else {
+	                        sellProperty(propertyToSell, null);
+	                    }
+	                } 
+	                else {
+	                    sellProperty(propertyToSell, null);
+	                }
+	            } 
+	            else {
+	                break;
+	            }
+	        }
 
-            if (this.money >= amount) {
-                this.money -= amount;
-                if(receiver != null) {
-                	receiver.setMoney(receiver.getMoney() + amount);            	
-                }
-                updateTotalAssets();
-            } 
-            else {
-                System.out.println(" " + this.name + " couldn't pay even after selling all properties. They lose!");
-            }
-        }
+	        if (this.money >= amount) {
+	            this.money -= amount;
+	            if (receiver != null) {
+	                receiver.setMoney(receiver.getMoney() + amount);
+	            }
+	            updateTotalAssets();
+	        } else {
+	            System.out.println(" " + this.name + " couldn't pay even after selling all properties. They lose!");
+	            declareBankrupt();
+	        }
+	    }
 	}
 	
 	private void sellProperty(PropertyBlock property, Entity buyer) {
-        int sellPrice;
-        
-        if (buyer instanceof Enemy || buyer instanceof Player) {
-            sellPrice = (int) (property.getPrice() *  (1 - (GameConfig.SELL_PROPERTY_ENEMY_DISCOUNT_PERCENTAGE / 100)));
-        } 
-        else {
-            sellPrice = (int) (property.getPrice() * (1 - (GameConfig.SELL_PROPERTY_BANK_DISCOUNT_PERCENTAGE / 100))); 
-        }
+	    int sellPrice;
 
-        this.money += sellPrice;
-        removeProperty(property);
-        
-        if (buyer instanceof Enemy || buyer instanceof Player) {
-            property.setOwner(buyer);
-        }
-        
-        updateTotalAssets();
+	    if (buyer instanceof Enemy || buyer instanceof Player) {
+	        sellPrice = (int) (property.getPrice() * (1 - (GameConfig.SELL_PROPERTY_ENEMY_DISCOUNT_PERCENTAGE / 100.0)));
+	    } 
+	    else {
+	        sellPrice = (int) (property.getPrice() * (1 - (GameConfig.SELL_PROPERTY_BANK_DISCOUNT_PERCENTAGE / 100.0)));
+	    }
 
-        if (buyer instanceof Enemy || buyer instanceof Player) {
-          buyer.addProperty(property);
-          buyer.setMoney(buyer.getMoney() - sellPrice);
-          buyer.updateTotalAssets();
-        }
+	    this.money += sellPrice;
+	    removeProperty(property);
 
-        System.out.print(" " + this.name + " sold " + property.getName() + " for $" + sellPrice + " ");
-        if(buyer instanceof Enemy || buyer instanceof Player) {
-        	System.out.println("to " + buyer.getName() + " at a discount of " + GameConfig.SELL_PROPERTY_ENEMY_DISCOUNT_PERCENTAGE + "%!");
-        }
-        else {
-        	System.out.println("to the Bank at a discount of " + GameConfig.SELL_PROPERTY_BANK_DISCOUNT_PERCENTAGE + "%!");        	
-        }
-        TextUtil.pressEnter();
-    }
+	    if (buyer instanceof Enemy || buyer instanceof Player) {
+	        property.setOwner(buyer);
+	    }
+
+	    updateTotalAssets();
+
+	    if (buyer instanceof Enemy || buyer instanceof Player) {
+	        buyer.addProperty(property);
+	        buyer.setMoney(buyer.getMoney() - sellPrice);
+	        buyer.updateTotalAssets();
+	    }
+
+	    System.out.print(" " + this.name + " sold " + property.getName() + " for $" + sellPrice + " ");
+	    if (buyer instanceof Enemy || buyer instanceof Player) {
+	        System.out.println(" to " + buyer.getName() + " at a discount of " + GameConfig.SELL_PROPERTY_ENEMY_DISCOUNT_PERCENTAGE + "%!");
+	    } 
+	    else {
+	        System.out.println(" to the Bank at a discount of " + GameConfig.SELL_PROPERTY_BANK_DISCOUNT_PERCENTAGE + "%!");
+	    }
+	    TextUtil.pressEnter();
+	}
 	
 	public void move(GenericBlock origin, GenericBlock destination) {
         if (origin != null && destination != null) {

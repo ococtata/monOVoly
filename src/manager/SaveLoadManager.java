@@ -78,16 +78,23 @@ public class SaveLoadManager {
 
             String playerId = parts[StatDataConfig.ID_INDEX];
             int level = Integer.parseInt(parts[StatDataConfig.LEVEL_INDEX]);
-            int coins = Integer.parseInt(parts[StatDataConfig.COINS_INDEX]);
             int gems = Integer.parseInt(parts[StatDataConfig.GEMS_INDEX]);
+            int currentExp = Integer.parseInt(parts[StatDataConfig.CURRENT_EXP_INDEX]);
             int currentEnergy = Integer.parseInt(parts[StatDataConfig.CURRENT_ENERGY_INDEX]);
-            
+            String equippedCharId = parts[StatDataConfig.EQUIPPED_CHARACTER_ID_INDEX];
+
             for (Player player : players) {
                 if (player.getId().equals(playerId)) {
                     player.setLevel(level);
-                    player.setCoins(coins);
                     player.setGems(gems);
+                    player.setCurrentExp(currentExp);
                     player.setCurrentEnergy(currentEnergy);
+                    if (!equippedCharId.equals("0")) {
+                        BaseCharacter equippedCharacter = CharacterLoaderManager.getInstance().getCharacterById(equippedCharId);
+                        player.setEquippedCharacter(equippedCharacter);
+                    } else {
+                        player.setEquippedCharacter(null);
+                    }
                     break;
                 }
             }
@@ -98,8 +105,9 @@ public class SaveLoadManager {
 	private void savePlayerStats(List<Player> players) {
         List<String> lines = new ArrayList<String>();
         for (Player player : players) {
-            String line = player.getId() + "#" + player.getLevel() + "#" + player.getCoins() + "#" +
-                    player.getGems() + "#" + player.getCurrentEnergy();
+            String equippedCharId = player.getEquippedCharacter() != null ? player.getEquippedCharacter().getId() : "0";
+            String line = player.getId() + "#" + player.getLevel() + "#" +
+                    player.getGems() + "#" + player.getCurrentExp() + "#" + player.getCurrentEnergy() + "#" + equippedCharId;
             lines.add(line);
         }
         FileUtil.writeLinesToFile(DataConfig.FILE_DATA_PLAYER_STAT, lines);
@@ -112,6 +120,8 @@ public class SaveLoadManager {
 
         if (lines == null) return;
 
+        inventory.getMaterialList().clear();
+
         for (String line : lines) {
             String[] parts = line.split("#");
             if (parts.length != 3) continue;
@@ -122,7 +132,7 @@ public class SaveLoadManager {
 
             if (player.getId().equals(playerId)) {
                 for (CharacterMaterial material : allMaterials) {
-                    if (material.getId().equals(String.valueOf(materialId))) { 
+                    if (material.getId().equals(String.valueOf(materialId))) {
                         CharacterMaterial newMaterial = new CharacterMaterial(
                                 material.getId(), material.getRarity(), material.getName(), material.getForCard());
                         inventory.addMaterial(newMaterial.getId(), amount);
@@ -134,15 +144,33 @@ public class SaveLoadManager {
     }
 	
 	private void savePlayerInventory(Player player) {
-	    List<String> lines = new ArrayList<String>();
-	    List<String> materials = savePlayerMaterials(player);
-	    List<String> characters = savePlayerCharacters(player);
-	    
-	    lines.addAll(materials);
-	    lines.addAll(characters);
-	    
-	    FileUtil.writeLinesToFile(DataConfig.FILE_DATA_PLAYER_INVENTORY, lines);
-	}
+        List<String> existingLines = FileUtil.readFile(DataConfig.FILE_DATA_PLAYER_INVENTORY);
+        if (existingLines == null) {
+            existingLines = new ArrayList<>();
+        }
+
+        List<String> updatedLines = new ArrayList<String>();
+        List<String> playerLines = new ArrayList<String>();
+
+        for (String line : existingLines) {
+            if (line.startsWith(player.getId() + "#")) {
+                playerLines.add(line);
+            } else {
+                updatedLines.add(line);
+            }
+        }
+        
+        List<String> materials = savePlayerMaterials(player);
+        List<String> characters = savePlayerCharacters(player);
+
+        playerLines.clear();
+        playerLines.addAll(materials);
+        playerLines.addAll(characters);
+
+        updatedLines.addAll(playerLines);
+
+        FileUtil.writeLinesToFile(DataConfig.FILE_DATA_PLAYER_INVENTORY, updatedLines);
+    }
 
 	private List<String> savePlayerMaterials(Player player) {
         List<String> lines = new ArrayList<String>();
@@ -157,10 +185,12 @@ public class SaveLoadManager {
 
 	private void loadPlayerCharacters(Player player) {
         PlayerInventory inventory = (PlayerInventory) player.getInventory();
-        List<BaseCharacter> allCharacters = CharacterLoaderManager.getInstance().getCharacterList(); 
+        List<BaseCharacter> allCharacters = CharacterLoaderManager.getInstance().getCharacterList();
         List<String> lines = FileUtil.readFile(DataConfig.FILE_DATA_PLAYER_INVENTORY);
 
         if (lines == null) return;
+
+        inventory.getCharacterList().clear();
 
         for (String line : lines) {
             String[] parts = line.split("#");
