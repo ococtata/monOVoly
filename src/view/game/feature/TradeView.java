@@ -111,7 +111,7 @@ public class TradeView extends BaseView implements Scanner {
 	                String statusColor = hasEnough ? ColorConfig.RESET : ColorConfig.RED;
 	                String statusText = hasEnough ? "" : " (Not enough!)";
 
-	                System.out.printf("    - %s%s%s (%dx/%dx)%s\n", reqMat.getRarity().getColor(), reqMat.getName(), ColorConfig.RESET, 
+	                System.out.printf("    - %s%s%s (%d/%d)%s\n", reqMat.getRarity().getColor(), reqMat.getName(), ColorConfig.RESET, 
 	                        ownedAmount, reqMat.getAmount(), statusColor + statusText + ColorConfig.RESET);
 	            }
 	            System.out.println("\n");
