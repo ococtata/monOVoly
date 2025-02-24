@@ -16,9 +16,6 @@ import view.BaseView;
 
 public class CharacterListView extends BaseView implements Scanner {
 	private CharacterListViewController characterListViewController;
-	
-	private int sortBy = 1;
-    private boolean ascending = true;
     
 	public CharacterListView() {
 		this.characterListViewController = new CharacterListViewController(this);
@@ -118,7 +115,6 @@ public class CharacterListView extends BaseView implements Scanner {
     }
 
     private void showTable(List<BaseCharacter> characters) {
-        int maxNoLength = "No.".length();
         int maxNameLength = "Name".length();
         int maxLevelLength = "Level".length();
         int maxTitleLength = "Title".length();
@@ -178,7 +174,6 @@ public class CharacterListView extends BaseView implements Scanner {
             int totalChance = baseChance + levelBonus;
             String chanceString = baseChance + "% + " + levelBonus + "% = " + totalChance + "%";
 
-            String formattedName = String.format("%-" + maxNameLength + "s", rawNames.get(i));
             String equippedStatus = (GameManager.getInstance().getPlayer().getEquippedCharacter() == character)
             	    ? ColorConfig.GREEN + " (Equipped)" + ColorConfig.RESET
             	    : "";

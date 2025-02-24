@@ -16,15 +16,15 @@ import view.BaseView;
 import view.PlayerGUI;
 
 public class ShopView extends BaseView implements PlayerGUI {
-	private ShopViewController shopViewController;
-	private Player player;
-	
-	public ShopView() {
-		this.shopViewController = new ShopViewController(this);
-		this.player = GameManager.getInstance().getPlayer();
-	}
+    private ShopViewController shopViewController;
+    private Player player;
 
-	@Override
+    public ShopView() {
+        this.shopViewController = new ShopViewController(this);
+        this.player = GameManager.getInstance().getPlayer();
+    }
+
+    @Override
     public void show() {
         while (true) {
             List<BaseCharacter> characters = shopViewController.getCharacters();
@@ -73,74 +73,80 @@ public class ShopView extends BaseView implements PlayerGUI {
     }
 
     private void levelUpCharacter(List<BaseCharacter> characters) {
-        TextUtil.clearScreen();
-    	if (characters.isEmpty()) {
-            System.out.println(" You don't have any characters!");
-            TextUtil.pressEnter();
-            return;
-        }
-    	
-        System.out.println(" Level Up Character\n");
-        TextUtil.printHorizontalBorder(GeneralConfig.WIDTH);
-        printGachaTopBar();
-        TextUtil.printHorizontalBorder(GeneralConfig.WIDTH);
-        showTable(characters);
-
-        System.out.print(" Enter the number of the character to equip/unequip [0 to go back]: ");
-        int characterNumber;
-        try {
-            characterNumber = scan.nextInt();
-            scan.nextLine();
-        } 
-        catch (InputMismatchException e) {
-            scan.nextLine();
-            System.out.println(" Invalid input. Please enter a number.");
-            TextUtil.pressEnter();
-            return;
-        }
-
-        if (characterNumber == 0) {
-            return;
-        }
-
-        if (characterNumber < 1 || characterNumber > characters.size()) {
-            System.out.println(" Invalid character number.");
-            TextUtil.pressEnter();
-            return;
-        }
-
-        BaseCharacter character = characters.get(characterNumber - 1);
-
-        if (character.getCurrentLevel() >= character.getMaxLevel()) {
-            System.out.println(" " + character.getName() + " is already at max level.");
+        while(true) {
+        	TextUtil.clearScreen();
+            if (characters.isEmpty()) {
+                System.out.println(" You don't have any characters!");
+                TextUtil.pressEnter();
+                return;
+            }
+            System.out.println(" Level Up Character\n");
+            TextUtil.printHorizontalBorder(GeneralConfig.WIDTH);
+            printGachaTopBar();
+            TextUtil.printHorizontalBorder(GeneralConfig.WIDTH);
+            showTable(characters);
+            
+            System.out.print(" Enter the number of the character to level up [0 to go back]: ");
+            int characterNumber;
+            try {
+            	characterNumber = scan.nextInt();
+            	scan.nextLine();
+            } catch (InputMismatchException e) {
+            	scan.nextLine();
+            	System.out.println(" Invalid input. Please enter a number.");
+            	TextUtil.pressEnter();
+            	return;
+            }
+            
+            if (characterNumber == 0) {
+            	return;
+            }
+            
+            if (characterNumber < 1 || characterNumber > characters.size()) {
+            	System.out.println(" Invalid character number.");
+            	TextUtil.pressEnter();
+            	return;
+            }
+            
+            BaseCharacter character = characters.get(characterNumber - 1);
+            
+            if (character.getCurrentLevel() >= character.getMaxLevel()) {
+            	System.out.println(" " + character.getName() + " is already at max level.");
+            	System.out.println();
+            	TextUtil.pressEnter();
+            	return;
+            }
+            
+            int baseLevelUpCost = GameConfig.BASE_CHARACTER_LEVEL_UP_COST;
+            int levelUpCostIncrement = GameConfig.CHARACTER_LEVEL_UP_INCREMENT;
+            int levelUpCost = baseLevelUpCost + (character.getCurrentLevel() * levelUpCostIncrement);
+            
             System.out.println();
-            TextUtil.pressEnter();
-            return;
-        }
-
-        int baseLevelUpCost = GameConfig.BASE_CHARACTER_LEVEL_UP_COST;
-        int levelUpCostIncrement = GameConfig.CHARACTER_LEVEL_UP_INCREMENT;
-        int levelUpCost = baseLevelUpCost + (character.getCurrentLevel() * levelUpCostIncrement);
-        
-        System.out.println();
-        if (player.getGems() >= levelUpCost) {
-            player.setGems(player.getGems() - levelUpCost);
-            character.setCurrentLevel(character.getCurrentLevel() + 1);
-            System.out.println(" " + character.getNameColor() + character.getName() + ColorConfig.RESET + " leveled up to level " + ColorConfig.GOLD + character.getCurrentLevel() + ColorConfig.RESET + "!");
+            System.out.println(" Level up " + character.getNameColor() + character.getName() + ColorConfig.RESET + " to level " + ColorConfig.GOLD + (character.getCurrentLevel() + 1) + ColorConfig.RESET + "?");
             System.out.println(" Cost: " + ColorConfig.CYAN + levelUpCost + ColorConfig.RESET + " gems.");
             System.out.println();
-            TextUtil.pressEnter();
-        } 
-        else {
-            System.out.println(" You don't have enough gems to level up " + character.getNameColor() + character.getName() + ColorConfig.RESET + ".");
-            System.out.println(" Cost: " + ColorConfig.CYAN + levelUpCost + ColorConfig.RESET + " gems.");
-            System.out.println();
-            TextUtil.pressEnter();
+            System.out.print(" Confirm? [y/n]: ");
+            String confirm = scan.nextLine().toLowerCase();
+            
+            if (confirm.equals("y")) {
+            	if (shopViewController.levelUpCharacter(character, levelUpCost)) {
+            		System.out.println(" " + character.getNameColor() + character.getName() + ColorConfig.RESET + " leveled up to level " + ColorConfig.GOLD + character.getCurrentLevel() + ColorConfig.RESET + "!");
+            		System.out.println(" Cost: " + ColorConfig.CYAN + levelUpCost + ColorConfig.RESET + " gems.");
+            		System.out.println();
+            		TextUtil.pressEnter();
+            	} 
+            	else {
+            		System.out.println(" You don't have enough gems to level up " + character.getNameColor() + character.getName() + ColorConfig.RESET + ".");
+            		System.out.println(" Cost: " + ColorConfig.CYAN + levelUpCost + ColorConfig.RESET + " gems.");
+            		System.out.println();
+            		TextUtil.pressEnter();
+            	}
+            	break;
+            }
         }
     }
 
     private void showTable(List<BaseCharacter> characters) {
-        int maxNoLength = "No.".length();
         int maxNameLength = "Name".length();
         int maxLevelLength = "Level".length();
         int maxTitleLength = "Title".length();
@@ -200,7 +206,6 @@ public class ShopView extends BaseView implements PlayerGUI {
             int totalChance = baseChance + levelBonus;
             String chanceString = baseChance + "% + " + levelBonus + "% = " + totalChance + "%";
 
-            String formattedName = String.format("%-" + maxNameLength + "s", rawNames.get(i));
             String equippedStatus = (GameManager.getInstance().getPlayer().getEquippedCharacter() == character)
             	    ? ColorConfig.GREEN + " (Equipped)" + ColorConfig.RESET
             	    : "";
