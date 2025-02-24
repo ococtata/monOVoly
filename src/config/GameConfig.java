@@ -33,4 +33,7 @@ public class GameConfig {
     public static final int SELL_PROPERTY_BANK_DISCOUNT_PERCENTAGE = 50;
     
     public static final double JAIL_TAX_MODIFIER = 1.5;
+    
+    public static final int BASE_CHARACTER_LEVEL_UP_COST = 200;
+    public static final int CHARACTER_LEVEL_UP_INCREMENT = 100;
 }

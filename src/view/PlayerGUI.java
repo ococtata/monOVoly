@@ -32,11 +32,12 @@ public interface PlayerGUI {
 	default void printTopBar() {
 		String topBar = String.format(" %s lvl. %d | %s", getName(), getLevel(), getEnergy());
 		System.out.println(" " + topBar);
-		System.out.println("  Gems: " + getGems());
+		System.out.printf("  Gems: %s%d%s\n", ColorConfig.CYAN, getGems(), ColorConfig.RESET);
 	}
 	
 	default void printGachaTopBar() {
-		String topBar = String.format(" %s lvl. %d \t| \tGems: %d", getName(), getLevel(), getGems());
+		String topBar = String.format(" %s lvl. %d \t| \tGems: %s%d%s", getName(), getLevel(), 
+				ColorConfig.CYAN, getGems(), ColorConfig.RESET);
 		System.out.println(" " + topBar);
 	}
 }	

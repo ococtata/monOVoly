@@ -19,6 +19,7 @@ import model.gacha.character.AinzOoalGown;
 import model.gacha.character.BaseCharacter;
 import model.gacha.character.Cocytus;
 import model.gacha.character.Demiurge;
+import model.gacha.character.ShalltearBloodfallen;
 import model.game.Dice;
 import model.game.GameBoard;
 import utility.Random;
@@ -412,52 +413,48 @@ public class MonovolyMapController implements Scanner, Random {
 	}
 
 	private void moveWithAnimation(Entity entity, int steps) {
-		GameBoard gameBoard = GameManager.getInstance().getGameBoard();
-		int currentIndex = entity.getBoardIndex();
-		boolean demiurgeTriggered = false;
+	    GameBoard gameBoard = GameManager.getInstance().getGameBoard();
+	    int currentIndex = entity.getBoardIndex();
 
-		for (int i = 0; i < steps; i++) {
-			gameBoard.getBlockList().get(currentIndex).removePiece(entity);
-			int nextIndex = (currentIndex + 1) % gameBoard.getBlockList().size();
-			gameBoard.getBlockList().get(nextIndex).addPiece(entity);
+	    for (int i = 0; i < steps; i++) {
+	        gameBoard.getBlockList().get(currentIndex).removePiece(entity);
+	        int nextIndex = (currentIndex + 1) % gameBoard.getBlockList().size();
+	        gameBoard.getBlockList().get(nextIndex).addPiece(entity);
 
-			entity.setBoardIndex(nextIndex);
+	        entity.setBoardIndex(nextIndex);
 
-			printGameInfo();
-			
-			try {
-				Thread.sleep(350);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
+	        printGameInfo();
 
-			currentIndex = nextIndex;
+	        try {
+	            Thread.sleep(350);
+	        } 
+	        catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	        }
 
-			if (currentIndex == 0 && !demiurgeTriggered) {
-				if (entity.getEquippedCharacter() instanceof Demiurge) {
-					Demiurge demiurge = (Demiurge) entity.getEquippedCharacter();
-					demiurge.useSkill(entity);
-				}
-				demiurgeTriggered = true;
-			}
-		}
+	        currentIndex = nextIndex;
 
-		GenericBlock landedBlock = gameBoard.getBlockList().get(currentIndex);
-		printGameInfo();
-		if (currentIndex == 0 && !demiurgeTriggered) {
-			if (entity.getEquippedCharacter() instanceof Demiurge) {
-				Demiurge demiurge = (Demiurge) entity.getEquippedCharacter();
-				demiurge.useSkill(entity);
-			}
-		}
+	        Entity opponent = entity.getEnemy();
+	        if (opponent != null && opponent.getBoardIndex() == currentIndex && entity.getEquippedCharacter() instanceof ShalltearBloodfallen) {
+	            ShalltearBloodfallen shalltear = (ShalltearBloodfallen) entity.getEquippedCharacter();
+	            shalltear.useSkill(entity, opponent);
+	        }
+	        else if (opponent != null && opponent.getBoardIndex() == currentIndex && entity.getEquippedCharacter() instanceof Cocytus) {
+	            Cocytus cocytus = (Cocytus) entity.getEquippedCharacter();
+	            cocytus.useSkill(entity, opponent);
+	        }
+	    }
 
-		try {
-			Thread.sleep(700);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-		showBlockInfo(entity, landedBlock);
-		landedBlock.onLand(entity);
+	    GenericBlock landedBlock = gameBoard.getBlockList().get(currentIndex);
+	    printGameInfo();
+
+	    try {
+	        Thread.sleep(700);
+	    } catch (InterruptedException e) {
+	        Thread.currentThread().interrupt();
+	    }
+	    showBlockInfo(entity, landedBlock);
+	    landedBlock.onLand(entity);
 	}
 
 	private void showBlockInfo(Entity piece, GenericBlock block) {
@@ -537,21 +534,6 @@ public class MonovolyMapController implements Scanner, Random {
 	public void endTurn() {
 		Entity piece = (GameManager.getInstance().isPlayerTurn() ? GameManager.getInstance().getPlayer()
 				: GameManager.getInstance().getEnemy());
-
-		if (piece.getMoney() < 0) {
-			if (piece.getEquippedCharacter() instanceof AinzOoalGown) {
-				AinzOoalGown ainz = (AinzOoalGown) piece.getEquippedCharacter();
-				if (!ainz.hasResurrected()) {
-					ainz.useSkill(piece);
-				} else {
-					gameOver(piece);
-				}
-			} else {
-				System.out.println(" " + piece.getName() + " is bankrupt!");
-				TextUtil.pressEnter();
-				gameOver(piece);
-			}
-		}
 
 		for (PropertyBlock property : piece.getOwnedProperties()) {
 			property.decrementFestivalDuration();

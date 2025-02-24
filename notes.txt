@@ -6,7 +6,7 @@ Format:
 - gacha character material format: material_id#rarity#name#for_card
 - player inventory format: 
 	-> Material: player_id#material_id#amount
-	-> Character: player_id#character_name
+	-> Character: player_id#character_name#level
 
 Formula
 - maxEnergy = base * (level * 0.1)
@@ -103,29 +103,34 @@ CHARACTER:
 
 CHARACTER DETAIL:
 - Ainz Ooal Gown (ID: CH001)
-	-) Title: Undead Overlord
-	-) Skill Name: Dark Resurrection
-	-) Skill Desc: Revive with 100% of original money after bankruptcy (once per game).
+	-) Title: The Sorcerer King
+	-) Skill Name: Create Fortress
+	-) Skill Desc: After construction, fully upgrade the property to a Landmark for free
 
 - Albedo (ID: CH002)
 	-) Title: Guardian Overseer
-	-) Skill Name: Absolute Defense
-	-) Skill Desc: 50% chance to ignore toll, or reduce it by 50%.
+	-) Skill Name: Armor of Malice
+	-) Skill Desc: Ignore all toll payments
 
 - Shalltear Bloodfallen (ID: CH003)
 	-) Title: The Bloody Valkyrie
 	-) Skill Name: Blood Tribute
-	-) Skill Desc: Steal 10% of opponent's money when they land on your property.
+	-) Skill Desc: Steal 50% of an opponent's money when passing them
 
 - Demiurge (ID: CH004)
 	-) Title: Tactical Genius
 	-) Skill Name: Infernal Strategy
-	-) Skill Desc: Teleport an opponent to a chosen property when passing/landing on start.
+	-) Skill Desc: Teleport to the Start after constructing a building
 
 - Cocytus (ID: CH005)
 	-) Title: Ruler of Glaciers
-	-) Skill Name: Glacial Execution
-	-) Skill Desc: Freeze opponents for one turn when they land on your property.
+	-) Skill Name: Glacial Imprisonment
+	-) Skill Desc: Send an opponent to Jail when passing them
+
+- Pandora's Actor (ID: CH006)
+	-) Title:  Perfect Impersonator
+	-) Skill Name: False Fortune
+	-) Skill Desc: 3 rent payments are free. Additionally, there is a chance to not decrease the free rent counter
 
 PENDANT:
 

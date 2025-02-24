@@ -24,8 +24,7 @@ public class InventoryView extends BaseView implements Scanner{
             System.out.println(" What do you want to see?");
             System.out.println(" 1. Owned Materials");
             System.out.println(" 2. Owned Characters");
-            System.out.println(" 3. Owned Pendants");
-            System.out.println(" 4. Back"); 
+            System.out.println(" 3. Back"); 
             System.out.println();
             System.out.print(" >> "); 
             
@@ -47,13 +46,6 @@ public class InventoryView extends BaseView implements Scanner{
                         characterListView.show();
                         return; 
                     case 3:
-                        PendantListView pendantListView = new PendantListView();
-                        //pendantListView.setPreviousView(this);
-                        //GameManager.getInstance().setCurrentView(pendantListView);
-                        //return;
-                        TextUtil.pressEnter();
-                        break;
-                    case 4:
                         GameManager.getInstance().setCurrentView(getPreviousView()); 
                         getPreviousView().show();
                         return;

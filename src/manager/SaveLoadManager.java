@@ -194,14 +194,16 @@ public class SaveLoadManager {
 
         for (String line : lines) {
             String[] parts = line.split("#");
-            if (parts.length != 2) continue;
+            if (parts.length != 3) continue; 
 
             String playerId = parts[0];
-            String characterId = parts[1];
+            String characterId = parts[1]; 
+            int level = Integer.parseInt(parts[2]); 
 
             if (player.getId().equals(playerId)) {
                 for (BaseCharacter character : allCharacters) {
                     if (character.getId().equals(characterId)) {
+                        character.setCurrentLevel(level);
                         inventory.addCharacter(character);
                         break;
                     }
@@ -214,7 +216,7 @@ public class SaveLoadManager {
         List<String> lines = new ArrayList<String>();
         PlayerInventory inventory = (PlayerInventory) player.getInventory();
         for (BaseCharacter character : inventory.getCharacterList()) {
-            String line = player.getId() + "#" + character.getId();
+            String line = player.getId() + "#" + character.getId() + "#" + character.getCurrentLevel();
             lines.add(line);
         }
         return lines;

@@ -3,11 +3,11 @@ package model.gacha.character;
 import config.CharacterConfig;
 import config.ColorConfig;
 import config.GameConfig;
+import model.block.PropertyBlock;
 import model.entity.Entity;
+import utility.Random;
 
-public class AinzOoalGown extends BaseCharacter {
-
-    private boolean hasResurrected = false; 
+public class AinzOoalGown extends BaseCharacter implements Random{
     
     public AinzOoalGown() {
         setName(CharacterConfig.AINZ_NAME);
@@ -16,27 +16,27 @@ public class AinzOoalGown extends BaseCharacter {
         setSkillDesc(CharacterConfig.AINZ_SKILL_DESC);
         setNameColor(ColorConfig.PURPLE);
         setId(CharacterConfig.AINZ_ID);
+        setCurrentLevel(1);
+        setBaseSkillChance(CharacterConfig.AINZ_BASE_SKILL_CHANCE);
     }
 	
-    public void useSkill(Entity entity) {
-		super.useSkill(entity);
-        
-        darkResurrection(entity);
+    public void useSkill(Entity entity, PropertyBlock property) {
+        super.useSkill(entity, getBaseSkillChance());
+        createFortress(entity, property);
     }
 
-	@Override
-    public void darkResurrection(Entity entity) {
-        if (!hasResurrected) {
-            int originalMoney = GameConfig.STARTING_MONEY;
-            int reviveAmount = (originalMoney * CharacterConfig.AINZ_REVIVE_MONEY_PERCENTAGE) / 100;
-            entity.setMoney(reviveAmount);
-            entity.updateTotalAssets();
-            hasResurrected = true;
-            System.out.println(" " + entity.getName() + " revived with $" + reviveAmount + "!");
+    public void createFortress(Entity entity, PropertyBlock property) {
+        int chance = getBaseSkillChance() + (getCurrentLevel() - 1);
+
+        if (rand.nextInt(100) < chance) {
+        	while (property.getBuildingLevel() < GameConfig.PROPERTY_MAX_BUILDING_LEVEL) {
+                property.constructFree(entity);
+            }
+            property.buildLandmarkFree(entity);
+            System.out.println(" " + getName() + " used Create Fortress to fully upgrade " + property.getName() + ".");
+        } else {
+            property.construct(entity);
+            System.out.println(" " + getName() + " constructed a building.");
         }
-    }
-    
-    public boolean hasResurrected() {
-        return hasResurrected;
     }
 }

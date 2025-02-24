@@ -7,6 +7,7 @@ import model.gacha.character.Albedo;
 import model.gacha.character.BaseCharacter;
 import model.gacha.character.Cocytus;
 import model.gacha.character.Demiurge;
+import model.gacha.character.PandorasActor;
 import model.gacha.character.ShalltearBloodfallen;
 
 public class CharacterMaterial {
@@ -42,6 +43,9 @@ private static int materialCounter = 0;
             case CharacterConfig.DEMIURGE_NAME:
                 this.character = new Demiurge();
                 break;
+            case CharacterConfig.PANDORAS_ACTOR_NAME:
+            	this.character = new PandorasActor();
+            	break;
             default:
                 this.character = null;
                 break;

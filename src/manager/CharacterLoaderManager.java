@@ -8,6 +8,7 @@ import model.gacha.character.Albedo;
 import model.gacha.character.BaseCharacter;
 import model.gacha.character.Cocytus;
 import model.gacha.character.Demiurge;
+import model.gacha.character.PandorasActor;
 import model.gacha.character.ShalltearBloodfallen;
 
 public class CharacterLoaderManager {
@@ -30,6 +31,7 @@ public class CharacterLoaderManager {
         allCharacters.add(new Cocytus());
         allCharacters.add(new Demiurge());
         allCharacters.add(new ShalltearBloodfallen());
+        allCharacters.add(new PandorasActor());
         
         for(BaseCharacter character : allCharacters) {
         	character.loadRequiredMaterials();

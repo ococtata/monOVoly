@@ -3,8 +3,9 @@ package model.gacha.character;
 import config.CharacterConfig;
 import config.ColorConfig;
 import model.entity.Entity;
+import utility.Random;
 
-public class ShalltearBloodfallen extends BaseCharacter implements CharacterSkills {
+public class ShalltearBloodfallen extends BaseCharacter implements CharacterSkills, Random {
 
 	public ShalltearBloodfallen() {
         setName(CharacterConfig.SHALLTEAR_NAME);
@@ -13,30 +14,33 @@ public class ShalltearBloodfallen extends BaseCharacter implements CharacterSkil
         setSkillDesc(CharacterConfig.SHALLTEAR_SKILL_DESC);
         setNameColor(ColorConfig.LIGHT_RED);
         setId(CharacterConfig.SHALLTEAR_ID);
+        setBaseSkillChance(CharacterConfig.SHALLTEAR_BASE_SKILL_CHANCE);
+        setCurrentLevel(1);
     }
 
-    public int useSkill(Entity entity, int toll) {
-    	super.useSkill(entity);
+	public void useSkill(Entity entity, Entity opponent) {
+        super.useSkill(entity, getBaseSkillChance());
         
-        return bloodTribute(toll, entity.getEnemy());
+        bloodTribute(entity, opponent);
     }
 	
     @Override
-	public int bloodTribute(int rent, Entity opponent) {
-        int tribute = (int) (opponent.getMoney() * 0.1);
-        if (opponent.getMoney() >= tribute) {
-            opponent.setMoney(opponent.getMoney() - tribute);
-            String name = getNameColor() + getName() + ColorConfig.RESET;
-            System.out.println(" " + name + " used Blood Tribute and stole $" + tribute + " from " + opponent.getName() + "!");
-            System.out.println();
-            System.out.println(" The total toll is now $" + (rent + tribute));
-            
-            return rent + tribute; 
-        } 
-        else {
-            System.out.println(" " + opponent.getName() + " doesn't have enough money for Blood Tribute!");
-            opponent.declareBankrupt();
-            return rent;
+    public void bloodTribute(Entity entity, Entity opponent) {
+        int chance = getBaseSkillChance() + (getCurrentLevel() - 1);
+        int tribute = (int) (opponent.getMoney() * 0.5);
+
+        if (rand.nextInt(100) < chance) {
+            if (opponent.getMoney() >= tribute) {
+                opponent.setMoney(opponent.getMoney() - tribute);
+                entity.setMoney(entity.getMoney() + tribute);
+                String name = getNameColor() + getName() + ColorConfig.RESET;
+                System.out.println(" " + name + " used Blood Tribute and stole $" + tribute + " from " + opponent.getName() + "!");
+            } else {
+                System.out.println(" " + opponent.getName() + " doesn't have enough money for Blood Tribute!");
+                opponent.declareBankrupt();
+            }
+        } else {
+            System.out.println(" " + getName() + "'s Blood Tribute failed.");
         }
     }
 

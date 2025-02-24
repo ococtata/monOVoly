@@ -2,7 +2,7 @@ package config;
 
 public class GachaConfig {
 	public enum Rarity {
-        COMMON(ColorConfig.LIGHT_GREY),
+        COMMON(ColorConfig.GREEN),
         RARE(ColorConfig.BLUE),
         EPIC(ColorConfig.PURPLE),
         LEGENDARY(ColorConfig.GOLD);

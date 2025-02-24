@@ -3,6 +3,7 @@ package model.gacha.character;
 import java.util.List;
 
 import config.BoardConfig;
+import config.CharacterConfig;
 import manager.GameManager;
 import manager.MaterialLoaderManager;
 import model.entity.Entity;
@@ -17,21 +18,26 @@ public abstract class BaseCharacter implements CharacterSkills {
     private String skillName;
     private String skillDesc;
     private String nameColor;
+    private int currentLevel;
+    private int baseSkillChance;
+    
+    private final int maxLevel = CharacterConfig.MAX_CHARACTER_LEVEL;
     
     private List<CharacterMaterial> requiredMaterials;
 
     public BaseCharacter() {
     }
 
-    public void useSkill(Entity entity) {
-        System.out.printf(" %s's %s uses %s!\n", entity.getName(), getName(), getSkillName());
+    public void useSkill(Entity entity, int baseChance) {
+        int totalChance = baseChance + (getCurrentLevel() - 1);
+        System.out.printf(" %s's %s uses %s! (Chance: %d%% + %d%% = %d%%)\n", entity.getName(), getName(), getSkillName(), baseChance, getCurrentLevel() - 1, totalChance);
         System.out.println();
         System.out.println(" Desc: " + getSkillDesc());
         System.out.println();
         TextUtil.pressEnter();
         System.out.println();
         TextUtil.printHorizontalBorder(
-				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+                BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
     }
 
     public String getId() {
@@ -99,4 +105,26 @@ public abstract class BaseCharacter implements CharacterSkills {
 	protected void setId(String id) {
 		this.id = id;
 	}
+
+	public int getCurrentLevel() {
+		return currentLevel;
+	}
+
+	public void setCurrentLevel(int currentLevel) {
+		this.currentLevel = currentLevel;
+	}
+
+	public int getMaxLevel() {
+		return maxLevel;
+	}
+
+	public int getBaseSkillChance() {
+		return baseSkillChance;
+	}
+
+	protected void setBaseSkillChance(int baseSkillChance) {
+		this.baseSkillChance = baseSkillChance;
+	}
+	
+	
 }

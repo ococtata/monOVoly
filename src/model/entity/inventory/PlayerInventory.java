@@ -35,6 +35,7 @@ public class PlayerInventory extends BaseInventory {
             materialToAdd.getName(),
             materialToAdd.getForCard()
         );
+        
         newMaterial.setAmount(amount);
         this.materialList.add(newMaterial);
     }

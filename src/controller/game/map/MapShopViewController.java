@@ -4,6 +4,7 @@ import config.MapConfig;
 import manager.GameManager;
 import manager.MapManager;
 import view.BaseView;
+import view.game.feature.ShopView;
 import view.game.map.MapShopView;
 
 public class MapShopViewController extends BaseMapViewController{
@@ -30,6 +31,10 @@ public class MapShopViewController extends BaseMapViewController{
             return true;
         }
 		else if(map[newY][newX] == MapConfig.SHOP) {
+			ShopView shopView = new ShopView();
+			shopView.setPreviousView(mapShopView);
+			GameManager.getInstance().setCurrentView(shopView);
+			shopView.show();
 			return false;
 		}
 		

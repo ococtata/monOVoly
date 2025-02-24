@@ -8,8 +8,11 @@ import controller.game.monovoly.MonovolyMapController;
 import manager.GameManager;
 import model.entity.Enemy;
 import model.entity.Entity;
+import model.gacha.character.AinzOoalGown;
 import model.gacha.character.Albedo;
 import model.gacha.character.Cocytus;
+import model.gacha.character.Demiurge;
+import model.gacha.character.PandorasActor;
 import model.gacha.character.ShalltearBloodfallen;
 import utility.Random;
 import utility.Scanner;
@@ -143,12 +146,6 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
 
     private void handleOpponentLanding(Entity piece) {
         int toll = payToll(piece); 
-        if (this.owner.getEquippedCharacter() instanceof ShalltearBloodfallen) {
-            toll = ((ShalltearBloodfallen) this.owner.getEquippedCharacter()).useSkill(piece, toll);
-        }
-        else if (this.owner.getEquippedCharacter() instanceof Cocytus) {
-            ((Cocytus) this.owner.getEquippedCharacter()).useSkill(owner, piece);
-        }
         
         piece.updateTotalAssets();
         this.owner.updateTotalAssets();
@@ -333,10 +330,20 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
                 buildingLevel++;
                 price += constructPrice;
                 piece.updateTotalAssets();
-                System.out.println(" " + piece.getName() + " constructed a building on " + this.getName() + ". Level: " + 
-                		buildingLevel + " for $" + constructPrice + "!");
+                System.out.println(" " + piece.getName() + " constructed a building on " + this.getName() + ". Level: " +
+                        buildingLevel + " for $" + constructPrice + "!");
                 showStats();
                 constructPrice += GameConfig.PROPERTY_BASE_CONSTRUCTION_COST;
+
+                if (piece.getEquippedCharacter() instanceof Demiurge) {
+                    Demiurge demiurge = (Demiurge) piece.getEquippedCharacter();
+                    demiurge.useSkill(piece); 
+                }
+                else if (piece.getEquippedCharacter() instanceof AinzOoalGown) {
+                	AinzOoalGown ainz = (AinzOoalGown) piece.getEquippedCharacter();
+                	ainz.useSkill(piece, this); 
+                }
+
             } 
             else {
                 System.out.println(piece.getName() + " doesn't have enough money to construct on " + this.getName());
@@ -367,16 +374,20 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
     private int payToll(Entity piece) {
         if (owner != null && owner != piece) {
             int amount = calculateToll(this);
-
-            if (piece.getEquippedCharacter() instanceof Albedo) {
-                amount = ((Albedo) piece.getEquippedCharacter()).useSkill(piece, amount);
+            
+            if (piece.getEquippedCharacter() instanceof PandorasActor) {
+                amount = ((PandorasActor) piece.getEquippedCharacter()).useSkill(amount, piece);
+            }
+            else if (piece.getEquippedCharacter() instanceof Albedo) {
+                amount = ((Albedo) piece.getEquippedCharacter()).useSkill(amount, piece);
             }
 
             if (piece.getMoney() >= amount) {
                 piece.pay(piece.getEnemy(), amount);
                 owner.setMoney(owner.getMoney() + amount);
                 System.out.println(" " + piece.getName() + " paid $" + amount + " toll to " + owner.getName() + ".");
-            } else {
+            } 
+            else {
                 System.out.println(" " + piece.getName() + " doesn't have enough money to pay the toll!");
             }
             return amount;

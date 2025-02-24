@@ -59,7 +59,7 @@ public class ExitUtil {
 		for(String line : logo) {
 			System.out.println(line);
 			try {
-				Thread.sleep(100);
+				Thread.sleep(60);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
