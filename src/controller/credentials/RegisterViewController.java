@@ -28,7 +28,7 @@ public class RegisterViewController {
 		String userData = String.format("%s#%s#%s#%s", id, username, email, ecryptedPassword);
 		FileUtil.appendToFile(DataConfig.FILE_DATA_USER, userData);
 		
-		String playerStat = String.format("%s#1#0#0#0", id);	
+		String playerStat = String.format("%s#1#0#0#0#0", id);	
 		FileUtil.appendToFile(DataConfig.FILE_DATA_PLAYER_STAT, playerStat);
 		
 		SaveLoadManager.getInstance().loadAll();

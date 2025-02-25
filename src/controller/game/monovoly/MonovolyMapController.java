@@ -507,7 +507,7 @@ public class MonovolyMapController implements Scanner, Random {
 		System.out.print("\t " + entity.getName());
 		String money = ColorConfig.GREEN + "$ "  + entity.getMoney() + ColorConfig.RESET;
 		String total = ColorConfig.GOLD + entity.getTotalAssest() + ColorConfig.RESET;
-				System.out.println("\t\t\t " + money + "\t\t Total: " + total);
+				System.out.println("\t\t " + money + "\t\t Total: " + total);
 
 		BaseCharacter equippedCharacter = entity.getEquippedCharacter();
 		if (equippedCharacter != null) {
