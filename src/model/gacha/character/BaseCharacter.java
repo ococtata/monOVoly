@@ -4,6 +4,7 @@ import java.util.List;
 
 import config.BoardConfig;
 import config.CharacterConfig;
+import config.ColorConfig;
 import manager.GameManager;
 import manager.MaterialLoaderManager;
 import model.entity.Entity;
@@ -30,7 +31,8 @@ public abstract class BaseCharacter implements CharacterSkills {
 
     public void useSkill(Entity entity, int baseChance) {
         int totalChance = baseChance + (getCurrentLevel() - 1);
-        System.out.printf(" %s's %s uses %s! (Chance: %d%% + %d%% = %d%%)\n", entity.getName(), getName(), getSkillName(), baseChance, getCurrentLevel() - 1, totalChance);
+        String charName = getNameColor() + getName() + ColorConfig.RESET;
+        System.out.printf(" %s's %s uses %s! (Chance: %d%% + %d%% = %d%%)\n", entity.getName(), charName, getSkillName(), baseChance, getCurrentLevel() - 1, totalChance);
         System.out.println();
         System.out.println(" Desc: " + getSkillDesc());
         System.out.println();

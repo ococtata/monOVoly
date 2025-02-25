@@ -173,17 +173,36 @@ public class MaterialListView extends BaseView implements Scanner {
     }
 	
 	private void showTable(int startIndex, int endIndex, List<CharacterMaterial> materials) {
-		TextUtil.printHorizontalBorder(borderLength);
+	    TextUtil.printHorizontalBorder(borderLength);
 
-        System.out.printf(" | %-5s | %-40s | %-10s | %-10s | %-23s |\n", "No.", "Name", "Rarity", "Amount", "For Character");
-        TextUtil.printHorizontalBorder(borderLength);
+	    System.out.printf(" | %-5s | %-40s | %-10s | %-10s | %-23s |\n", 
+	                      "No.", "Name", "Rarity", "Amount", "For Character");
+	    TextUtil.printHorizontalBorder(borderLength);
 
-        for (int i = startIndex; i < endIndex; i++) {
-            CharacterMaterial material = materials.get(i);
-            String rarityColor = material.getRarity().getColor();
-            System.out.printf(" | %-5d | %s%-40s%s | %s%-10s%s | %-10d | %-23s |\n", i + 1, rarityColor, material.getName(), ColorConfig.RESET,
-                    rarityColor, material.getRarity(), ColorConfig.RESET, material.getAmount(), material.getForCard());
-            TextUtil.printHorizontalBorder(borderLength);
-        }
+	    for (int i = startIndex; i < endIndex; i++) {
+	        CharacterMaterial material = materials.get(i);
+	        String rarityColor = material.getRarity().getColor();
+	        String charColor = material.getCharacter().getNameColor();
+	        String coloredForCardName = charColor + material.getForCard() + ColorConfig.RESET;
+
+	        String plainForCardName = stripAnsiCodes(coloredForCardName);
+
+	        int namePadding = 40 - stripAnsiCodes(material.getName()).length();
+	        int rarityPadding = 10 - stripAnsiCodes(material.getRarity().toString()).length();
+	        int forCardPadding = 23 - plainForCardName.length();
+
+	        System.out.printf(" | %-5d | %s%s%" + namePadding + "s%s | %s%s%" + rarityPadding + "s%s | %-10d | %s%s%" + forCardPadding + "s%s |\n", 
+	                i + 1, 
+	                rarityColor, material.getName(), "", ColorConfig.RESET,
+	                rarityColor, material.getRarity(), "", ColorConfig.RESET,
+	                material.getAmount(),
+	                charColor, material.getForCard(), "", ColorConfig.RESET);
+
+	        TextUtil.printHorizontalBorder(borderLength);
+	    }
+	}
+
+	private String stripAnsiCodes(String input) {
+	    return input.replaceAll("\u001B\\[[;\\d]*m", "");
 	}
 }

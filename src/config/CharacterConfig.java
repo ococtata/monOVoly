@@ -24,7 +24,7 @@ public class CharacterConfig {
     public static final String AINZ_NAME = "Ainz Ooal Gown";
     public static final String AINZ_TITLE = "The Sorcerer King";
     public static final String AINZ_SKILL_NAME = "Create Fortress";
-    public static final String AINZ_SKILL_DESC = "After construction, fully upgrade the property to a Landmark for free";
+    public static final String AINZ_SKILL_DESC = "When buying a property, acquire and fully upgrade it to a Landmark for free";
 
     // Albedo
     public static final String ALBEDO_NAME = "Albedo";

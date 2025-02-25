@@ -51,7 +51,9 @@ public class ExitUtil {
 		    "              ===========================================================",
 		    "              |      Confront the challenges of learning and outgrow    |",
 		    "              |              the boundaries together ~ 24-2             |",
-		    "              ==========================================================="
+		    "              ===========================================================",
+		    "",
+		    "                       created by OV24-2 | Octavius Sandriago            "
 		};
 	
 	public static void exitGame() {

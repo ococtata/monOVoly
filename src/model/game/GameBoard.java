@@ -231,7 +231,7 @@ public class GameBoard {
 	
 	private String getColorForBlock(GenericBlock block) {
 	    if (block instanceof StartBlock) {
-	        return ColorConfig.LIGHT_GREY;
+	        return ColorConfig.DARK_GREY;
 	    } 
 	    else if (block instanceof CardBlock) {
 	        return ColorConfig.GOLD; 

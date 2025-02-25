@@ -12,7 +12,7 @@ public class Albedo extends BaseCharacter implements Random {
         setTitle(CharacterConfig.ALBEDO_TITLE);
         setSkillName(CharacterConfig.ALBEDO_SKILL_NAME);
         setSkillDesc(CharacterConfig.ALBEDO_SKILL_DESC);
-        setNameColor(ColorConfig.WHITE);
+        setNameColor(ColorConfig.DARK_GREY);
         setId(CharacterConfig.ALBEDO_ID);
         setBaseSkillChance(CharacterConfig.ALBEDO_BASE_SKILL_CHANCE);
         setCurrentLevel(1);

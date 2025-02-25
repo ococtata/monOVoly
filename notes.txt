@@ -31,6 +31,7 @@ MAIN MENU
 ================================================================
 GAME
 - enemy will equip a random character only if the player has a character in their inventory
+- enemy's character will be 1 or 2 levels lower/higher than the player's
 - pick who goes first by picking 1 of 2 cards (1 goes first)
 - enemy will randomly choose (roll dice, use item, etc)
 - player will have 3 types of rolls (odd, any, even)
@@ -96,16 +97,16 @@ GACHA
 CHARACTER:
 - cost 150 gems to gacha
 - result in material (4 amount, rarity random)
-- rarity: common: grey, rare: blue, epic: purple, legendary: gold
+- rarity: common: green, rare: blue, epic: purple, legendary: gold
 - need a certain amount of materials to unlock characters (trade)
 - make the legendary rarity 1% chance of appearing
-- can trade common and rare rarity for gems (25 common = 10 gems, 10 rare = 15 gems)
+- trade to a higher rarity material with the cost of 20 of the lower rarity ones
 
 CHARACTER DETAIL:
 - Ainz Ooal Gown (ID: CH001)
 	-) Title: The Sorcerer King
 	-) Skill Name: Create Fortress
-	-) Skill Desc: After construction, fully upgrade the property to a Landmark for free
+	-) Skill Desc: When buying a property, acquire and fully upgrade it to a Landmark for free
 
 - Albedo (ID: CH002)
 	-) Title: Guardian Overseer

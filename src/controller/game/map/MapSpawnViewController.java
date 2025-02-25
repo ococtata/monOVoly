@@ -37,12 +37,12 @@ public class MapSpawnViewController extends BaseMapViewController {
 	        return false;
 	    } 
 	    else if (map[newY][newX] == MapConfig.GATE) {
-	    	System.out.println();
-	        TextUtil.printHorizontalBorder(50);
+	    	TextUtil.clearScreen();
 	        System.out.println(" Monovoly requires " + ColorConfig.YELLOW + GameConfig.ENERGY_COST_TO_PLAY + ColorConfig.RESET + " energy to play.\n");
 	        System.out.println(" Would you like to enter " + ColorConfig.GOLD + "Monovoly" + ColorConfig.RESET + "?");
 	        System.out.println(" 1. Enter");
 	        System.out.println(" 2. Cancel");
+	        System.out.println();
 	        System.out.print(" >> ");
 
 	        String input = TextUtil.scan.nextLine().trim();

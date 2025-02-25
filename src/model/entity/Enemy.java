@@ -32,9 +32,13 @@ public class Enemy extends Entity implements Random {
         if (playerCharacters.size() > 0) {
             int randomIndex = rand.nextInt(allCharacters.size());
             BaseCharacter randomCharacter = allCharacters.get(randomIndex);
+            int playerLevel = GameManager.getInstance().getPlayer().getEquippedCharacter().getCurrentLevel();
+            int randomLevelGap = rand.nextInt(5) - 2;
+            int randomLevel = Math.max(1, playerLevel + randomLevelGap);
+            randomCharacter.setCurrentLevel(randomLevel);
             setEquippedCharacter(randomCharacter);
             
-            setEquippedCharacter(CharacterLoaderManager.getInstance().getCharacterById("CH003"));
+            setEquippedCharacter(CharacterLoaderManager.getInstance().getCharacterById("CH002"));
         }
     }
 

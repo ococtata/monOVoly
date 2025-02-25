@@ -4,6 +4,7 @@ import java.util.InputMismatchException;
 
 import config.BoardConfig;
 import config.GameConfig;
+import controller.game.monovoly.IMonovolyGameGUI;
 import controller.game.monovoly.MonovolyMapController;
 import manager.GameManager;
 import model.entity.Enemy;
@@ -18,7 +19,7 @@ import utility.Random;
 import utility.Scanner;
 import utility.TextUtil;
 
-public class PropertyBlock extends GenericBlock implements Random, Scanner {
+public class PropertyBlock extends GenericBlock implements Random, Scanner, IMonovolyGameGUI {
     private int price;
     private int constructPrice;
     private int buildingLevel;
@@ -149,7 +150,11 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
         
         piece.updateTotalAssets();
         this.owner.updateTotalAssets();
+        TextUtil.printHorizontalBorder(
+				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
         showStats();
+        TextUtil.printHorizontalBorder(
+				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
         handleNonMaxLevelProperty(piece);
     }
     
@@ -161,7 +166,11 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
             this.price += landmarkCost;
             piece.updateTotalAssets();
             System.out.println(" " + piece.getName() + " built a landmark on " + this.getName() + "for " + landmarkCost + "!");
+            TextUtil.printHorizontalBorder(
+    				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
             showStats();
+            TextUtil.printHorizontalBorder(
+    				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
         } else {
             System.out.println(" " + piece.getName() + " doesn't have enough money to build a landmark.");
         }
@@ -285,12 +294,23 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
     
     private void buy(Entity piece) {
         if (piece.getMoney() >= this.price) {
+            if (piece.getEquippedCharacter() instanceof AinzOoalGown) {
+                AinzOoalGown ainz = (AinzOoalGown) piece.getEquippedCharacter();
+                ainz.useSkill(piece, this);
+                return;
+            }
+
             piece.pay(null, this.price);
             setOwner(piece);
             piece.addProperty(this);
             piece.updateTotalAssets();
             System.out.println(" " + piece.getName() + " bought " + this.getName() + " for $" + this.price);
+            TextUtil.printHorizontalBorder(
+    				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
             showStats();
+            TextUtil.printHorizontalBorder(
+    				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+
         } 
         else {
             System.out.println(" " + piece.getName() + " doesn't have enough money to buy " + this.getName());
@@ -316,7 +336,11 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
                 System.out.println(" " + piece.getName() + " overtook " + this.getName() 
                 + " for $" + overtakePrice);
             }
+            TextUtil.printHorizontalBorder(
+    				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
             showStats();
+            TextUtil.printHorizontalBorder(
+    				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
         } 
         else {
             System.out.println(" " + piece.getName() + " doesn't have enough money to overtake " + this.getName());
@@ -332,18 +356,18 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
                 piece.updateTotalAssets();
                 System.out.println(" " + piece.getName() + " constructed a building on " + this.getName() + ". Level: " +
                         buildingLevel + " for $" + constructPrice + "!");
+                TextUtil.printHorizontalBorder(
+        				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
                 showStats();
+                TextUtil.printHorizontalBorder(
+        				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
                 constructPrice += GameConfig.PROPERTY_BASE_CONSTRUCTION_COST;
 
                 if (piece.getEquippedCharacter() instanceof Demiurge) {
                     Demiurge demiurge = (Demiurge) piece.getEquippedCharacter();
                     demiurge.useSkill(piece); 
                 }
-                else if (piece.getEquippedCharacter() instanceof AinzOoalGown) {
-                	AinzOoalGown ainz = (AinzOoalGown) piece.getEquippedCharacter();
-                	ainz.useSkill(piece, this); 
-                }
-
+                
             } 
             else {
                 System.out.println(piece.getName() + " doesn't have enough money to construct on " + this.getName());
@@ -432,14 +456,7 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner {
     	this.price -= constructPrice;
     	this.constructPrice -= GameConfig.PROPERTY_BASE_CONSTRUCTION_PRICE_INCREASE;
     }
-    
-    private void showStats() {
-    	System.out.println();
-        TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-    	MonovolyMapController.showStats();
-        TextUtil.printHorizontalBorder(BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-    }
-    
+
     public Entity getOwner() {
         return owner;
     }

@@ -49,8 +49,8 @@ public class StartBlock extends GenericBlock implements Scanner {
         }
 
         System.out.println(" " + piece.getName() + " can upgrade one of their properties.\n");
-        System.out.println(" Select a property to upgrade:");
-
+        TextUtil.pressEnter();
+        
         PropertyBlock chosen = piece.chooseProperty();
 
         if (chosen != null) {

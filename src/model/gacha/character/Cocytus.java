@@ -68,5 +68,10 @@ public class Cocytus extends BaseCharacter implements CharacterSkills, Random {
         else {
             System.out.println(" " + name + "'s Glacial Imprisonment failed.");
         }
+        
+        System.out.println();
+        TextUtil.pressEnter();
     }
+	
+	
 }

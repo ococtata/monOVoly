@@ -3,6 +3,7 @@ package model.gacha.character;
 import config.BoardConfig;
 import config.CharacterConfig;
 import config.ColorConfig;
+import controller.game.monovoly.IMonovolyGameGUI;
 import manager.GameManager;
 import model.block.GenericBlock;
 import model.block.PropertyBlock;
@@ -11,7 +12,7 @@ import model.game.GameBoard;
 import utility.Random;
 import utility.TextUtil;
 
-public class Demiurge extends BaseCharacter implements CharacterSkills, Random {
+public class Demiurge extends BaseCharacter implements CharacterSkills, Random, IMonovolyGameGUI {
 
 	public Demiurge() {
         setName(CharacterConfig.DEMIURGE_NAME);
@@ -32,42 +33,42 @@ public class Demiurge extends BaseCharacter implements CharacterSkills, Random {
 	
 	@Override
     public void infernalStrategy(Entity entity) {
-		Entity target = entity.getEnemy();
+        Entity target = entity.getEnemy();
         GameBoard gameBoard = GameManager.getInstance().getGameBoard();
-        PropertyBlock destination = entity.chooseProperty();
         GenericBlock currentBlock = gameBoard.getBlockList().get(target.getBoardIndex());
+        GenericBlock startBlock = gameBoard.getBlockList().get(0);
 
-        if (target != null && destination != null) {
+        if (target != null) {
             int chance = getBaseSkillChance() + (getCurrentLevel() - 1);
 
-            if (GameManager.getInstance().getGameBoard().getBlockList().indexOf(destination) == 0){
+            if (GameManager.getInstance().getGameBoard().getBlockList().indexOf(currentBlock) == 0) {
                 chance = 100;
             }
 
-            if (GameManager.getInstance().getGameBoard().getBlockList().indexOf(currentBlock) == 0){
-                chance = 100;
-            }
+            if (rand.nextInt(100) < chance) {
+                int stepsToStart = calculateStepsToStart(target.getBoardIndex(), gameBoard.getBlockList().size());
+               moveWithAnimation(target, stepsToStart); 
 
-            if(GameManager.getInstance().getGameBoard().getBlockList().indexOf(currentBlock) == GameManager.getInstance().getGameBoard().getBlockList().indexOf(destination)){
-                chance = 0;
-            }
-
-            if (GameManager.getInstance().getGameBoard().getBlockList().indexOf(destination) == 0 || GameManager.getInstance().getGameBoard().getBlockList().indexOf(currentBlock) == 0 || rand.nextInt(100) < chance) {
-                target.move(currentBlock, destination);
                 TextUtil.clearScreen();
-                currentBlock.removePiece(target);
                 GameManager.getInstance().getGameBoard().printBoard();
-                System.out.println(" " + getName() + " used Infernal Strategy and teleported " + target.getName() + " to " + destination.getName() + "!");
+                System.out.println(" " + getName() + " used Infernal Strategy and teleported " + target.getName() + " to the start!");
                 System.out.println();
                 TextUtil.pressEnter();
                 TextUtil.printHorizontalBorder(
                         BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-                destination.onLand(target);
+                startBlock.onLand(target);
                 TextUtil.pressEnter();
-            } 
-            else {
+            } else {
                 System.out.println(" " + getName() + "'s Infernal Strategy failed.");
             }
         }
-	}
+    }
+
+    private int calculateStepsToStart(int currentIndex, int boardSize) {
+        if (currentIndex == 0) {
+            return 0;
+        } else {
+            return (boardSize - currentIndex); 
+        }
+    }
 }
