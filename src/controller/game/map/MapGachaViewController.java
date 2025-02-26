@@ -7,7 +7,7 @@ import model.Position;
 import model.gacha.GachaCharacter;
 import view.BaseView;
 import view.game.feature.GachaView;
-import view.game.feature.NoticeView;
+import view.game.feature.LeaderboardView;
 import view.game.map.MapGachaView;
 
 public class MapGachaViewController extends BaseMapViewController{

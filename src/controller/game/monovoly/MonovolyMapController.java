@@ -450,9 +450,10 @@ public class MonovolyMapController implements Scanner, Random, IMonovolyGameGUI 
 	}
 
 	private void playerWin(Player player) {
-		player.setGems(player.getGems() + 1000);
+		player.setGems(player.getGems() + 1500);
 		player.addExp(10);
-		System.out.println(" " + player.getName() + " earned 1000 gems and 10 XP!");
+		player.increaseTrophy(500);
+		System.out.println(" " + player.getName() + " earned 1500 gems, 10 XP, and earned 500 Trophies!");
 		System.out.println();
 		TextUtil.pressEnter();
 	}

@@ -10,7 +10,6 @@ public class DataConfig {
 	
 	// folder
 	public static final String FOLDER_MAP = "map";
-	public static final String FOLDER_NOTICES = "notices";
 	
 	// maps
 	public static final String FILE_MAP_SPAWN = "map/spawnMap.txt";

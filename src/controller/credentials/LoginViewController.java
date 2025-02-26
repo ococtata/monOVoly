@@ -26,7 +26,7 @@ public class LoginViewController {
             String[] credentials = line.split("#");
             String decryptedPassword = Decryption.passwordDecrypt(credentials[CredentialsConfig.PASSWORD_INDEX]);
             if (credentials[CredentialsConfig.EMAIL_INDEX].equals(email) &&
-                    decryptedPassword.equals(password)) {
+                    decryptedPassword.equals(password.trim())) {
             	loadPlayerFromGameManager(credentials[CredentialsConfig.ID_INDEX]);
                 System.out.println(" Successfully logged in!");
                 return true;

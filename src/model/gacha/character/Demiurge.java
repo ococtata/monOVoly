@@ -25,41 +25,44 @@ public class Demiurge extends BaseCharacter implements CharacterSkills, Random, 
         setCurrentLevel(1);
     }
 	
-	public void useSkill(Entity entity) {
+	public void useSkill(Entity entity, PropertyBlock property) {
 		super.useSkill(entity, getBaseSkillChance());
         
-		infernalStrategy(entity);
+		infernalStrategy(entity, property);
 	}
 	
 	@Override
-    public void infernalStrategy(Entity entity) {
-        Entity target = entity.getEnemy();
+    public void infernalStrategy(Entity entity, PropertyBlock property) {
         GameBoard gameBoard = GameManager.getInstance().getGameBoard();
-        GenericBlock currentBlock = gameBoard.getBlockList().get(target.getBoardIndex());
+        GenericBlock currentBlock = gameBoard.getBlockList().get(entity.getBoardIndex());
         GenericBlock startBlock = gameBoard.getBlockList().get(0);
 
-        if (target != null) {
+        if (entity != null) {
             int chance = getBaseSkillChance() + (getCurrentLevel() - 1);
 
             if (GameManager.getInstance().getGameBoard().getBlockList().indexOf(currentBlock) == 0) {
                 chance = 100;
             }
-
+            String name = getNameColor() + getName() + ColorConfig.RESET;
             if (rand.nextInt(100) < chance) {
-                int stepsToStart = calculateStepsToStart(target.getBoardIndex(), gameBoard.getBlockList().size());
-               moveWithAnimation(target, stepsToStart); 
+                int stepsToStart = calculateStepsToStart(entity.getBoardIndex(), gameBoard.getBlockList().size());
 
-                TextUtil.clearScreen();
-                GameManager.getInstance().getGameBoard().printBoard();
-                System.out.println(" " + getName() + " used Infernal Strategy and teleported " + target.getName() + " to the start!");
+                System.out.println(" " + name + " used Infernal Strategy and moved " + entity.getName() + " to the start!");
                 System.out.println();
                 TextUtil.pressEnter();
+                moveWithAnimation(entity, stepsToStart); 
                 TextUtil.printHorizontalBorder(
                         BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-                startBlock.onLand(target);
+                startBlock.onLand(entity);
                 TextUtil.pressEnter();
             } else {
-                System.out.println(" " + getName() + "'s Infernal Strategy failed.");
+                System.out.println(" " + name + "'s Infernal Strategy failed.");
+                System.out.println();
+            	
+            	TextUtil.pressEnter();
+            	TextUtil.printHorizontalBorder(
+                        BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+            	System.out.println(" " + getNameColor() + entity.getName() + ColorConfig.RESET + " bought " + property.getName() + " for $" + property.getPrice());
             }
         }
     }

@@ -4,6 +4,7 @@ import config.CharacterConfig;
 import config.ColorConfig;
 import model.entity.Entity;
 import utility.Random;
+import utility.TextUtil;
 
 public class Albedo extends BaseCharacter implements Random {
 
@@ -33,6 +34,14 @@ public class Albedo extends BaseCharacter implements Random {
             System.out.println(" " + name + "'s Armor of Malice prevented the rent payment!");
             return 0;
         }
+        else {
+        	System.out.println(" " + name + "'s Armor of Malice failed!");
+        	System.out.println();
+        	
+        	TextUtil.pressEnter();
+        }
+        
+        
         return rent;
     }
 }

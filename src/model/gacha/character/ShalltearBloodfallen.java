@@ -4,6 +4,7 @@ import config.CharacterConfig;
 import config.ColorConfig;
 import model.entity.Entity;
 import utility.Random;
+import utility.TextUtil;
 
 public class ShalltearBloodfallen extends BaseCharacter implements CharacterSkills, Random {
 
@@ -29,18 +30,24 @@ public class ShalltearBloodfallen extends BaseCharacter implements CharacterSkil
         int chance = getBaseSkillChance() + (getCurrentLevel() - 1);
         int tribute = (int) (opponent.getMoney() * 0.5);
 
+        String name = getNameColor() + getName() + ColorConfig.RESET;
         if (rand.nextInt(100) < chance) {
             if (opponent.getMoney() >= tribute) {
                 opponent.setMoney(opponent.getMoney() - tribute);
                 entity.setMoney(entity.getMoney() + tribute);
-                String name = getNameColor() + getName() + ColorConfig.RESET;
                 System.out.println(" " + name + " used Blood Tribute and stole $" + tribute + " from " + opponent.getName() + "!");
-            } else {
+            } 
+            else {
                 System.out.println(" " + opponent.getName() + " doesn't have enough money for Blood Tribute!");
                 opponent.declareBankrupt();
             }
-        } else {
-            System.out.println(" " + getName() + "'s Blood Tribute failed.");
+            TextUtil.pressEnter();
+        } 
+        else {
+            System.out.println(" " + name + "'s Blood Tribute failed.");
+            System.out.println();
+        	
+        	TextUtil.pressEnter();
         }
     }
 

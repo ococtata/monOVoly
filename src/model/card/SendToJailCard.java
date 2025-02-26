@@ -58,7 +58,7 @@ public class SendToJailCard extends GenericCard implements IMonovolyGameGUI {
         if (currentIndex <= jailIndex) {
             return jailIndex - currentIndex;
         } else {
-            return (boardSize - currentIndex) + jailIndex + 1;
+            return (boardSize - currentIndex) + jailIndex + 2;
         }
     }
 }

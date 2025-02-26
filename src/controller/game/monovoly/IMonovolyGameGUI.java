@@ -116,18 +116,26 @@ public interface IMonovolyGameGUI {
 	}
 
 	default void printStatsWithCharacter(Entity entity) {
-	    System.out.print(" " + (entity.getRank() == 1 ? "(1st)" : "(2nd)"));
-	    System.out.print("\t " + entity.getName());
+	    String rank = entity.getRank() == 1 ? "(1st)" : "(2nd)";
+	    String name = entity.getName();
 	    String money = ColorConfig.GREEN + "$ " + entity.getMoney() + ColorConfig.RESET;
 	    String total = ColorConfig.GOLD + entity.getTotalAssest() + ColorConfig.RESET;
-	    System.out.println("\t\t\t " + money + "\t\t Total: " + total);
+
+	    int maxNameLength = Math.max("Name".length(), name.replaceAll("\\e\\[[\\d;]*m", "").length());
+	    if (entity.getEnemy() != null) {
+	        maxNameLength = Math.max(maxNameLength, entity.getEnemy().getName().replaceAll("\\e\\[[\\d;]*m", "").length());
+	    }
+
+	    System.out.printf(" %s\t %-20s\t\t%-15s   Total: %s\n", rank, name, money, total);
 
 	    BaseCharacter equippedCharacter = entity.getEquippedCharacter();
 	    if (equippedCharacter != null) {
-	        System.out.println(" \t\t\t Character: \t " + equippedCharacter.getNameColor() + equippedCharacter.getName()
+	        System.out.print("\t"); 
+	        System.out.println(" Character\t\t: " + equippedCharacter.getNameColor() + equippedCharacter.getName()
 	                + ColorConfig.RESET + " (Lvl. " + equippedCharacter.getCurrentLevel() + ")");
 	    } else {
-	        System.out.println(" \t\t\t Character: \t None");
+	        System.out.print(" ".repeat(9));
+	        System.out.println(" Character\t: None");
 	    }
 	}
 	

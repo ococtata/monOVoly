@@ -65,11 +65,12 @@ BLOCKS
 - tax -> if piece land on tax, loose 10% of total asset
 - property:
 	-) not owned:
-		-> price = base property price (125k) + (random 50k - 150k) => NOTE: random always on 10k interval
+		-> price = base property price (1250) + (random 500 - 1500) => NOTE: random always on 100 interval
 	-) owned (self):
-		-> construct building = base building price (30k) + random (20k - 50k)
+		-> construct building = base building price (300) + random (200 - 500)
 		-> increase the building value by the construct building price
-		-> increase construct building price by 100k every upgrade
+		-> increase construct building price by 1000 every upgrade
+		-> if have max level building (level 3), can buy landmark for 10000
 	-) owned (enemy):
 		-> pay the toll (30% of total property value)
 		-> if the the property has a landmark, multiply the total toll by 1.25x

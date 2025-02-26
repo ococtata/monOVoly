@@ -10,6 +10,7 @@ import model.entity.Player;
 import model.entity.inventory.PlayerInventory;
 import model.gacha.character.BaseCharacter;
 import model.gacha.material.CharacterMaterial;
+import security.Decryption;
 import utility.FileUtil;
 
 public class SaveLoadManager {
@@ -54,7 +55,7 @@ public class SaveLoadManager {
             String username = parts[CredentialsConfig.USERNAME_INDEX];
             String email = parts[CredentialsConfig.EMAIL_INDEX];
             String password = parts[CredentialsConfig.PASSWORD_INDEX];
-
+            
             Player player = new Player(playerId, username, email, password, 0, 1, 0, 0, 0);
             players.add(player);
         }
@@ -64,7 +65,8 @@ public class SaveLoadManager {
 	private void savePlayers(List<Player> players) {
         List<String> lines = new ArrayList<String>();
         for (Player player : players) {
-            String line = player.getId() + "#" + player.getName() + "#" + player.getEmail() + "#" + player.getPassword();
+        	String name = stripAnsiCodes(player.getName());
+            String line = player.getId() + "#" + name + "#" + player.getEmail() + "#" + player.getPassword();
             lines.add(line);
         }
         FileUtil.writeLinesToFile(DataConfig.FILE_DATA_USER, lines);
@@ -82,6 +84,7 @@ public class SaveLoadManager {
             int currentExp = Integer.parseInt(parts[StatDataConfig.CURRENT_EXP_INDEX]);
             int currentEnergy = Integer.parseInt(parts[StatDataConfig.CURRENT_ENERGY_INDEX]);
             String equippedCharId = parts[StatDataConfig.EQUIPPED_CHARACTER_ID_INDEX];
+            int trophy = Integer.parseInt(parts[StatDataConfig.TROPHY_INDEX]);
 
             for (Player player : players) {
                 if (player.getId().equals(playerId)) {
@@ -89,6 +92,7 @@ public class SaveLoadManager {
                     player.setGems(gems);
                     player.setCurrentExp(currentExp);
                     player.setCurrentEnergy(currentEnergy);
+                    player.setTrophy(trophy);
                     if (!equippedCharId.equals("0")) {
                         BaseCharacter equippedCharacter = CharacterLoaderManager.getInstance().getCharacterById(equippedCharId);
                         player.setEquippedCharacter(equippedCharacter);
@@ -106,8 +110,8 @@ public class SaveLoadManager {
         List<String> lines = new ArrayList<String>();
         for (Player player : players) {
             String equippedCharId = player.getEquippedCharacter() != null ? player.getEquippedCharacter().getId() : "0";
-            String line = player.getId() + "#" + player.getLevel() + "#" +
-                    player.getGems() + "#" + player.getCurrentExp() + "#" + player.getCurrentEnergy() + "#" + equippedCharId;
+            String line = player.getId() + "#" + player.getLevel() + "#" + player.getGems() + "#"
+                    + player.getCurrentExp() + "#" + player.getCurrentEnergy() + "#" + equippedCharId + "#" + player.getTrophy();
             lines.add(line);
         }
         FileUtil.writeLinesToFile(DataConfig.FILE_DATA_PLAYER_STAT, lines);
@@ -221,4 +225,8 @@ public class SaveLoadManager {
         }
         return lines;
     }
+	
+	private String stripAnsiCodes(String input) {
+	    return input.replaceAll("\u001B\\[[;\\d]*m", "");
+	}
 }

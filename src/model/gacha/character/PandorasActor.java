@@ -27,9 +27,10 @@ public class PandorasActor extends BaseCharacter implements CharacterSkills, Ran
 	
 	@Override
 	public int falseFortune(int amount) {
+		String name = getNameColor() + getName() + ColorConfig.RESET;
 		if (freeRentCount > 0) {
             freeRentCount--;
-            System.out.println(" False Fortune activated! No rent paid.");
+            System.out.println(" " + name + "'s False Fortune prevented the rent payment!");
 
             int chance = getBaseSkillChance() + (getCurrentLevel() - 1);
 

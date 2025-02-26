@@ -21,7 +21,6 @@ public class RegisterView extends BaseView {
     public void show() {
         TextUtil.printHeader("REGISTER", WIDTH, HEIGHT);
         System.out.println();
-
         String username;
         while (true) {
             System.out.print(" Username [0 to exit]: ");
@@ -100,4 +99,5 @@ public class RegisterView extends BaseView {
         deactivateView();
         new TitleScreenView();
     }
+    
 }

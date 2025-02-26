@@ -16,6 +16,7 @@ public abstract class Entity {
 	private int money;
 	private int totalAssest;
 	private int rank;
+	private int trophy;
 
 	private String piece;
 	private String color;
@@ -250,5 +251,21 @@ public abstract class Entity {
 
 	public void setFrozen(boolean isFrozen) {
 		this.isFrozen = isFrozen;
+	}
+
+	public int getTrophy() {
+		return trophy;
+	}
+
+	public void setTrophy(int trophy) {
+		this.trophy = trophy;
+	}
+	
+	public void increaseTrophy(int amount) {
+		setTrophy(getTrophy() + amount);
+	}
+	
+	public void decreaseTrophy(int amount) {
+		setTrophy(getTrophy() - amount);
 	}
 }

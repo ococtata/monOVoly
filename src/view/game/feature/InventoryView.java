@@ -8,7 +8,6 @@ import utility.TextUtil;
 import view.BaseView;
 import view.game.feature.inventory.CharacterListView;
 import view.game.feature.inventory.MaterialListView;
-import view.game.feature.inventory.PendantListView;
 
 public class InventoryView extends BaseView implements Scanner{
 	private InventoryViewController inventoryViewController;

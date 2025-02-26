@@ -7,7 +7,7 @@ import manager.GameManager;
 import manager.MapManager;
 import model.entity.Player;
 import utility.TextUtil;
-import view.game.feature.NoticeView;
+import view.game.feature.LeaderboardView;
 import view.game.map.MapTradeView;
 import view.game.map.MapGachaView;
 import view.game.map.MapShopView;
@@ -30,10 +30,10 @@ public class MapSpawnViewController extends BaseMapViewController {
 	        return false;
 	    }
 
-	    if (map[newY][newX] == MapConfig.NOTICE) {
-	        NoticeView noticeView = new NoticeView();
-	        noticeView.setPreviousView(mapSpawnView);
-	        GameManager.getInstance().setCurrentView(noticeView);
+	    if (map[newY][newX] == MapConfig.LEADERBOARD) {
+	        LeaderboardView leaderboardView = new LeaderboardView();
+	        leaderboardView.setPreviousView(mapSpawnView);
+	        GameManager.getInstance().setCurrentView(leaderboardView);
 	        return false;
 	    } 
 	    else if (map[newY][newX] == MapConfig.GATE) {

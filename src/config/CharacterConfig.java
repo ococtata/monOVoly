@@ -24,7 +24,7 @@ public class CharacterConfig {
     public static final String AINZ_NAME = "Ainz Ooal Gown";
     public static final String AINZ_TITLE = "The Sorcerer King";
     public static final String AINZ_SKILL_NAME = "Create Fortress";
-    public static final String AINZ_SKILL_DESC = "When buying a property, acquire and fully upgrade it to a Landmark for free";
+    public static final String AINZ_SKILL_DESC = "When buying/overtaking a property, acquire and fully upgrade it to a Landmark for free";
 
     // Albedo
     public static final String ALBEDO_NAME = "Albedo";
@@ -42,7 +42,7 @@ public class CharacterConfig {
     public static final String DEMIURGE_NAME = "Demiurge";
     public static final String DEMIURGE_TITLE = "Tactical Genius";
     public static final String DEMIURGE_SKILL_NAME = "Infernal Strategy";
-    public static final String DEMIURGE_SKILL_DESC = "Teleport to the Start after constructing a building";
+    public static final String DEMIURGE_SKILL_DESC = "Instantly move to the Start after purchasing a property";
 
     // Cocytus
     public static final String COCYTUS_NAME = "Cocytus";

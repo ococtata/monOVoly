@@ -310,6 +310,11 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
             showStats();
             TextUtil.printHorizontalBorder(
     				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+            
+            if (piece.getEquippedCharacter() instanceof Demiurge) {
+                Demiurge demiurge = (Demiurge) piece.getEquippedCharacter();
+                demiurge.useSkill(piece, this); 
+            }
 
         } 
         else {
@@ -320,6 +325,12 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
     private void overtake(Entity piece) {
         int overtakePrice = price * GameConfig.PROPERTY_OVERTAKE_MULTIPLIER;
         if (piece.getMoney() >= overtakePrice) {
+        	if (piece.getEquippedCharacter() instanceof AinzOoalGown) {
+                AinzOoalGown ainz = (AinzOoalGown) piece.getEquippedCharacter();
+                ainz.useSkill(piece, this);
+                return;
+            }
+        	
             piece.pay(piece.getEnemy(), overtakePrice);
             Entity previousOwner = owner;
             setOwner(piece);
@@ -332,15 +343,16 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
                 System.out.println(" " + piece.getName() + " overtook " + this.getName() 
                 + " from " + previousOwner.getName() + " for $" + overtakePrice);
             } 
-            else {
-                System.out.println(" " + piece.getName() + " overtook " + this.getName() 
-                + " for $" + overtakePrice);
-            }
             TextUtil.printHorizontalBorder(
     				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
             showStats();
             TextUtil.printHorizontalBorder(
     				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+            
+            if (piece.getEquippedCharacter() instanceof Demiurge) {
+                Demiurge demiurge = (Demiurge) piece.getEquippedCharacter();
+                demiurge.useSkill(piece, this); 
+            }
         } 
         else {
             System.out.println(" " + piece.getName() + " doesn't have enough money to overtake " + this.getName());
@@ -362,12 +374,6 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
                 TextUtil.printHorizontalBorder(
         				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
                 constructPrice += GameConfig.PROPERTY_BASE_CONSTRUCTION_COST;
-
-                if (piece.getEquippedCharacter() instanceof Demiurge) {
-                    Demiurge demiurge = (Demiurge) piece.getEquippedCharacter();
-                    demiurge.useSkill(piece); 
-                }
-                
             } 
             else {
                 System.out.println(piece.getName() + " doesn't have enough money to construct on " + this.getName());

@@ -149,8 +149,11 @@ public class GameBoard {
     
     private String getBlockLabel(GenericBlock block) {
         String label = block.getType();
-
-        if (label.length() > 2) {
+        
+        if(block instanceof PropertyBlock && ((PropertyBlock) block).hasLandmark()) {
+        	label = "L";
+        }
+        else if (label.length() > 2) {
         	label = label.substring(0, 1).toUpperCase();
         }
         

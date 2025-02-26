@@ -24,8 +24,6 @@ public class StartBlock extends GenericBlock implements Scanner {
     @Override
     public void onLand(Entity piece) {
         increaseMoney(piece, income);
-        System.out.println(" " + piece.getName() + " landed on " + getName() + " and received $" + income + "!");
-        System.out.println();
         TextUtil.pressEnter();
         System.out.println();
         upgradeProperty(piece);
