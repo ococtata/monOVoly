@@ -1,7 +1,7 @@
 package config;
 
 public class GameConfig {
-	public static final int STARTING_MONEY = 50000;
+	public static final int STARTING_MONEY = 40000;
 	public static final int ENERGY_COST_TO_PLAY = 10;
 
 	public static final int BLOCK_START_BASE_INCOME = 3000;
@@ -36,4 +36,5 @@ public class GameConfig {
     
     public static final int BASE_CHARACTER_LEVEL_UP_COST = 200;
     public static final int CHARACTER_LEVEL_UP_INCREMENT = 100;
+    
 }

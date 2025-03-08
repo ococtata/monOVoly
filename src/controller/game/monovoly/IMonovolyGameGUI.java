@@ -7,6 +7,7 @@ import model.block.CardBlock;
 import model.block.GenericBlock;
 import model.block.JailBlock;
 import model.block.PropertyBlock;
+import model.block.StartBlock;
 import model.entity.Entity;
 import model.gacha.character.BaseCharacter;
 import model.gacha.character.Cocytus;
@@ -15,132 +16,155 @@ import model.game.GameBoard;
 import utility.TextUtil;
 
 public interface IMonovolyGameGUI {
-	default void moveWithAnimation(Entity entity, int steps) {
-	    GameBoard gameBoard = GameManager.getInstance().getGameBoard();
-	    int currentIndex = entity.getBoardIndex();
+    default void moveWithAnimation(Entity entity, int steps) {
+        GameBoard gameBoard = GameManager.getInstance().getGameBoard();
+        int currentIndex = entity.getBoardIndex();
+        int startBlockIndex = 0; 
+        boolean passedStart = false;
+        StartBlock startBlock = null;
+        
+        for (GenericBlock block : gameBoard.getBlockList()) {
+            if (block instanceof StartBlock) {
+                startBlock = (StartBlock) block;
+                startBlockIndex = block.getIndex();
+                break;
+            }
+        }
+        
+        if (startBlock != null) {
+            startBlock.resetProcessedEntities();
+        }
 
-	    for (int i = 0; i < steps; i++) {
-	        gameBoard.getBlockList().get(currentIndex).removePiece(entity);
-	        int nextIndex = (currentIndex + 1) % gameBoard.getBlockList().size();
-	        gameBoard.getBlockList().get(nextIndex).addPiece(entity);
+        for (int i = 0; i < steps; i++) {
+            gameBoard.getBlockList().get(currentIndex).removePiece(entity);
+            int nextIndex = (currentIndex + 1) % gameBoard.getBlockList().size();
+            gameBoard.getBlockList().get(nextIndex).addPiece(entity);
 
-	        entity.setBoardIndex(nextIndex);
+            entity.setBoardIndex(nextIndex);
 
-	        printGameInfo();
+            printGameInfo();
 
-	        try {
-	            Thread.sleep(350);
-	        } 
-	        catch (InterruptedException e) {
-	            Thread.currentThread().interrupt();
-	        }
-
-	        currentIndex = nextIndex;
-
-	        Entity opponent = entity.getEnemy();
-	        if (opponent != null && opponent.getBoardIndex() == currentIndex && entity.getEquippedCharacter() instanceof ShalltearBloodfallen) {
-	            ShalltearBloodfallen shalltear = (ShalltearBloodfallen) entity.getEquippedCharacter();
-	            shalltear.useSkill(entity, opponent);
-	        }
-	        else if (opponent != null && opponent.getBoardIndex() == currentIndex && entity.getEquippedCharacter() instanceof Cocytus) {
-	            Cocytus cocytus = (Cocytus) entity.getEquippedCharacter();
-	            cocytus.useSkill(entity, opponent);
-	        }
-	    }
-
-	    GenericBlock landedBlock = gameBoard.getBlockList().get(currentIndex);
-	    printGameInfo();
-
-	    try {
-	        Thread.sleep(700);
-	    } catch (InterruptedException e) {
-	        Thread.currentThread().interrupt();
-	    }
-	    
-	    showBlockInfo(entity, landedBlock);
-	    
-	    if(entity.isInJail() && landedBlock instanceof JailBlock && !landedBlock.getPiecesOnBlock().contains(entity)) {
-	    	landedBlock.addPiece(entity);
-	    }
-	    landedBlock.onLand(entity);	    	
-	}
-	
-	default void showBlockInfo(Entity piece, GenericBlock block) {
-		System.out.println(" " + piece.getName() + " landed on a '" + block.getType() + "' block!");
-		System.out.println();
-
-		if (!(block instanceof CardBlock)) {
-			System.out.println(" Name: " + block.getName());
-			System.out.println(" Desc: " + block.getDesc());
-			System.out.println();
-
-			if (block instanceof PropertyBlock) {
-				PropertyBlock propertyBlock = (PropertyBlock) block;
-				Entity owner = propertyBlock.getOwner();
-
-				if (owner == null) {
-					System.out.println(" Owner\t\t: None");
-					System.out.println(" Price\t\t: $" + propertyBlock.getPrice());
-				} else {
-					System.out.println(" Owner\t\t: " + owner.getName());
-					System.out.println(" Price\t\t: $" + propertyBlock.getPrice());
-					System.out.println(" Building Level\t: " + propertyBlock.getBuildingLevel());
-
-					if (propertyBlock.hasLandmark()) {
-						System.out.print(" Landmark\t: ");
-						showLandmarkInfo(propertyBlock);
-					} else {
-						System.out.println(" Landmark\t: (NO)");
-					}
-				}
+            try {
+				Thread.sleep(350);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		}
-		TextUtil.printHorizontalBorder(
-				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-	}
-	
-	default void printGameInfo() {
-		TextUtil.clearScreen();
-		GameManager.getInstance().getGameBoard().printBoard();
-		TextUtil.printHorizontalBorder(
-				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-		showStats();
-		TextUtil.printHorizontalBorder(
-				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-	}
-	
-	default void showStats() {
-		Entity entity = GameManager.getInstance().isPlayerTurn() ? GameManager.getInstance().getPlayer()
-				: GameManager.getInstance().getEnemy();
-		printStatsWithCharacter(entity);
-	}
 
-	default void printStatsWithCharacter(Entity entity) {
-	    String rank = entity.getRank() == 1 ? "(1st)" : "(2nd)";
-	    String name = entity.getName();
-	    String money = ColorConfig.GREEN + "$ " + entity.getMoney() + ColorConfig.RESET;
-	    String total = ColorConfig.GOLD + entity.getTotalAssest() + ColorConfig.RESET;
+            currentIndex = nextIndex;
+            
+            if (startBlock != null && currentIndex == startBlockIndex && i < steps - 1) {
+                startBlock.onPass(entity);
+                passedStart = true;
+            }
 
-	    int maxNameLength = Math.max("Name".length(), name.replaceAll("\\e\\[[\\d;]*m", "").length());
-	    if (entity.getEnemy() != null) {
-	        maxNameLength = Math.max(maxNameLength, entity.getEnemy().getName().replaceAll("\\e\\[[\\d;]*m", "").length());
-	    }
+            Entity opponent = entity.getEnemy();
+            if (opponent != null && opponent.getBoardIndex() == currentIndex && entity.getEquippedCharacter() instanceof ShalltearBloodfallen) {
+                ShalltearBloodfallen shalltear = (ShalltearBloodfallen) entity.getEquippedCharacter();
+                shalltear.useSkill(entity, opponent);
+            }
+            else if (opponent != null && opponent.getBoardIndex() == currentIndex && entity.getEquippedCharacter() instanceof Cocytus) {
+                Cocytus cocytus = (Cocytus) entity.getEquippedCharacter();
+                cocytus.useSkill(entity, opponent);
+            }
+        }
 
-	    System.out.printf(" %s\t %-20s\t\t%-15s   Total: %s\n", rank, name, money, total);
+        GenericBlock landedBlock = gameBoard.getBlockList().get(currentIndex);
+        printGameInfo();
 
-	    BaseCharacter equippedCharacter = entity.getEquippedCharacter();
-	    if (equippedCharacter != null) {
-	        System.out.print("\t"); 
-	        System.out.println(" Character\t\t: " + equippedCharacter.getNameColor() + equippedCharacter.getName()
-	                + ColorConfig.RESET + " (Lvl. " + equippedCharacter.getCurrentLevel() + ")");
-	    } else {
-	        System.out.print(" ".repeat(9));
-	        System.out.println(" Character\t: None");
-	    }
-	}
-	
-	default void showLandmarkInfo(PropertyBlock property) {
-		System.out.println(property.getLandmarkName());
-		System.out.println(" Landmark Desc  : " + property.getLandmarkDesc());
-	}
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        
+        showBlockInfo(entity, landedBlock);
+        
+        if(entity.isInJail() && landedBlock instanceof JailBlock && !landedBlock.getPiecesOnBlock().contains(entity)) {
+            landedBlock.addPiece(entity);
+        }
+        
+        if(!(landedBlock instanceof StartBlock && passedStart)) {
+        	landedBlock.onLand(entity);                    	
+        }
+    }
+    
+    default void showBlockInfo(Entity piece, GenericBlock block) {
+        System.out.println(" " + piece.getName() + " landed on a '" + block.getType() + "' block!");
+        System.out.println();
+
+        if (!(block instanceof CardBlock)) {
+            System.out.println(" Name: " + block.getName());
+            System.out.println(" Desc: " + block.getDesc());
+            System.out.println();
+
+            if (block instanceof PropertyBlock) {
+                PropertyBlock propertyBlock = (PropertyBlock) block;
+                Entity owner = propertyBlock.getOwner();
+
+                if (owner == null) {
+                    System.out.println(" Owner\t\t: None");
+                    System.out.println(" Price\t\t: $" + propertyBlock.getPrice());
+                } else {
+                    System.out.println(" Owner\t\t: " + owner.getName());
+                    System.out.println(" Price\t\t: $" + propertyBlock.getPrice());
+                    System.out.println(" Building Level\t: " + propertyBlock.getBuildingLevel());
+
+                    if (propertyBlock.hasLandmark()) {
+                        System.out.print(" Landmark\t: ");
+                        showLandmarkInfo(propertyBlock);
+                    } else {
+                        System.out.println(" Landmark\t: (NO)");
+                    }
+                }
+            }
+        }
+        TextUtil.printHorizontalBorder(
+                BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+    }
+    
+    default void printGameInfo() {
+        TextUtil.clearScreen();
+        GameManager.getInstance().getGameBoard().printBoard();
+        TextUtil.printHorizontalBorder(
+                BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+        showStats();
+        TextUtil.printHorizontalBorder(
+                BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
+    }
+    
+    default void showStats() {
+        Entity entity = GameManager.getInstance().isPlayerTurn() ? GameManager.getInstance().getPlayer()
+                : GameManager.getInstance().getEnemy();
+        printStatsWithCharacter(entity);
+    }
+
+    default void printStatsWithCharacter(Entity entity) {
+        String rank = entity.getRank() == 1 ? "(1st)" : "(2nd)";
+        String name = entity.getName();
+        String money = ColorConfig.GREEN + "$ " + entity.getMoney() + ColorConfig.RESET;
+        String total = ColorConfig.GOLD + entity.getTotalAssest() + ColorConfig.RESET;
+
+        int maxNameLength = Math.max("Name".length(), name.replaceAll("\\e\\[[\\d;]*m", "").length());
+        if (entity.getEnemy() != null) {
+            maxNameLength = Math.max(maxNameLength, entity.getEnemy().getName().replaceAll("\\e\\[[\\d;]*m", "").length());
+        }
+
+        System.out.printf(" %s\t %-20s\t\t%-15s   Total: %s\n", rank, name, money, total);
+
+        BaseCharacter equippedCharacter = entity.getEquippedCharacter();
+        if (equippedCharacter != null) {
+            System.out.print("\t"); 
+            System.out.println(" Character\t\t: " + equippedCharacter.getNameColor() + equippedCharacter.getName()
+                    + ColorConfig.RESET + " (Lvl. " + equippedCharacter.getCurrentLevel() + ")");
+        } else {
+            System.out.print(" ".repeat(9));
+            System.out.println(" Character\t: None");
+        }
+    }
+    
+    default void showLandmarkInfo(PropertyBlock property) {
+        System.out.println(property.getLandmarkName());
+        System.out.println(" Landmark Desc  : " + property.getLandmarkDesc());
+    }
 }

@@ -26,7 +26,7 @@ public class CardBlock extends GenericBlock implements Random {
 	@Override
     public void onLand(Entity piece) {
 		int randomIndex = rand.nextInt(cardList.size());
-        GenericCard card = cardList.get(randomIndex);
+        GenericCard card = cardList.get(2);
         setName(card.getName());
         setDesc(card.getDesc());
         

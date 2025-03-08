@@ -2,15 +2,17 @@ package model.gacha.character;
 
 import config.CharacterConfig;
 import config.ColorConfig;
+import controller.game.monovoly.IMonovolyGameGUI;
 import manager.GameManager;
 import model.block.GenericBlock;
 import model.block.GoToJailBlock;
+import model.block.JailBlock;
 import model.entity.Entity;
 import model.game.GameBoard;
 import utility.Random;
 import utility.TextUtil;
 
-public class Cocytus extends BaseCharacter implements CharacterSkills, Random {
+public class Cocytus extends BaseCharacter implements CharacterSkills, Random, IMonovolyGameGUI {
 
 	public Cocytus() {
 		setName(CharacterConfig.COCYTUS_NAME);
@@ -31,38 +33,41 @@ public class Cocytus extends BaseCharacter implements CharacterSkills, Random {
 	
 	@Override
     public void glacialImprisonment(Entity entity, Entity opponent) {
+		if(opponent.isInJail()) {
+			System.out.println(" " + opponent.getName() + " is already in jail!\n");
+			TextUtil.pressEnter();
+			return;
+		}
+		
         int chance = getBaseSkillChance() + (getCurrentLevel() - 1);
         String name = getNameColor() + getName() + ColorConfig.RESET;
         GameManager gameManager = GameManager.getInstance();
         GameBoard gameBoard = gameManager.getGameBoard();
         
         if (rand.nextInt(100) < chance) {
-        	if(opponent.isInJail()) {
-        		System.out.println(" " + opponent.getName() + " is already in jail!");
-        		return;
-        	}
-        	
-        	GenericBlock currentBlock = null;
+                        
+            JailBlock jailBlock = null;
+            int jailIndex = -1;
             for (GenericBlock block : gameBoard.getBlockList()) {
-                if (block.getPiecesOnBlock().contains(opponent)) {
-                    currentBlock = block;
+                if (block instanceof JailBlock) {
+                    jailBlock = (JailBlock) block;
+                    jailIndex = jailBlock.getIndex();
                     break;
                 }
             }
 
-            GoToJailBlock jailBlock = null;
-            for (GenericBlock block : gameBoard.getBlockList()) {
-                if (block instanceof GoToJailBlock) {
-                    jailBlock = (GoToJailBlock) block;
-                    break;
-                }
+            if (jailIndex == -1) {
+                System.out.println(" Jail block not found!");
+                return;
             }
-            
+
             System.out.println(" " + name + " used Glacial Imprisonment! " + opponent.getName() + " was sent to jail.");
-            currentBlock.removePiece(opponent);
-            opponent.setBoardIndex(jailBlock.getIndex());
-            jailBlock.addPiece(opponent);
-            jailBlock.onLand(opponent);
+            TextUtil.pressEnter();
+            
+            int stepsToJail = calculateStepsToJail(opponent.getBoardIndex(), jailIndex, gameBoard.getBlockList().size());
+            opponent.setInJail(true);
+            moveWithAnimation(opponent, stepsToJail + 1);
+
             
         } 
         else {
@@ -73,5 +78,11 @@ public class Cocytus extends BaseCharacter implements CharacterSkills, Random {
         TextUtil.pressEnter();
     }
 	
-	
+	private int calculateStepsToJail(int currentIndex, int jailIndex, int boardSize) {
+        if (currentIndex <= jailIndex) {
+            return jailIndex - currentIndex;
+        } else {
+            return (boardSize - currentIndex) + jailIndex;
+        }
+    }
 }

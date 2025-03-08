@@ -167,6 +167,7 @@ public class GameBoard {
                 if(propertyBlock.isFestival()) {
                 	label += "F";
                 	label = ownerColor + label + ColorConfig.RESET;
+                	return label;
                 }
                 else {
                 	label = ownerColor + label + ColorConfig.RESET;                   	

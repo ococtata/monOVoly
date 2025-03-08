@@ -53,7 +53,6 @@ public class Demiurge extends BaseCharacter implements CharacterSkills, Random, 
                 moveWithAnimation(entity, stepsToStart); 
                 TextUtil.printHorizontalBorder(
                         BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
-                startBlock.onLand(entity);
                 TextUtil.pressEnter();
             } else {
                 System.out.println(" " + name + "'s Infernal Strategy failed.");

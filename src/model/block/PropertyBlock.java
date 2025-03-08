@@ -269,6 +269,7 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
         if (this.owner != piece) {
             if (choice == option) {
                 overtake(piece);
+                return;
             }
             option++;
         }
@@ -276,6 +277,7 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
         if (owner == piece && buildingLevel < GameConfig.PROPERTY_MAX_BUILDING_LEVEL) {
             if (choice == option) {
                 construct(piece);
+                return;
             }
             option++;
         }
@@ -283,12 +285,14 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
         if (owner == piece && buildingLevel == GameConfig.PROPERTY_MAX_BUILDING_LEVEL && !this.hasLandmark) {
             if (choice == option) {
                 offerLandmarkUpgrade(piece);
+                return;
             }
             option++;
         }
 
         if (choice == option) { 
-            System.out.println(" " + piece.getName() + " chose to do nothing.");
+            System.out.println(" " + piece.getName() + " chose to do nothing\n");
+            TextUtil.pressEnter();
         }
     }
     
@@ -367,7 +371,8 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
                 price += constructPrice;
                 piece.updateTotalAssets();
                 System.out.println(" " + piece.getName() + " constructed a building on " + this.getName() + ". Level: " +
-                        buildingLevel + " for $" + constructPrice + "!");
+                        buildingLevel + " for $" + constructPrice + "!\n");
+                TextUtil.pressEnter();
                 TextUtil.printHorizontalBorder(
         				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
                 showStats();
@@ -377,6 +382,8 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
             } 
             else {
                 System.out.println(piece.getName() + " doesn't have enough money to construct on " + this.getName());
+                System.out.println();
+                TextUtil.pressEnter();
             }
         }
     }
@@ -408,7 +415,8 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
             if (piece.getEquippedCharacter() instanceof PandorasActor) {
                 amount = ((PandorasActor) piece.getEquippedCharacter()).useSkill(amount, piece);
             }
-            else if (piece.getEquippedCharacter() instanceof Albedo) {
+            
+            if (piece.getEquippedCharacter() instanceof Albedo) {
                 amount = ((Albedo) piece.getEquippedCharacter()).useSkill(amount, piece);
             }
 
@@ -417,7 +425,8 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
                 owner.setMoney(owner.getMoney() + amount);
                 System.out.println(" " + piece.getName() + " paid $" + amount + " toll to " + owner.getName() + ".");
             } 
-            else {
+            else 
+            {
                 System.out.println(" " + piece.getName() + " doesn't have enough money to pay the toll!");
             }
             return amount;

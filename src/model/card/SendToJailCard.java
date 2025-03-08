@@ -27,8 +27,6 @@ public class SendToJailCard extends GenericCard implements IMonovolyGameGUI {
         GameBoard gameBoard = gameManager.getGameBoard();
         
         Entity target = (piece == gameManager.getPlayer()) ? gameManager.getEnemy() : gameManager.getPlayer();
-
-        int targetIndex = target.getBoardIndex();
         
         JailBlock jailBlock = null;
         int jailIndex = -1;
@@ -48,17 +46,17 @@ public class SendToJailCard extends GenericCard implements IMonovolyGameGUI {
         System.out.println(" " + piece.getName() + " used 'Send to Jail' on " + target.getName() + "!\n");
         TextUtil.pressEnter();
         
-        int stepsToJail = calculateStepsToJail(targetIndex, jailIndex, gameBoard.getBlockList().size());
-        moveWithAnimation(target, stepsToJail);
-
+        int stepsToJail = calculateStepsToJail(target.getBoardIndex(), jailIndex, gameBoard.getBlockList().size());
         target.setInJail(true);
+        moveWithAnimation(target, stepsToJail + 1);
+
     }
 
     private int calculateStepsToJail(int currentIndex, int jailIndex, int boardSize) {
         if (currentIndex <= jailIndex) {
             return jailIndex - currentIndex;
         } else {
-            return (boardSize - currentIndex) + jailIndex + 2;
+            return (boardSize - currentIndex) + jailIndex;
         }
     }
 }

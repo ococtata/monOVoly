@@ -161,7 +161,8 @@ public class TradeView extends BaseView implements Scanner {
 	                TextUtil.pressEnter();
 	                continue;
 	            }
-
+	            
+	            System.out.println();
 	            if (tradeViewController.canTradeForCharacter(player, selectedChar)) {
 	                tradeViewController.performTradeForCharacter(player, selectedChar);
 	                System.out.printf(" Successfully traded for %s%s%s!\n", selectedChar.getNameColor(),

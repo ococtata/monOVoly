@@ -32,6 +32,7 @@ public class Albedo extends BaseCharacter implements Random {
 
         if (rand.nextInt(100) < chance) {
             System.out.println(" " + name + "'s Armor of Malice prevented the rent payment!");
+            System.out.println();
             return 0;
         }
         else {
@@ -39,6 +40,7 @@ public class Albedo extends BaseCharacter implements Random {
         	System.out.println();
         	
         	TextUtil.pressEnter();
+        	System.out.println();
         }
         
         

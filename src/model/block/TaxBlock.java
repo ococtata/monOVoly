@@ -1,9 +1,12 @@
 package model.block;
 
+import config.BoardConfig;
 import config.GameConfig;
+import controller.game.monovoly.IMonovolyGameGUI;
 import model.entity.Entity;
+import utility.TextUtil;
 
-public class TaxBlock extends GenericBlock{
+public class TaxBlock extends GenericBlock implements IMonovolyGameGUI{
 	private double taxPercentage;
 
 	public TaxBlock(String name, String desc, int index) {
@@ -17,6 +20,7 @@ public class TaxBlock extends GenericBlock{
         int tax = (int) (piece.getMoney() * taxPercentage);
         piece.pay(null, tax);
         System.out.printf(" %s paid $%d in taxes.\n", piece.getName(), tax);
+        showStats();
     }
 
 }
