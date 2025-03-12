@@ -432,6 +432,7 @@ public class MonovolyMapController implements Scanner, Random, IMonovolyGameGUI 
 		if (!playerQuit) {
 			if (loser instanceof Player) {
 				System.out.println(" Enemy wins!");
+				playerLose(GameManager.getInstance().getPlayer());
 			} else {
 				System.out.println(" Player wins!");
 				playerWin(GameManager.getInstance().getPlayer());
@@ -449,6 +450,13 @@ public class MonovolyMapController implements Scanner, Random, IMonovolyGameGUI 
 		}
 	}
 
+	private void playerLose(Player player) {
+		player.decreaseTrophy(500);
+		System.out.println(" " + player.getName() + " lost 500 Trophies!");
+		System.out.println();
+		TextUtil.pressEnter();
+	}
+	
 	private void playerWin(Player player) {
 		player.setGems(player.getGems() + 1500);
 		player.addExp(10);

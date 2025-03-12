@@ -23,7 +23,7 @@ public class RegisterView extends BaseView {
         System.out.println();
         String username;
         while (true) {
-            System.out.print(" Username [0 to exit]: ");
+            System.out.print(" \n Username [minimum length 4, 0 to exit]: ");
             username = scan.nextLine();
             if (username.equals("0")) {
                 deactivateView();
@@ -44,7 +44,7 @@ public class RegisterView extends BaseView {
 
         String email;
         while (true) {
-            System.out.print(" Email [0 to exit]: ");
+            System.out.print(" \n Email [contains '@' and '.com', 0 to exit]: ");
             email = scan.nextLine();
             if (email.equals("0")) {
                 deactivateView();
@@ -64,7 +64,7 @@ public class RegisterView extends BaseView {
 
         String password;
         while (true) {
-            System.out.print(" Password [0 to exit]: ");
+            System.out.print(" \n Password [minimum length 6, 0 to exit]: ");
             password = scan.nextLine();
             if (password.equals("0")) {
                 deactivateView();
@@ -81,7 +81,7 @@ public class RegisterView extends BaseView {
 
         String confirmPassword;
         while (true) {
-            System.out.print(" Confirm Password [0 to exit]: ");
+            System.out.print(" \n Confirm Password [must be same as password, 0 to exit]: ");
             confirmPassword = scan.nextLine();
             if (confirmPassword.equals("0")) {
                 deactivateView();
@@ -94,6 +94,7 @@ public class RegisterView extends BaseView {
             }
             break;
         }
+        System.out.println();
         
         registerViewController.registerUser(username, email, password);
         deactivateView();

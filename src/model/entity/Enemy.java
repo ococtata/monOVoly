@@ -52,9 +52,7 @@ public class Enemy extends Entity implements Random {
             int randomLevelGap = rand.nextInt(5) - 2;
             int randomLevel = Math.max(1, playerLevel + randomLevelGap);
             randomCharacter.setCurrentLevel(randomLevel);
-            setEquippedCharacter(randomCharacter);
-            
-            setEquippedCharacter(CharacterLoaderManager.getInstance().getCharacterById("CH005"));
+            setEquippedCharacter(randomCharacter);            
         }
     }
 

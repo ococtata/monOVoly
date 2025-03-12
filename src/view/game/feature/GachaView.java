@@ -1,5 +1,6 @@
 package view.game.feature;
 
+import config.GachaConfig;
 import config.GeneralConfig;
 import controller.game.feature.GachaViewController;
 import model.gacha.GachaCharacter;
@@ -24,7 +25,7 @@ public class GachaView extends BaseView implements Scanner, PlayerGUI{
             TextUtil.printHeader("CHARACTER GACHA", GeneralConfig.WIDTH, GeneralConfig.HEIGHT);
             printGachaTopBar();
             TextUtil.printHorizontalBorder(GeneralConfig.WIDTH);
-            System.out.println(" 1. Roll");
+            System.out.printf(" 1. Roll (%s gems)\n", GachaConfig.CHARACTER_GACHA_COST);
             System.out.println(" 2. Go Back");
             System.out.println();
             System.out.print(" >> "); 

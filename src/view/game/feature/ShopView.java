@@ -122,7 +122,7 @@ public class ShopView extends BaseView implements PlayerGUI {
             int levelUpCost = baseLevelUpCost + (character.getCurrentLevel() * levelUpCostIncrement);
             
             System.out.println();
-            System.out.println(" Level up " + character.getNameColor() + character.getName() + ColorConfig.RESET + " to level " + ColorConfig.GOLD + (character.getCurrentLevel() + 1) + ColorConfig.RESET + "?");
+            System.out.println(" Level up " + character.getNameColor() + character.getName() + ColorConfig.RESET + " to level " + ColorConfig.ORANGE + (character.getCurrentLevel() + 1) + ColorConfig.RESET + "?");
             System.out.println(" Cost: " + ColorConfig.CYAN + levelUpCost + ColorConfig.RESET + " gems.");
             System.out.println();
             System.out.print(" Confirm? [y/n]: ");
@@ -130,7 +130,7 @@ public class ShopView extends BaseView implements PlayerGUI {
             
             if (confirm.equals("y")) {
             	if (shopViewController.levelUpCharacter(character, levelUpCost)) {
-            		System.out.println(" " + character.getNameColor() + character.getName() + ColorConfig.RESET + " leveled up to level " + ColorConfig.GOLD + character.getCurrentLevel() + ColorConfig.RESET + "!");
+            		System.out.println(" " + character.getNameColor() + character.getName() + ColorConfig.RESET + " leveled up to level " + ColorConfig.ORANGE + character.getCurrentLevel() + ColorConfig.RESET + "!");
             		System.out.println(" Cost: " + ColorConfig.CYAN + levelUpCost + ColorConfig.RESET + " gems.");
             		System.out.println();
             		TextUtil.pressEnter();

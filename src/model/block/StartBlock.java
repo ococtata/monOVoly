@@ -20,7 +20,7 @@ public class StartBlock extends GenericBlock implements Scanner {
         this.processedThisTurn = new HashSet<>();
         initializePieces();
         setType("Start");
-    }
+    }	
     
     @Override
     public void onLand(Entity piece) {
@@ -72,6 +72,8 @@ public class StartBlock extends GenericBlock implements Scanner {
                 BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
         
         PropertyBlock chosen = piece.chooseProperty();
+        
+        System.out.println();
         if (chosen != null) {
             if (chosen.getBuildingLevel() < GameConfig.PROPERTY_MAX_BUILDING_LEVEL) {
                 chosen.construct(piece);
@@ -86,7 +88,6 @@ public class StartBlock extends GenericBlock implements Scanner {
         }
         else {
             System.out.println(" " + piece.getName() + " decided to do nothing.");
-            TextUtil.clearScreen();
         }
     }
     

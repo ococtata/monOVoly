@@ -6,7 +6,7 @@ import model.entity.Entity;
 import utility.Random;
 
 public class PandorasActor extends BaseCharacter implements CharacterSkills, Random {
-	private int freeRentCount = 3;
+	private int freeTollCount = 3;
 	
 	public PandorasActor() {
 		setName(CharacterConfig.PANDORAS_ACTOR_NAME);
@@ -28,15 +28,15 @@ public class PandorasActor extends BaseCharacter implements CharacterSkills, Ran
 	@Override
 	public int falseFortune(int amount) {
 		String name = getNameColor() + getName() + ColorConfig.RESET;
-		if (freeRentCount > 0) {
-            freeRentCount--;
-            System.out.println(" " + name + "'s False Fortune prevented the rent payment!");
+		if (freeTollCount > 0) {
+            freeTollCount--;
+            System.out.println(" " + name + "'s False Fortune prevented the toll payment!");
 
             int chance = getBaseSkillChance() + (getCurrentLevel() - 1);
 
             if (rand.nextInt(100) < chance) {
-                freeRentCount++;
-                System.out.println(" False Fortune counter not reduced!");
+                freeTollCount++;
+                System.out.println(" False Fortune counter increased!");
             }
             
             System.out.println(" False Fortune counter: " + getFreeRentCount());
@@ -50,10 +50,10 @@ public class PandorasActor extends BaseCharacter implements CharacterSkills, Ran
 	}
 	
 	public int getFreeRentCount() {
-        return freeRentCount;
+        return freeTollCount;
     }
 
-    public void setFreeRentCount(int freeRentCount) {
-        this.freeRentCount = freeRentCount;
+    public void setFreeRentCount(int freeTollCount) {
+        this.freeTollCount = freeTollCount;
     }
 }

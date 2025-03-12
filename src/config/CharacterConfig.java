@@ -14,10 +14,10 @@ public class CharacterConfig {
 
     // Skill Chances (Base)
     public static final int AINZ_BASE_SKILL_CHANCE = 55;
+    public static final int ALBEDO_BASE_SKILL_CHANCE = 35;
     public static final int SHALLTEAR_BASE_SKILL_CHANCE = 65;
     public static final int DEMIURGE_BASE_SKILL_CHANCE = 55;
     public static final int COCYTUS_BASE_SKILL_CHANCE = 35;
-    public static final int ALBEDO_BASE_SKILL_CHANCE = 35;
     public static final int PANDORAS_BASE_SKILL_CHANCE = 10;
 
     // Ainz Ooal Gown
@@ -54,5 +54,5 @@ public class CharacterConfig {
     public static final String PANDORAS_ACTOR_NAME = "Pandora's Actor";
     public static final String PANDORAS_ACTOR_TITLE = "Perfect Impersonator";
     public static final String PANDORAS_ACTOR_SKILL_NAME = "False Fortune";
-    public static final String PANDORAS_ACTOR_SKILL_DESC = "3 rent payments are free. Additionally, there is a chance to not decrease the free rent counter";
+    public static final String PANDORAS_ACTOR_SKILL_DESC = "3 toll payments are free. Additionally, there is a chance to not decrease the free toll counter";
 }

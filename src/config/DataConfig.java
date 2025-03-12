@@ -9,11 +9,11 @@ public class DataConfig {
 	public static final String FILE_DATA_PLAYER_INVENTORY = "data/playerinventorydata.txt"; 
 	
 	// folder
-	public static final String FOLDER_MAP = "map";
+	public static final String FOLDER_MAP = "data/map";
 	
 	// maps
-	public static final String FILE_MAP_SPAWN = "map/spawnMap.txt";
-	public static final String FILE_MAP_SHOP = "map/shopMap.txt";
-	public static final String FILE_MAP_GACHA = "map/gachaMap.txt";
-	public static final String FILE_MAP_BARRACKS = "map/tradeMap.txt";
+	public static final String FILE_MAP_SPAWN = "data/map/spawnMap.txt";
+	public static final String FILE_MAP_SHOP = "data/map/shopMap.txt";
+	public static final String FILE_MAP_GACHA = "data/map/gachaMap.txt";
+	public static final String FILE_MAP_BARRACKS = "data/map/tradeMap.txt";
 }	

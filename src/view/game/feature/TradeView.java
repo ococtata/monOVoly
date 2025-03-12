@@ -66,11 +66,6 @@ public class TradeView extends BaseView implements Scanner {
 
 	private void tradeForCharacter(Player player) {
 	    List<CharacterMaterial> materials = tradeViewController.getMaterials(player);
-	    if (materials == null || materials.isEmpty()) {
-	        System.out.println(" No materials found.");
-	        TextUtil.pressEnter();
-	        return;
-	    }
 
 	    List<BaseCharacter> characters = tradeViewController.getCharactersForTrade();
 	    if (characters.isEmpty()) {
@@ -85,7 +80,7 @@ public class TradeView extends BaseView implements Scanner {
 
 	    while (true) {
 	        TextUtil.clearScreen();
-	        System.out.println(" Trade Materials for Character:\n");
+	        System.out.println(" Trade Materials for Character (Page " + (currentPage + 1) + " of " + totalPages + "): \n");
 	        TextUtil.printHorizontalBorder(50);
 
 	        int start = currentPage * PAGE_SIZE;
@@ -224,7 +219,7 @@ public class TradeView extends BaseView implements Scanner {
 	private void tradeForHigherRarityForCharacter(Player player, BaseCharacter character, List<CharacterMaterial> materials) {
 	    while (true) {
 	        TextUtil.clearScreen();
-	        System.out.println(" Trade Materials for Higher Rarity for " + character.getName() + ":\n");
+	        System.out.println(" Trade Materials for Higher Rarity for " + character.getNameColor() + character.getName() + ColorConfig.RESET + ":\n");
 
 	        List<CharacterMaterial> requiredMaterials = character.getRequiredMaterials();
 

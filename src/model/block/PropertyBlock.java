@@ -64,7 +64,7 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
             handleOwnerLanding(piece);
         }
         
-        System.out.println(" This property is " + (this.owner == null ? " unowned" : "owned by " + owner.getName()));
+        System.out.println(" " + this.getName() + " is " + (this.owner == null ? " unowned" : "owned by " + owner.getName()));
     }
 
     private void handleEnemyBuy(Entity piece) {
@@ -376,8 +376,6 @@ public class PropertyBlock extends GenericBlock implements Random, Scanner, IMon
                 TextUtil.printHorizontalBorder(
         				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
                 showStats();
-                TextUtil.printHorizontalBorder(
-        				BoardConfig.BLOCK_WIDTH * BoardConfig.BOARD_WIDTH + (BoardConfig.BOARD_WIDTH - 1));
                 constructPrice += GameConfig.PROPERTY_BASE_CONSTRUCTION_COST;
             } 
             else {
